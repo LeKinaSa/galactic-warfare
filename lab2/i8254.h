@@ -9,8 +9,8 @@
  * Constants for programming the i8254 Timer. Needs to be completed.
  */
 
-#define TIMER_FREQ 1193182 /**< @brief clock frequency for timer in PC and AT */
-#define TIMER0_IRQ 0 /**< @brief Timer 0 IRQ line */
+#define TIMER_FREQ 1193182  /**< @brief clock frequency for timer in PC and AT */
+#define TIMER0_IRQ 0        /**< @brief Timer 0 IRQ line */
 
 /* I/O port addresses */
 
@@ -25,21 +25,26 @@
 
 /* Timer selection: bits 7 and 6 */
 
-#define TIMER_SEL0   0x00              /**< @brief Control Word for Timer 0 */
-#define TIMER_SEL1   BIT(6)            /**< @brief Control Word for Timer 1 */
-#define TIMER_SEL2   BIT(7)            /**< @brief Control Word for Timer 2 */
-#define TIMER_RB_CMD (BIT(7) | BIT(6)) /**< @brief Read Back Command */
+#define TIMER_SEL0    0x00              /**< @brief Control Word for Timer 0 */
+#define TIMER_SEL1    BIT(6)            /**< @brief Control Word for Timer 1 */
+#define TIMER_SEL2    BIT(7)            /**< @brief Control Word for Timer 2 */
+#define TIMER_RB_CMD (BIT(7) | BIT(6))  /**< @brief Read Back Command */
 
 /* Register selection: bits 5 and 4 */
 
-#define TIMER_LSB     BIT(4)                  /**< @brief Initialize Counter LSB only */
-#define TIMER_MSB     BIT(5)                  /**< @brief Initialize Counter MSB only */
-#define TIMER_LSB_MSB (TIMER_LSB | TIMER_MSB) /**< @brief Initialize LSB first and MSB afterwards */
+#define TIMER_LSB            BIT(4)                  /**< @brief Initialize Counter LSB only */
+#define TIMER_MSB            BIT(5)                  /**< @brief Initialize Counter MSB only */
+#define TIMER_LSB_MSB       (TIMER_LSB | TIMER_MSB)  /**< @brief Initialize LSB first and MSB afterwards */
+#define TIMER_LSB_MSB_SHIFT  0x04                    /**< @brief Number of bits between bit 0 and LSB and MSB bits */
 
 /* Operating mode: bits 3, 2 and 1 */
 
-#define TIMER_SQR_WAVE (BIT(2) | BIT(1)) /**< @brief Mode 3: square wave generator */
-#define TIMER_RATE_GEN BIT(2)            /**< @brief Mode 2: rate generator */
+#define TIMER_INTERRUPT  0x00              /**< @brief Mode 0: interrupt on terminal */
+#define TIMER_HW_ONESHOT BIT(1)            /**< @brief Mode 1: hardware retriggerable one-shot */
+#define TIMER_RATE_GEN   BIT(2)            /**< @brief Mode 2: rate generator */
+#define TIMER_SQR_WAVE  (BIT(2) | BIT(1))  /**< @brief Mode 3: square wave generator */
+#define TIMER_SW_STROBE  BIT(3)            /**< @brief Mode 4: software strobe */
+#define TIMER_HW_STROBE (BIT(3) | BIT(1))  /**< @brief Mode 5: hardware strobe */
 
 /* Counting mode: bit 0 */
 

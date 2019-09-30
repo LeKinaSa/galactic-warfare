@@ -71,8 +71,44 @@ int (timer_get_conf)(uint8_t timer, uint8_t *st) {
 
 int (timer_display_conf)(uint8_t timer, uint8_t st,
                         enum timer_status_field field) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  
+  union timer_status_field_val val;
+  switch (field) {
+    case tsf_all:
+      val.byte = st;
+      break;
+    case tsf_initial:
+      st = st & TIMER_LSB_MSB;
+      val.in_mode = st >> TIMER_LSB_MSB_SHIFT;
+      break;
+    case tsf_mode:
+      if (TIMER_HW_STROBE == (st & TIMER_HW_STROBE)) {
+        val.count_mode = 5;
+      }
+      else if (TIMER_SW_STROBE == (st & TIMER_SW_STROBE)) {
+        val.count_mode = 4;
+      }
+      else if (TIMER_SQR_WAVE == (st & TIMER_SQR_WAVE)) {
+        val.count_mode = 3;
+      }
+      else if (TIMER_RATE_GEN == (st & TIMER_RATE_GEN)) {
+        val.count_mode= 2;
+      }
+      else if (TIMER_HW_ONESHOT == (st & TIMER_HW_ONESHOT)) {
+        val.count_mode = 1;
+      }
+      else if (TIMER_INTERRUPT == (st & TIMER_INTERRUPT)) {
+        val.count_mode = 0;
+      }
+      break;
+    case tsf_base:
+      val.bcd = st & TIMER_BCD;
+      break;
+    default:
+      return 1;
+  }
+  
+  timer_print_config(timer, field, val);
 
-  return 1;
+  return 0;
 }
