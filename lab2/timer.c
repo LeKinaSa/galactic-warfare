@@ -108,7 +108,9 @@ int (timer_display_conf)(uint8_t timer, uint8_t st,
       return 1;
   }
   
-  timer_print_config(timer, field, val);
+  if (timer_print_config(timer, field, val)) {
+    return 1;
+  }
 
   return 0;
 }
