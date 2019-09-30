@@ -32,10 +32,41 @@ void (timer_int_handler)() {
 }
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  int retv;
+  uint32_t ctrl_word = TIMER_RB_CMD | TIMER_RB_COUNT_ | TIMER_RB_SEL(timer);
 
-  return 1;
+  retv = sys_outb(TIMER_CTRL, ctrl_word);
+
+  if (retv == EINVAL) {
+    printf("Error when calling sys_outb.\n");
+    return retv;
+  }
+
+  int timer_port;
+
+  switch (timer) {
+  case 0:
+    timer_port = TIMER_0;
+    break;
+  case 1:
+    timer_port = TIMER_1;
+    break;
+  case 2:
+    timer_port = TIMER_2;
+    break;
+  default:
+    printf("Invalid arg: timer.\n");
+    return EINVAL;
+  }
+
+  retv = util_sys_inb(timer_port, st);
+
+  if (retv == EINVAL) {
+    printf("Error when calling util_sys_inb.\n");
+    return retv;
+  }
+
+  return retv;
 }
 
 int (timer_display_conf)(uint8_t timer, uint8_t st,
