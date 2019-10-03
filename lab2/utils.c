@@ -24,9 +24,9 @@ int (util_sys_inb)(int port, uint8_t *value) {
 
   if (retv == EINVAL) {
     printf("Error when calling sys_inb.\n");
-    return retv;
+    return 1;
   }
 
   *value = (uint8_t)word;
-  return retv;
+  return 0;
 }

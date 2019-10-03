@@ -73,6 +73,7 @@ int (timer_display_conf)(uint8_t timer, uint8_t st,
                         enum timer_status_field field) {
   
   union timer_status_field_val val;
+  
   switch (field) {
     case tsf_all:
       val.byte = st;
@@ -109,6 +110,7 @@ int (timer_display_conf)(uint8_t timer, uint8_t st,
   }
   
   if (timer_print_config(timer, field, val)) {
+    printf("Error when calling timer_print_config.\n");
     return 1;
   }
 
