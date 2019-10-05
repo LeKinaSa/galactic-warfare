@@ -13,17 +13,32 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
 }
 
 int (timer_subscribe_int)(uint8_t *bit_no) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
-
-  return 1;
+  // bit_no is the address to be initialized with the bit number to be set in the mask returned upon an interrupt
+  int *hook_id = 0;                                                   // <----
+  // Prepare hook_id to be input
+  int retv = sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, hook_id);
+  if (retv == EINVAL) {
+    printf("Error when calling sys_irqsetpolicy.\n");
+    return 1;
+  }
+  // Treat hook_id as output
+  
+  // Not yet done !
+  
+  return 0;
 }
 
 int (timer_unsubscribe_int)() {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
-
-  return 1;
+  int *hook_id = 0;                                                   // <---
+  if (hook_id == NULL) {
+    printf("Error when calling timer_unsubscribe_int.\n");
+    return 1;
+  }
+  int res = sys_irqrmpolicy(hook_id);
+  if (res == EINVAL) {
+    printf("Error when calling sys_irqrmpolicy.\n");
+  }
+  return 0;
 }
 
 void (timer_int_handler)() {
