@@ -5,11 +5,78 @@
 
 #include "i8254.h"
 
-int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+/* Valid frequencies for a timer with a 16-bit register and a clock speed of 1193182 Hz */
+#define MIN_FREQ 19         // Lower frequencies would require an initial value higher than 65535 (max value for unsigned 16-bit integer)
+#define MAX_FREQ 1193182    // Highest frequency is equal to the clock speed (initial value is 1)
 
-  return 1;
+/* Bitmasks */
+#define MASK_MODE 0x0E
+#define MASK_MODE_BSD 0x0F
+
+int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
+  uint8_t status;
+
+  if (timer_get_conf(timer, &status)) {
+    printf("Error when reading timer configuration.\n");
+    return 1;
+  }
+
+  /* Certain frequencies are not supported by the timer 
+  since they would exceed the limit for a 16-bit unsigned integer */
+  if (freq < MIN_FREQ || freq > MAX_FREQ) {
+    printf("Invalid frequency for 16-bit timer.");
+    return 1;
+  }
+
+  uint16_t initial_value = TIMER_FREQ / freq;
+
+  int timer_port;
+  uint32_t ctrl_word = TIMER_LSB_MSB | (MASK_MODE_BSD & status);
+
+  switch (timer) {
+  case 0:
+    timer_port = TIMER_0;
+    ctrl_word |= TIMER_SEL0;
+    break;
+  case 1:
+    timer_port = TIMER_1;
+    ctrl_word |= TIMER_SEL1;
+    break;
+  case 2:
+    timer_port = TIMER_2;
+    ctrl_word |= TIMER_SEL2;
+    break;
+  default:
+    printf("Invalid arg: timer.\n");
+    return 1;
+  }
+
+  if (sys_outb(TIMER_CTRL, ctrl_word) == EINVAL) {
+    printf("Error when writing to control register.\n");
+    return 1;
+  }
+
+  uint8_t lsb, msb;
+
+  if (util_get_LSB(initial_value, &lsb)) {
+    return 1;
+  }
+
+  if (util_get_MSB(initial_value, &msb)) {
+    return 1;
+  }
+
+  if (sys_outb(timer_port, lsb) == EINVAL) {
+    printf("Error when writng LSB to timer.\n");
+    return 1;
+  }
+
+  if (sys_outb(timer_port, msb) == EINVAL) {
+    printf("Error when writng MSB to timer.\n");
+    return 1;
+  }
+
+  return 0;
 }
 
 int (timer_subscribe_int)(uint8_t *bit_no) {
@@ -88,40 +155,41 @@ int (timer_display_conf)(uint8_t timer, uint8_t st,
                         enum timer_status_field field) {
   
   union timer_status_field_val val;
-  
+  uint8_t mode_bits = st & MASK_MODE;
+
   switch (field) {
-    case tsf_all:
-      val.byte = st;
-      break;
-    case tsf_initial:
-      st = st & TIMER_LSB_MSB;
-      val.in_mode = st >> TIMER_LSB_MSB_SHIFT;
-      break;
-    case tsf_mode:
-      if (TIMER_HW_STROBE == (st & TIMER_HW_STROBE)) {
-        val.count_mode = 5;
-      }
-      else if (TIMER_SW_STROBE == (st & TIMER_SW_STROBE)) {
-        val.count_mode = 4;
-      }
-      else if (TIMER_SQR_WAVE == (st & TIMER_SQR_WAVE)) {
-        val.count_mode = 3;
-      }
-      else if (TIMER_RATE_GEN == (st & TIMER_RATE_GEN)) {
-        val.count_mode= 2;
-      }
-      else if (TIMER_HW_ONESHOT == (st & TIMER_HW_ONESHOT)) {
-        val.count_mode = 1;
-      }
-      else if (TIMER_INTERRUPT == (st & TIMER_INTERRUPT)) {
-        val.count_mode = 0;
-      }
-      break;
-    case tsf_base:
-      val.bcd = st & TIMER_BCD;
-      break;
-    default:
-      return 1;
+  case tsf_all:
+    val.byte = st;
+    break;
+  case tsf_initial:
+    st = st & TIMER_LSB_MSB;
+    val.in_mode = st >> TIMER_LSB_MSB_SHIFT;
+    break;
+  case tsf_mode:
+    if (TIMER_HW_STROBE == mode_bits) {
+      val.count_mode = 5;
+    }
+    else if (TIMER_SW_STROBE == mode_bits) {
+      val.count_mode = 4;
+    }
+    else if ((TIMER_SQR_WAVE == mode_bits) || (TIMER_SQR_WAVE_ALT == mode_bits)) {
+      val.count_mode = 3;
+    }
+    else if ((TIMER_RATE_GEN == mode_bits) || (TIMER_RATE_GEN_ALT == mode_bits)) {
+      val.count_mode= 2;
+    }
+    else if (TIMER_HW_ONESHOT == mode_bits) {
+      val.count_mode = 1;
+    }
+    else if (TIMER_INTERRUPT == mode_bits) {
+      val.count_mode = 0;
+    }
+    break;
+  case tsf_base:
+    val.bcd = st & TIMER_BCD;
+    break;
+  default:
+    return 1;
   }
   
   if (timer_print_config(timer, field, val)) {

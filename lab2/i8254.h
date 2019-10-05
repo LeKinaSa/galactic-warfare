@@ -46,6 +46,11 @@
 #define TIMER_SW_STROBE  BIT(3)            /**< @brief Mode 4: software strobe */
 #define TIMER_HW_STROBE (BIT(3) | BIT(1))  /**< @brief Mode 5: hardware strobe */
 
+/* Operating modes 2 and 3 with bit 3 set to 1. 
+These shouldn't be used to preserve compatibility with future Intel products */
+#define TIMER_RATE_GEN_ALT (BIT(3) | TIMER_RATE_GEN)  /**< @brief Mode 2 (alt): rate generator */
+#define TIMER_SQR_WAVE_ALT (BIT(3) | TIMER_SQR_WAVE)  /**< @brief Mode 3 (alt): square wave generator */
+
 /* Counting mode: bit 0 */
 
 #define TIMER_BCD 0x01 /**< @brief Count in BCD */
