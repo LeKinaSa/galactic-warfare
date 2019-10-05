@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 int(util_get_LSB)(uint16_t val, uint8_t *lsb) {
-  if (val == NULL) {
+  if ((void *) (uint32_t) val == NULL) {
     printf("Error when calling util_get_LSB.\n");
     return 1;
   }
@@ -12,7 +12,7 @@ int(util_get_LSB)(uint16_t val, uint8_t *lsb) {
 }
 
 int(util_get_MSB)(uint16_t val, uint8_t *msb) {
-  if (val == NULL) {
+  if ((void *) (uint32_t) val == NULL) {
     printf("Error when calling util_get_MSB.\n");
     return 1;
   }
