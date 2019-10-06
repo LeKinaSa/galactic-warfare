@@ -80,29 +80,27 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
 }
 
 int (timer_subscribe_int)(uint8_t *bit_no) {
-  // bit_no is the address to be initialized with the bit number to be set in the mask returned upon an interrupt
-  int *hook_id = 0;                                                   // <----
-  // Prepare hook_id to be input
-  int retv = sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, hook_id);
-  if (retv == EINVAL) {
+  if (bit_no == NULL) {
+    printf("Invalid arg: bit_no when trying to subscribe the irq_line.\n");
+    return 1;
+  }
+  // bit_no probably needs some treatment
+  int retv = sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, (int *) bit_no);
+  if (retv != OK) {
     printf("Error when calling sys_irqsetpolicy.\n");
     return 1;
   }
-  // Treat hook_id as output
-  
-  // Not yet done !
-  
   return 0;
 }
 
 int (timer_unsubscribe_int)() {
-  int *hook_id = 0;                                                   // <---
+  int *hook_id = 0; // Still not OK !!!!
   if (hook_id == NULL) {
     printf("Error when calling timer_unsubscribe_int.\n");
     return 1;
   }
   int res = sys_irqrmpolicy(hook_id);
-  if (res == EINVAL) {
+  if (res != OK) {
     printf("Error when calling sys_irqrmpolicy.\n");
   }
   return 0;
