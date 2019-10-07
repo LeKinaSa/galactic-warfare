@@ -14,10 +14,12 @@
 
 /* Valid frequencies for a timer with a 16-bit register and a clock speed of 1193182 Hz */
 
-#define MIN_FREQ 19         /* Lower frequencies would require an initial value higher than 65535 (max value for unsigned 16-bit integer) */
-#define MAX_FREQ 1193182    /* Highest frequency is equal to the clock speed (initial value is 1) */
+#define MIN_FREQ 19             /**< @brief Lower frequencies would require an initial value higher than 65535 (max value for unsigned 16-bit integer) */
+#define MAX_FREQ TIMER_FREQ     /**< @brief Highest frequency is equal to the clock speed (initial value is 1) */
 
-#define INTERRUPTS_PER_SECOND 60 /* Number of interrupts per second by the timer */
+/* Interrupt-related constants */
+
+#define INTERRUPTS_PER_SECOND 60 /**< @brief Default number of interrupts per second by the timer */
 
 /* I/O port addresses */
 
@@ -54,7 +56,7 @@
 #define TIMER_HW_STROBE (BIT(3) | BIT(1))  /**< @brief Mode 5: hardware strobe */
 
 /* Operating modes 2 and 3 with bit 3 set to 1. 
-These shouldn't be used to preserve compatibility with future Intel products */
+These shouldn't be used in order to preserve compatibility with future Intel products */
 #define TIMER_RATE_GEN_ALT (BIT(3) | TIMER_RATE_GEN)  /**< @brief Mode 2 (alt): rate generator */
 #define TIMER_SQR_WAVE_ALT (BIT(3) | TIMER_SQR_WAVE)  /**< @brief Mode 3 (alt): square wave generator */
 
@@ -71,8 +73,8 @@ These shouldn't be used to preserve compatibility with future Intel products */
 
 /* Bitmasks */
 
-#define MASK_MODE     0x0E    /* Mask to obtain the mode bits in the read-back command */
-#define MASK_MODE_BSD 0x0F    /* Mask to obtain the operating mode and counting base of the control word*/
+#define TIMER_MASK_MODE     0x0E    /**< @brief Mask to obtain the mode bits in the read-back command */
+#define TIMER_MASK_MODE_BCD 0x0F    /**< @brief Mask to obtain the operating mode and counting base of the control word */
 
 
 /**@}*/

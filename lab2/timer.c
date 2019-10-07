@@ -7,6 +7,7 @@
 
 
 int hook_id = TIMER0_IRQ;
+extern int counter;
 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   uint8_t status;
@@ -26,7 +27,7 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   uint16_t initial_value = TIMER_FREQ / freq;
 
   int timer_port;
-  uint32_t ctrl_word = TIMER_LSB_MSB | (MASK_MODE_BSD & status);
+  uint32_t ctrl_word = TIMER_LSB_MSB | (TIMER_MASK_MODE_BCD & status);
 
   switch (timer) {
   case 0:
@@ -95,6 +96,7 @@ int (timer_unsubscribe_int)() {
 }
 
 void (timer_int_handler)() {
+  ++counter;
 }
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {
@@ -119,7 +121,7 @@ int (timer_get_conf)(uint8_t timer, uint8_t *st) {
     break;
   default:
     printf("Invalid arg: timer.\n");
-    return EINVAL;
+    return 1;
   }
 
   if (util_sys_inb(timer_port, st) == EINVAL) {
@@ -134,7 +136,7 @@ int (timer_display_conf)(uint8_t timer, uint8_t st,
                         enum timer_status_field field) {
   
   union timer_status_field_val val;
-  uint8_t mode_bits = st & MASK_MODE;
+  uint8_t mode_bits = st & TIMER_MASK_MODE;
 
   switch (field) {
   case tsf_all:

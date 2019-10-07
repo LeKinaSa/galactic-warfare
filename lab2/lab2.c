@@ -4,7 +4,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-int seconds, counter;
+#include "i8254.h"
+
+int counter = 0;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -56,20 +58,19 @@ int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
 }
 
 int(timer_test_int)(uint8_t time) {
-  uint8_t bit_no = 0;
+  uint8_t num_seconds = 0, bit_no = 0;
+
+  counter = 0;
 
   if (timer_subscribe_int(&bit_no)) {
     printf("Error calling timer_subscribe_int.\n");
     return 1;
   }
 
-  seconds = 0;
-  counter = 0;
-
   int ipc_status;
   message msg;
 
-  while (seconds < time) {
+  while (num_seconds < time) {
     if (driver_receive(ANY, &msg, &ipc_status)) { 
       printf("Error when calling driver_receive.\n");
       continue;
@@ -78,20 +79,16 @@ int(timer_test_int)(uint8_t time) {
       switch(_ENDPOINT_P(msg.m_source)) {
       case HARDWARE:
         if (msg.m_notify.interrupts & BIT(bit_no)) {
-          counter++;
-          if ((counter % 60) == 0) {
+          timer_int_handler();
+          if ((counter % INTERRUPTS_PER_SECOND) == 0) {
             timer_print_elapsed_time();
-            counter = 0;
-            seconds++;
+            ++num_seconds;
           }
         }
         break;
       default:
         break;
       }
-    }
-    else {
-      /* Do nothing */
     }
   }
 

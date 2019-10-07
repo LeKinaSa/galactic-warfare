@@ -24,11 +24,8 @@ int(util_get_MSB)(uint16_t val, uint8_t *msb) {
 
 int (util_sys_inb)(int port, uint8_t *value) {
   uint32_t word;
-  int retv;
 
-  retv = sys_inb(port, &word);
-
-  if (retv == EINVAL) {
+  if (sys_inb(port, &word) == EINVAL) {
     printf("Error when calling sys_inb.\n");
     return 1;
   }
