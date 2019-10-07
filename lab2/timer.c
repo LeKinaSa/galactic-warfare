@@ -105,14 +105,11 @@ void (timer_int_handler)() {
 }
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {
-  int retv;
   uint32_t ctrl_word = TIMER_RB_CMD | TIMER_RB_COUNT_ | TIMER_RB_SEL(timer);
 
-  retv = sys_outb(TIMER_CTRL, ctrl_word);
-
-  if (retv == EINVAL) {
+  if (sys_outb(TIMER_CTRL, ctrl_word) == EINVAL) {
     printf("Error when calling sys_outb.\n");
-    return retv;
+    return 1;
   }
 
   int timer_port;
@@ -132,14 +129,12 @@ int (timer_get_conf)(uint8_t timer, uint8_t *st) {
     return EINVAL;
   }
 
-  retv = util_sys_inb(timer_port, st);
-
-  if (retv == EINVAL) {
+  if (util_sys_inb(timer_port, st) == EINVAL) {
     printf("Error when calling util_sys_inb.\n");
-    return retv;
+    return 1;
   }
 
-  return retv;
+  return 0;
 }
 
 int (timer_display_conf)(uint8_t timer, uint8_t st,

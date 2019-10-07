@@ -57,7 +57,11 @@ int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
 
 int(timer_test_int)(uint8_t time) {
   uint8_t bit_no = 0;
-  timer_subscribe_int(&bit_no);
+
+  if (timer_subscribe_int(&bit_no)) {
+    printf("Error calling timer_subscribe_int.\n");
+    return 1;
+  }
 
   seconds = 0;
   counter = 0;
@@ -91,7 +95,10 @@ int(timer_test_int)(uint8_t time) {
     }
   }
 
-  timer_unsubscribe_int();
+  if (timer_unsubscribe_int()) {
+    printf("Error calling timer_unsubscribe_int.\n");
+    return 1;
+  }
   
   return 0;
 }
