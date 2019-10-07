@@ -5,13 +5,6 @@
 
 #include "i8254.h"
 
-/* Valid frequencies for a timer with a 16-bit register and a clock speed of 1193182 Hz */
-#define MIN_FREQ 19         // Lower frequencies would require an initial value higher than 65535 (max value for unsigned 16-bit integer)
-#define MAX_FREQ 1193182    // Highest frequency is equal to the clock speed (initial value is 1)
-
-/* Bitmasks */
-#define MASK_MODE 0x0E
-#define MASK_MODE_BSD 0x0F
 
 int hook_id = TIMER0_IRQ;
 

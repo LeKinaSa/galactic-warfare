@@ -9,8 +9,13 @@
  * Constants for programming the i8254 Timer. Needs to be completed.
  */
 
-#define TIMER_FREQ 1193182  /**< @brief clock frequency for timer in PC and AT */
+#define TIMER_FREQ 1193182  /**< @brief Clock frequency for timer in PC and AT */
 #define TIMER0_IRQ 0        /**< @brief Timer 0 IRQ line */
+
+/* Valid frequencies for a timer with a 16-bit register and a clock speed of 1193182 Hz */
+
+#define MIN_FREQ 19         /* Lower frequencies would require an initial value higher than 65535 (max value for unsigned 16-bit integer) */
+#define MAX_FREQ 1193182    /* Highest frequency is equal to the clock speed (initial value is 1) */
 
 /* I/O port addresses */
 
@@ -61,6 +66,12 @@ These shouldn't be used to preserve compatibility with future Intel products */
 #define TIMER_RB_COUNT_  BIT(5)
 #define TIMER_RB_STATUS_ BIT(4)
 #define TIMER_RB_SEL(n)  BIT((n) + 1)
+
+/* Bitmasks */
+
+#define MASK_MODE 0x0E        /* Mask to obtain the mode bits in the read-back command */
+#define MASK_MODE_BSD 0x0F    /* Mask to obtain the operating mode and counting base of the control word*/
+
 
 /**@}*/
 
