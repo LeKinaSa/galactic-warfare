@@ -9,17 +9,15 @@
  * Constants for programming the i8254 Timer. Needs to be completed.
  */
 
-#define TIMER_FREQ 1193182  /**< @brief Clock frequency for timer in PC and AT */
-#define TIMER0_IRQ 0        /**< @brief Timer 0 IRQ line */
+#define TIMER_FREQ 1193182              /**< @brief Clock frequency for timer in PC and AT */
+
+#define TIMER0_IRQ 0                    /**< @brief Timer 0 IRQ line */
+#define TIMER0_INTERRUPTS_PER_SECOND 60 /**< @brief Default number of interrupts per second by timer 0 */
 
 /* Valid frequencies for a timer with a 16-bit register and a clock speed of 1193182 Hz */
 
 #define MIN_FREQ 19             /**< @brief Lower frequencies would require an initial value higher than 65535 (max value for unsigned 16-bit integer) */
 #define MAX_FREQ TIMER_FREQ     /**< @brief Highest frequency is equal to the clock speed (initial value is 1) */
-
-/* Interrupt-related constants */
-
-#define INTERRUPTS_PER_SECOND 60 /**< @brief Default number of interrupts per second by the timer */
 
 /* I/O port addresses */
 

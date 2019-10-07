@@ -80,7 +80,7 @@ int(timer_test_int)(uint8_t time) {
       case HARDWARE:
         if (msg.m_notify.interrupts & BIT(bit_no)) {
           timer_int_handler();
-          if ((counter % INTERRUPTS_PER_SECOND) == 0) {
+          if ((counter % TIMER0_INTERRUPTS_PER_SECOND) == 0) {
             timer_print_elapsed_time();
             ++num_seconds;
           }
