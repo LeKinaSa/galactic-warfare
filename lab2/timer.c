@@ -13,6 +13,8 @@
 #define MASK_MODE 0x0E
 #define MASK_MODE_BSD 0x0F
 
+int hook_id = TIMER0_IRQ;
+
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   uint8_t status;
 
@@ -80,35 +82,26 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
 }
 
 int (timer_subscribe_int)(uint8_t *bit_no) {
-  if (bit_no == NULL) {
-    printf("Invalid arg: bit_no when trying to subscribe the irq_line.\n");
-    return 1;
-  }
-  // bit_no probably needs some treatment
-  int retv = sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, (int *) bit_no);
-  if (retv != OK) {
+  *bit_no = hook_id;
+
+  if (sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hook_id) == EINVAL) {
     printf("Error when calling sys_irqsetpolicy.\n");
     return 1;
   }
+  
   return 0;
 }
 
 int (timer_unsubscribe_int)() {
-  int *hook_id = 0; // Still not OK !!!!
-  if (hook_id == NULL) {
-    printf("Error when calling timer_unsubscribe_int.\n");
+  if (sys_irqrmpolicy(&hook_id) == EINVAL) {
+    printf("Error when calling sys_irqrmpolicy.\n");
     return 1;
   }
-  int res = sys_irqrmpolicy(hook_id);
-  if (res != OK) {
-    printf("Error when calling sys_irqrmpolicy.\n");
-  }
+
   return 0;
 }
 
 void (timer_int_handler)() {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
 }
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {
@@ -174,7 +167,7 @@ int (timer_display_conf)(uint8_t timer, uint8_t st,
       val.count_mode = 3;
     }
     else if ((TIMER_RATE_GEN == mode_bits) || (TIMER_RATE_GEN_ALT == mode_bits)) {
-      val.count_mode= 2;
+      val.count_mode = 2;
     }
     else if (TIMER_HW_ONESHOT == mode_bits) {
       val.count_mode = 1;
