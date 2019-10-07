@@ -17,6 +17,8 @@
 #define MIN_FREQ 19         /* Lower frequencies would require an initial value higher than 65535 (max value for unsigned 16-bit integer) */
 #define MAX_FREQ 1193182    /* Highest frequency is equal to the clock speed (initial value is 1) */
 
+#define INTERRUPTS_PER_SECOND 60 /* Number of interrupts per second by the timer */
+
 /* I/O port addresses */
 
 #define TIMER_0    0x40 /**< @brief Timer 0 count register */
@@ -69,7 +71,7 @@ These shouldn't be used to preserve compatibility with future Intel products */
 
 /* Bitmasks */
 
-#define MASK_MODE 0x0E        /* Mask to obtain the mode bits in the read-back command */
+#define MASK_MODE     0x0E    /* Mask to obtain the mode bits in the read-back command */
 #define MASK_MODE_BSD 0x0F    /* Mask to obtain the operating mode and counting base of the control word*/
 
 
