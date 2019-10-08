@@ -53,10 +53,9 @@
 #define TIMER_SW_STROBE  BIT(3)            /**< @brief Mode 4: software strobe */
 #define TIMER_HW_STROBE (BIT(3) | BIT(1))  /**< @brief Mode 5: hardware strobe */
 
-/* Operating modes 2 and 3 with bit 3 set to 1. 
-These shouldn't be used in order to preserve compatibility with future Intel products */
-#define TIMER_RATE_GEN_ALT (BIT(3) | TIMER_RATE_GEN)  /**< @brief Mode 2 (alt): rate generator */
-#define TIMER_SQR_WAVE_ALT (BIT(3) | TIMER_SQR_WAVE)  /**< @brief Mode 3 (alt): square wave generator */
+#define TIMER_MODE_SHIFT        1       /**< @brief Number of bits between bit 0 and mode bits */
+#define TIMER_MAX_MODE          5       /**< @brief Maximum mode value when following compatibility conventions */
+#define TIMER_MASK_ALT_MODES    0x03    /**< @brief Bitmask to conventionalize modes that don't follow compatibility conventions */
 
 /* Counting mode: bit 0 */
 
@@ -71,9 +70,9 @@ These shouldn't be used in order to preserve compatibility with future Intel pro
 
 /* Bitmasks */
 
-#define TIMER_MASK_MODE     0x0E    /**< @brief Mask to obtain the mode bits in the read-back command */
-#define TIMER_MASK_MODE_BCD 0x0F    /**< @brief Mask to obtain the operating mode and counting base of the control word */
-
+#define TIMER_MASK_INIT     0x30    /**< @brief Bitmask to obtain initialization mode bits */
+#define TIMER_MASK_MODE     0x0E    /**< @brief Bitmask to obtain the mode bits */
+#define TIMER_MASK_MODE_BCD 0x0F    /**< @brief Bitmask to obtain the operating mode and counting base bits */
 
 /**@}*/
 

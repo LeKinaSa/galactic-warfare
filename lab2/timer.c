@@ -76,6 +76,11 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
 }
 
 int (timer_subscribe_int)(uint8_t *bit_no) {
+  if (bit_no == NULL) {
+    printf("Error occurred: null pointer.\n");
+    return 1;
+  }
+
   *bit_no = hook_id;
 
   if (sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hook_id) != OK) {
@@ -100,6 +105,11 @@ void (timer_int_handler)() {
 }
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {
+  if (st == NULL) {
+    printf("Error occurred: null pointer.\n");
+    return 1;
+  }
+
   uint32_t ctrl_word = TIMER_RB_CMD | TIMER_RB_COUNT_ | TIMER_RB_SEL(timer);
 
   if (sys_outb(TIMER_CTRL, ctrl_word) == EINVAL) {
@@ -143,28 +153,15 @@ int (timer_display_conf)(uint8_t timer, uint8_t st,
     val.byte = st;
     break;
   case tsf_initial:
-    st = st & TIMER_LSB_MSB;
+    st = st & TIMER_MASK_INIT;
     val.in_mode = st >> TIMER_LSB_MSB_SHIFT;
     break;
   case tsf_mode:
-    if (TIMER_HW_STROBE == mode_bits) {
-      val.count_mode = 5;
+    mode_bits = mode_bits >> TIMER_MODE_SHIFT;
+    if (mode_bits > TIMER_MAX_MODE) {     // If greater than TIMER_MAX_MODE, compatibility conventions aren't being followed
+      mode_bits &= TIMER_MASK_ALT_MODES;  // Bitmask that conventionalizes mode_bits (X bits set to 0)
     }
-    else if (TIMER_SW_STROBE == mode_bits) {
-      val.count_mode = 4;
-    }
-    else if ((TIMER_SQR_WAVE == mode_bits) || (TIMER_SQR_WAVE_ALT == mode_bits)) {
-      val.count_mode = 3;
-    }
-    else if ((TIMER_RATE_GEN == mode_bits) || (TIMER_RATE_GEN_ALT == mode_bits)) {
-      val.count_mode = 2;
-    }
-    else if (TIMER_HW_ONESHOT == mode_bits) {
-      val.count_mode = 1;
-    }
-    else if (TIMER_INTERRUPT == mode_bits) {
-      val.count_mode = 0;
-    }
+    val.count_mode = mode_bits;
     break;
   case tsf_base:
     val.bcd = st & TIMER_BCD;
