@@ -34,6 +34,8 @@
 
 /* SCANCODES */
 
+#define KBD_BREAKCODE          BIT(7)    /* General breakcode */
+#define KBD_2_BYTES_CODE       0xE0      /* Most significant byte for a 2 bytes scancode */
 #define KBD_ESC_BREAKCODE      0x81      /* ESC breakcode */
 
 #endif /* _LCOM_I8042_H_ */
