@@ -21,6 +21,15 @@ int (kbd_subscribe_int)(uint8_t *bit_no) {
   return 0;
 }
 
+int (kbd_enable_int)() {
+  if (sys_irqenable(&hook_id) != OK) {
+    printf("Error when calling sys_irqenable.\n");
+    return 1;
+  }
+
+  return 0;
+}
+
 int (kbd_disable_int)() {
   if (sys_irqdisable(&hook_id) != OK) {
     printf("Error when calling sys_irqdisable.\n");
