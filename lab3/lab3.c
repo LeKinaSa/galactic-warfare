@@ -33,9 +33,13 @@ int main(int argc, char *argv[]) {
 }
 
 int(kbd_test_scan)() {
-  uint8_t bit_no = KBD_IRQ;
-  int scancode = 0;
-  
+  uint8_t bit_no = KBD_IRQ, scancode = 0;
+  uint8_t bytes[2];
+  int size = 1;
+  bool two_byte_scancode = false;
+
+  // check if keyboard is OK
+
   if (kbd_subscribe_int(&bit_no)) {
     printf("Error calling kbd_subscribe_int.\n");
     return 1;
@@ -53,7 +57,25 @@ int(kbd_test_scan)() {
       switch(_ENDPOINT_P(msg.m_source)) {
       case HARDWARE:
         if (msg.m_notify.interrupts & BIT(bit_no)) {
-          //handler
+          // -- IH --
+          // read status
+          // read output - 1 byte
+          // check error (parity | timeout) , timeout -> read 3-5 times -> discard
+          if (scancode == KBD_2_BYTES_CODE) {
+            bytes[0] = scancode;
+            two_byte_scancode = true;
+          }
+          else {
+            if (two_byte_scancode) {
+              bytes[1] = scancode;
+              size = 2;
+            }
+            else {
+              bytes[0] = scancode;
+              size = 1;
+            }
+            kbd_print_scancode(~(scancode & KBD_BREAKCODE), size, bytes);
+          }
         }
         break;
       default:
@@ -66,7 +88,7 @@ int(kbd_test_scan)() {
     printf("Error calling kbd_unsubscribe_int.\n");
     return 1;
   }
-  
+  //printf(cnt);
   return 0;
   
 }
