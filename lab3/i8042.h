@@ -3,7 +3,7 @@
 
 #include <lcom/lcf.h>
 
-#define KBD_IRQ 1
+#define KBD_IRQ   1     /* IRQ line for keyboard interrupts */
 
 /* PORTS */
 #define KBD_STATUS_REG           0x64                 /* Status Register Port */
@@ -31,5 +31,9 @@
 #define KBD_CHECK_INTERFACE    0xAB      /* Check KBC Interface */
 #define KBD_DISABLE_INTERFACE  0xAD      /* Disable KBD Interface */
 #define KBD_ENABLE_INTERFACE   0xAE      /* Enable KBD Interface */
+
+/* SCANCODES */
+
+#define KBD_ESC_BREAKCODE      0x81      /* ESC breakcode */
 
 #endif /* _LCOM_I8042_H_ */
