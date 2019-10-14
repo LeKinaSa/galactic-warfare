@@ -5,7 +5,10 @@
 
 #define KBD_IRQ   1     /* IRQ line for keyboard interrupts */
 
+#define KBD_TIMEOUT_MAX_ATTEMPTS  5
+
 /* PORTS */
+
 #define KBD_STATUS_REG           0x64                 /* Status Register Port */
 #define KBD_OUTPUT_BUF           0x60                 /* Output Buffer Port */
 #define KBD_INPUT_COMMANDS_BUF   KBD_STATUS_REG       /* Command Port */
@@ -34,7 +37,7 @@
 
 /* SCANCODES */
 
-#define KBD_BREAKCODE          BIT(7)    /* General breakcode */
+#define KBD_BREAKCODE          BIT(7)    /* Bit set to 1 for breakcodes, 0 for makecodes */
 #define KBD_2_BYTES_CODE       0xE0      /* Most significant byte for a 2 bytes scancode */
 #define KBD_ESC_BREAKCODE      0x81      /* ESC breakcode */
 

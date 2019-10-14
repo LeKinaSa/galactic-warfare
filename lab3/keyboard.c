@@ -2,8 +2,10 @@
 
 #include "keyboard.h"
 #include "i8042.h"
+#include "utils.h"
 
 int hook_id = KBD_IRQ;
+extern int scancode;
 
 int (kbd_subscribe_int)(uint8_t *bit_no) {
   if (bit_no == NULL) {
@@ -46,4 +48,29 @@ int (kbd_unsubscribe_int)() {
   }
 
   return 0;
+}
+
+void (kbc_ih)(void) {
+  uint8_t status, output;
+  int attempts = 0;
+
+  while (attempts < KBD_TIMEOUT_MAX_ATTEMPTS) {
+    if (util_sys_inb(KBD_STATUS_REG, &status)) {
+      printf("Error when reading from status register.\n");
+    }
+
+    if (status & KBD_OUT_BUF_FULL) {
+      if (util_sys_inb(KBD_OUTPUT_BUF, &output)) {
+        printf("Error when reading from output buffer.\n");
+      }
+      
+      if ((status & (KBD_PARITY_ERROR | KBD_TIMEOUT)) == 0) { // Output contains no errors
+        scancode = output;
+        break;
+      }
+      else if ((status & KBD_TIMEOUT) != 0) {
+        ++attempts;
+      }
+    }
+  }
 }

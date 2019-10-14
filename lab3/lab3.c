@@ -8,6 +8,8 @@
 #include "keyboard.h"
 #include "i8042.h"
 
+uint8_t scancode;
+
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
   lcf_set_language("EN-US");
@@ -33,12 +35,13 @@ int main(int argc, char *argv[]) {
 }
 
 int(kbd_test_scan)() {
-  uint8_t bit_no = KBD_IRQ, scancode = 0;
+  uint8_t bit_no = 0;
+
   uint8_t bytes[2];
   int size = 1;
-  bool two_byte_scancode = false;
+  bool is_makecode, two_byte_scancode = false;
 
-  // check if keyboard is OK
+  // TODO: check if keyboard is OK?
 
   if (kbd_subscribe_int(&bit_no)) {
     printf("Error calling kbd_subscribe_int.\n");
@@ -57,10 +60,8 @@ int(kbd_test_scan)() {
       switch(_ENDPOINT_P(msg.m_source)) {
       case HARDWARE:
         if (msg.m_notify.interrupts & BIT(bit_no)) {
-          // -- IH --
-          // read status
-          // read output - 1 byte
-          // check error (parity | timeout) , timeout -> read 3-5 times -> discard
+          kbc_ih();
+          
           if (scancode == KBD_2_BYTES_CODE) {
             bytes[0] = scancode;
             two_byte_scancode = true;
@@ -74,7 +75,11 @@ int(kbd_test_scan)() {
               bytes[0] = scancode;
               size = 1;
             }
-            kbd_print_scancode(~(scancode & KBD_BREAKCODE), size, bytes);
+
+            /* If scancode is breakcode, MSB is set to 1 */
+            is_makecode = (scancode & KBD_BREAKCODE) == 0;
+
+            kbd_print_scancode(is_makecode, size, bytes);
           }
         }
         break;
@@ -88,6 +93,7 @@ int(kbd_test_scan)() {
     printf("Error calling kbd_unsubscribe_int.\n");
     return 1;
   }
+
   //kbd_print_no_sysinb(cnt);
   return 0;
   
