@@ -5,6 +5,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "keyboard.h"
+#include "i8042.h"
+
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
   lcf_set_language("EN-US");
@@ -30,10 +33,42 @@ int main(int argc, char *argv[]) {
 }
 
 int(kbd_test_scan)() {
-  /* To be completed by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  uint8_t bit_no = KBD_IRQ;
+  int scancode = 0;
+  
+  if (kbd_subscribe_int(&bit_no)) {
+    printf("Error calling kbd_subscribe_int.\n");
+    return 1;
+  }
+  
+  int ipc_status;
+  message msg;
 
-  return 1;
+  while (scancode != KBD_ESC_BREAKCODE) {
+    if (driver_receive(ANY, &msg, &ipc_status)) { 
+      printf("Error when calling driver_receive.\n");
+      continue;
+    }
+    if (is_ipc_notify(ipc_status)) {
+      switch(_ENDPOINT_P(msg.m_source)) {
+      case HARDWARE:
+        if (msg.m_notify.interrupts & BIT(bit_no)) {
+          //handler
+        }
+        break;
+      default:
+        break;
+      }
+    }
+  }
+  
+  if (kbd_unsubscribe_int()) {
+    printf("Error calling kbd_unsubscribe_int.\n");
+    return 1;
+  }
+  
+  return 0;
+  
 }
 
 int(kbd_test_poll)() {
