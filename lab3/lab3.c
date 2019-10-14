@@ -88,7 +88,7 @@ int(kbd_test_scan)() {
     printf("Error calling kbd_unsubscribe_int.\n");
     return 1;
   }
-  //printf(cnt);
+  //kbd_print_no_sysinb(cnt);
   return 0;
   
 }
