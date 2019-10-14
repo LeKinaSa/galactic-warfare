@@ -4,5 +4,7 @@
 #include <lcom/lcf.h>
 
 int (kbd_subscribe_int)(uint8_t *bit_no);
+int (kbd_disable_int)();
+int (kbd_unsubscribe_int)();
 
 #endif /* __KEYBOARD_H */
