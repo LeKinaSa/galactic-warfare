@@ -9,6 +9,7 @@
 #include "i8042.h"
 
 uint8_t scancode;
+uint32_t cnt;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -35,6 +36,7 @@ int main(int argc, char *argv[]) {
 }
 
 int(kbd_test_scan)() {
+  cnt = 0;
   uint8_t bit_no = 0;
 
   uint8_t bytes[2];
@@ -94,7 +96,7 @@ int(kbd_test_scan)() {
     return 1;
   }
 
-  //kbd_print_no_sysinb(cnt);
+  kbd_print_no_sysinb(cnt);
   return 0;
   
 }
