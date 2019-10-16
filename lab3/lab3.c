@@ -102,18 +102,10 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
+  cnt = 0;
+
   // Check if keyboard is OK
   // notifications are off so we need to do this by polling (kbd_check_poll)
-
-  // Polling cicle
-  // Retrieve STATUS
-  // Verify OBF bit from status_byte
-  // if 1: retrieve data
-  // if 0: pass
-  // needs to have a sleep
-  // stop condition: ESC breakcode
-  //repor as interrupcoes
-  cnt = 0;
   
   uint8_t bytes[2];
   int size = 1;
@@ -149,9 +141,8 @@ int(kbd_test_poll)() {
         kbd_print_scancode(is_makecode, size, bytes);
       }
     }
-    sleep(3); // SLEEP_TIME_CONSTANT
+    sleep(KBD_TIME_BETWEEN_POL);
   }
-  
   
   // repor as interrupções
 
