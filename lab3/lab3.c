@@ -43,7 +43,7 @@ int(kbd_test_scan)() {
   int size = 1;
   bool is_makecode, two_byte_scancode = false;
 
-  // TODO: check if keyboard is OK?
+  // TODO: check if keyboard is OK? (kbd_check)
 
   if (kbd_subscribe_int(&bit_no)) {
     printf("Error calling kbd_subscribe_int.\n");
@@ -102,8 +102,16 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
-  /* To be completed by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  // Check if keyboard is OK
+  // notifications are off so we need to do this by polling (kbd_check_poll)
+
+  // Polling cicle
+  // Retrieve STATUS
+  // Verify OBF bit from status_byte
+  // if 1: retrieve data
+  // if 0: pass
+  // needs to have a sleep
+  // stop condition: ESC breakcode
 
   return 1;
 }
