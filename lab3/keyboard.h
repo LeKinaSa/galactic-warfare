@@ -8,4 +8,7 @@ int (kbd_enable_int)();
 int (kbd_disable_int)();
 int (kbd_unsubscribe_int)();
 
+uint8_t retrieve_status();
+uint8_t retrieve_output();
+
 #endif /* __KEYBOARD_H */

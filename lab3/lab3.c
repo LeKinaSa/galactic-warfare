@@ -112,8 +112,51 @@ int(kbd_test_poll)() {
   // if 0: pass
   // needs to have a sleep
   // stop condition: ESC breakcode
+  //repor as interrupcoes
+  cnt = 0;
+  
+  uint8_t bytes[2];
+  int size = 1;
+  bool is_makecode, two_byte_scancode = false;
+  uint8_t status;
 
-  return 1;
+  while (scancode != KBD_ESC_BREAKCODE) {
+    status = retrieve_status();
+    
+    if ((status & (KBD_TIMEOUT | KBD_PARITY_ERROR)) != 0) {
+      printf("Error when reading from status register.\n");
+    }
+    else if ((status & KBD_OUT_BUF_FULL)) {
+      scancode = retrieve_output();
+    
+      if (scancode == KBD_2_BYTES_CODE) {
+        bytes[0] = scancode;
+        two_byte_scancode = true;
+      }
+      else {
+        if (two_byte_scancode) {
+        bytes[1] = scancode;
+        size = 2;
+        }
+        else {
+          bytes[0] = scancode;
+          size = 1;
+        }
+
+        /* If scancode is breakcode, MSB is set to 1 */
+        is_makecode = (scancode & KBD_BREAKCODE) == 0;
+
+        kbd_print_scancode(is_makecode, size, bytes);
+      }
+    }
+    sleep(3); // SLEEP_TIME_CONSTANT
+  }
+  
+  
+  // repor as interrupções
+
+  kbd_print_no_sysinb(cnt);
+  return 0;
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {

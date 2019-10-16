@@ -74,3 +74,28 @@ void (kbc_ih)(void) {
     }
   }
 }
+
+
+uint8_t retrieve_status(void) {
+  uint8_t status;
+  int attempts = 0;
+
+  while (attempts < KBD_TIMEOUT_MAX_ATTEMPTS) {
+    if (util_sys_inb(KBD_STATUS_REG, &status)) {
+      printf("Error when reading from status register.\n");
+    }
+    if ((status & KBD_TIMEOUT) != 0) {
+      ++attempts;
+    }
+  }
+  return status;
+}
+
+uint8_t retrieve_output(void) {
+  uint8_t output;
+
+  if (util_sys_inb(KBD_OUTPUT_BUF, &output)) {
+      printf("Error when reading from output buffer.\n");
+  }
+  return output;
+}
