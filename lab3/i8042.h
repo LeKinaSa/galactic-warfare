@@ -43,6 +43,6 @@
 
 /* POLLING */
 
-#define KBD_TIME_BETWEEN_POL   20000   /* Time in microseconds to wait between two polling cicles */
+#define KBD_POLLING_INTERVAL   20000   /* Time in microseconds to wait between two polling cicles */
 
 #endif /* _LCOM_I8042_H_ */

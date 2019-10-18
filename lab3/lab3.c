@@ -9,7 +9,7 @@
 #include "i8042.h"
 
 uint8_t scancode;
-uint32_t cnt = 0;
+uint32_t sys_inb_cnt = 0;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 }
 
 int(kbd_test_scan)() {
-  cnt = 0;
+  sys_inb_cnt = 0;
   uint8_t bit_no = 0;
 
   uint8_t bytes[2];
@@ -46,7 +46,7 @@ int(kbd_test_scan)() {
   // TODO: check if keyboard is OK? (kbd_check)
 
   if (kbd_subscribe_int(&bit_no)) {
-    printf("Error calling kbd_subscribe_int.\n");
+    printf("Error when calling kbd_subscribe_int.\n");
     return 1;
   }
   
@@ -81,7 +81,9 @@ int(kbd_test_scan)() {
             /* If scancode is breakcode, MSB is set to 1 */
             is_makecode = (scancode & KBD_BREAKCODE) == 0;
 
-            kbd_print_scancode(is_makecode, size, bytes);
+            if (kbd_print_scancode(is_makecode, size, bytes)) {
+              printf("Error when calling kbd_print_scancode.\n");
+            }
           }
         }
         break;
@@ -92,12 +94,12 @@ int(kbd_test_scan)() {
   }
   
   if (kbd_unsubscribe_int()) {
-    printf("Error calling kbd_unsubscribe_int.\n");
+    printf("Error when calling kbd_unsubscribe_int.\n");
     return 1;
   }
   
-  if (kbd_print_no_sysinb(cnt)) {
-    printf("Error calling kbd_print_no_sysinb.\n");
+  if (kbd_print_no_sysinb(sys_inb_cnt)) {
+    printf("Error when calling kbd_print_no_sysinb.\n");
     return 1;
   }
 
@@ -106,7 +108,7 @@ int(kbd_test_scan)() {
 }
 
 int(kbd_test_poll)() {
-  cnt = 0;
+  sys_inb_cnt = 0;
 
   // Check if keyboard is OK
   // notifications are off so we need to do this by polling (kbd_check_poll)
@@ -117,12 +119,14 @@ int(kbd_test_poll)() {
   uint8_t status;
 
   while (scancode != KBD_ESC_BREAKCODE) {
-    kbd_retrieve_status(&status);
+    if (kbd_retrieve_status(&status)) {
+      printf("Error when calling kbd_retrieve_status.\n");
+    }
     
     if ((status & (KBD_TIMEOUT | KBD_PARITY_ERROR)) != 0) {
-      printf("Error when reading from status register.\n");
+      printf("Status register indicates keyboard timeout or parity error.\n");
     }
-    else if ((status & KBD_OUT_BUF_FULL)) {
+    else if (status & KBD_OUT_BUF_FULL) {
       if (kbd_retrieve_output(&scancode)) {
         printf("Error when retrieving keyboard output.\n");
       }
@@ -148,12 +152,12 @@ int(kbd_test_poll)() {
       }
     }
     
-    tickdelay(micros_to_ticks(KBD_TIME_BETWEEN_POL));
+    tickdelay(micros_to_ticks(KBD_POLLING_INTERVAL));
   }
   
   // repor as interrupções
 
-  kbd_print_no_sysinb(cnt);
+  kbd_print_no_sysinb(sys_inb_cnt);
   return 0;
 }
 

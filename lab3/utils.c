@@ -2,7 +2,9 @@
 
 #include "utils.h"
 
-extern uint32_t cnt;
+#ifdef LAB3
+extern uint32_t sys_inb_cnt;
+#endif
 
 int (util_sys_inb)(int port, uint8_t *value) {
   if (value == NULL) {
@@ -18,7 +20,7 @@ int (util_sys_inb)(int port, uint8_t *value) {
   }
 
   #ifdef LAB3
-  cnt++;
+  sys_inb_cnt++;
   #endif
 
   *value = (uint8_t)word;

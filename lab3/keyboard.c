@@ -93,7 +93,7 @@ int kbd_retrieve_status(uint8_t *status) {
     }
   }
 
-  printf("Couldn't retrieve status. Maximum no. of attempts reached.\n");
+  printf("Couldn't retrieve status. Maximum num. of attempts reached.\n");
   return 1;
 }
 
