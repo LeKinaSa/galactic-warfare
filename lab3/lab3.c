@@ -155,7 +155,36 @@ int(kbd_test_poll)() {
     tickdelay(micros_to_ticks(KBD_POLLING_INTERVAL));
   }
   
-  // repor as interrupções
+  // TODO: maybe improve this section
+
+  uint8_t command_byte = 0;
+
+  // Issue first KBC command
+  if (kbd_write_kbc_command(KBC_READ_COMMAND_BYTE)) {
+    printf("Error when calling kbd_write_kbc_command.\n");
+    return 1;
+  }
+
+  // Get return value from KBC command
+  if (kbd_retrieve_output(&command_byte)) {
+    printf("Error when calling kbd_retrieve_output.\n");
+    return 1;
+  }
+
+  // Enable keyboard interrupts, preserve rest of command byte
+  command_byte |= CMD_BYTE_ENABLE_KBD_INT;
+
+  // Issue second KBC command
+  if (kbd_write_kbc_command(KBC_WRITE_COMMAND_BYTE)) {
+    printf("Error when calling kbd_write_kbc_command.\n");
+    return 1;
+  }
+
+  // Write new command byte
+  if (kbd_write_kbc_arg(command_byte)) {
+    printf("Error when calling kbd_write_kbc_arg.\n");
+    return 1;
+  }
 
   kbd_print_no_sysinb(sys_inb_cnt);
   return 0;

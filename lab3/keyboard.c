@@ -105,3 +105,69 @@ int kbd_retrieve_output(uint8_t *output) {
 
   return 0;
 }
+
+int kbd_write_kbc_command(uint8_t command) {
+  uint8_t status;
+  int wait_time = 0; // Current wait time in microseconds */
+
+  while (wait_time < KBC_COMMAND_WAIT_TIME) {
+    if (kbd_retrieve_status(&status)) {
+      printf("Error when calling kbd_retrieve_status.\n");
+      return 1;
+    }
+
+    // First we must check if there are any errors and if the input buffer is full
+    if ((status & (KBD_TIMEOUT | KBD_PARITY_ERROR)) != 0) {
+      printf("Status register indicates keyboard timeout or parity error.\n");
+      return 1;
+    }
+
+    if ((status & KBD_IN_BUF_FULL) == 0) {
+      // Input buffer is not full, we can write the KBC command
+      if (sys_outb(KBD_INPUT_COMMANDS_BUF, command)) {
+        printf("Error when calling sys_outb: couldn't write KBC command.\n");
+        return 1;
+      }
+      return 0;
+    }
+
+    wait_time += KBD_POLLING_INTERVAL;
+    micro_delay(KBD_POLLING_INTERVAL);
+  }
+
+  printf("Timeout occurred: took too long to write command.\n");
+  return 1;
+}
+
+int kbd_write_kbc_arg(uint8_t arg) {
+  uint8_t status;
+  int wait_time = 0; // Current wait time in microseconds */
+
+  while (wait_time < KBC_COMMAND_WAIT_TIME) {
+    if (kbd_retrieve_status(&status)) {
+      printf("Error when calling kbd_retrieve_status.\n");
+      return 1;
+    }
+
+    // First we must check if there are any errors and if the input buffer is full
+    if ((status & (KBD_TIMEOUT | KBD_PARITY_ERROR)) != 0) {
+      printf("Status register indicates keyboard timeout or parity error.\n");
+      return 1;
+    }
+
+    if ((status & KBD_IN_BUF_FULL) == 0) {
+      // Input buffer is not full, we can write the argument
+      if (sys_outb(KBD_INPUT_ARGS_BUF, arg)) {
+        printf("Error when calling sys_outb: couldn't write argument.\n");
+        return 1;
+      }
+      return 0;
+    }
+
+    wait_time += KBD_POLLING_INTERVAL;
+    micro_delay(KBD_POLLING_INTERVAL);
+  }
+
+  printf("Timeout occurred: took too long to write argument.\n");
+  return 1;
+}
