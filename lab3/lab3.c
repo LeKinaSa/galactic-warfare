@@ -64,7 +64,7 @@ int(kbd_test_scan)() {
         if (msg.m_notify.interrupts & BIT(bit_no)) {
           kbc_ih();
           
-          if (scancode == KBD_2_BYTES_CODE) {
+          if (scancode == KBD_TWO_BYTE_CODE) {
             bytes[0] = scancode;
             two_byte_scancode = true;
           }
@@ -117,15 +117,17 @@ int(kbd_test_poll)() {
   uint8_t status;
 
   while (scancode != KBD_ESC_BREAKCODE) {
-    status = retrieve_status();
+    kbd_retrieve_status(&status);
     
     if ((status & (KBD_TIMEOUT | KBD_PARITY_ERROR)) != 0) {
       printf("Error when reading from status register.\n");
     }
     else if ((status & KBD_OUT_BUF_FULL)) {
-      scancode = retrieve_output();
+      if (kbd_retrieve_output(&scancode)) {
+        printf("Error when retrieving keyboard output.\n");
+      }
     
-      if (scancode == KBD_2_BYTES_CODE) {
+      if (scancode == KBD_TWO_BYTE_CODE) {
         bytes[0] = scancode;
         two_byte_scancode = true;
       }
@@ -145,7 +147,8 @@ int(kbd_test_poll)() {
         kbd_print_scancode(is_makecode, size, bytes);
       }
     }
-    sleep(KBD_TIME_BETWEEN_POL);
+    
+    tickdelay(micros_to_ticks(KBD_TIME_BETWEEN_POL));
   }
   
   // repor as interrupções

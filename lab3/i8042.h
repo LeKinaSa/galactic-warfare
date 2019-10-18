@@ -38,10 +38,11 @@
 /* SCANCODES */
 
 #define KBD_BREAKCODE          BIT(7)    /* Bit set to 1 for breakcodes, 0 for makecodes */
-#define KBD_2_BYTES_CODE       0xE0      /* Most significant byte for a 2 bytes scancode */
+#define KBD_TWO_BYTE_CODE      0xE0      /* Most significant byte for a two byte scancode */
 #define KBD_ESC_BREAKCODE      0x81      /* ESC breakcode */
 
 /* POLLING */
-#define KBD_TIME_BETWEEN_POL   3         /* Time to wait between two polling cicles */
+
+#define KBD_TIME_BETWEEN_POL   20000   /* Time in microseconds to wait between two polling cicles */
 
 #endif /* _LCOM_I8042_H_ */
