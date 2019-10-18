@@ -10,4 +10,5 @@
     "lab2.h": "c",
     "lcf.h": "c"
   },
+  "C_Cpp.dimInactiveRegions": true,
 }

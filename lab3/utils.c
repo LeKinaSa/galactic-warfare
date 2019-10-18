@@ -17,10 +17,10 @@ int (util_sys_inb)(int port, uint8_t *value) {
     return 1;
   }
 
-  *value = (uint8_t)word;
-  return 0;
-
   #ifdef LAB3
   cnt++;
   #endif
+
+  *value = (uint8_t)word;
+  return 0;
 }
