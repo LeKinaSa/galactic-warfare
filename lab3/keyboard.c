@@ -171,3 +171,51 @@ int kbd_write_kbc_arg(uint8_t arg) {
   printf("Timeout occurred: took too long to write argument.\n");
   return 1;
 }
+
+
+int kbd_check() {
+  uint8_t response = 0x00;
+  bool error = false, unable_to_write_command = false;
+
+  // Disable Keyboard Interruptions
+  if (kbd_disable_int()) {
+    error = true;
+  }
+
+  // Disable Keyboard Output
+  if (kbd_write_kbc_command(KBC_DISABLE_INTERFACE)) {
+    error = true;
+  }
+
+  // Write the command to the KBC
+  if (kbd_write_kbc_command(KBC_CHECK_SELF)) {
+    error = true;
+  }
+  // Read the answer from the KBC
+  if (!unable_to_write_command) {
+    //kbd_read_kbc_response(response);
+  }
+
+  // Enable Keyboard Output
+  if (kbd_write_kbc_command(KBC_ENABLE_INTERFACE)) {
+    error = true;
+  }
+
+  // Enable Keyboard Interruptions
+  if (kbd_enable_int()) {
+    error = true;
+  }
+
+  if (error) {
+    return 1;
+  }
+  
+  if (response != KBC_CHECK_OK) {
+    return 1;
+  }
+  return 0;
+}
+
+int kbd_check_poll() {
+  return 0;
+}

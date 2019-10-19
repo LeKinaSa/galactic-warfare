@@ -43,12 +43,11 @@ int(kbd_test_scan)() {
   int size = 1;
   bool is_makecode, two_byte_scancode = false;
 
-  // TODO: check if keyboard is OK? (kbd_check)
-
   if (kbd_subscribe_int(&bit_no)) {
     printf("Error when calling kbd_subscribe_int.\n");
     return 1;
   }
+  //kbd_check();
   
   int ipc_status;
   message msg;
@@ -111,8 +110,9 @@ int(kbd_test_poll)() {
   sys_inb_cnt = 0;
 
   // Check if keyboard is OK
-  // notifications are off so we need to do this by polling (kbd_check_poll)
-  
+  // notifications are off so we need to do this by polling
+  //kbd_check_poll();
+
   uint8_t bytes[2];
   int size = 1;
   bool is_makecode, two_byte_scancode = false;
