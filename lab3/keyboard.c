@@ -172,37 +172,78 @@ int kbd_write_kbc_arg(uint8_t arg) {
   return 1;
 }
 
+int kbc_read_kbc_response(uint8_t *answer) {
+  int attempts = 0;
+  uint8_t status;
+
+  if (answer == NULL) {
+    printf("Error occurred: null pointer.\n");
+    return 1;
+  }
+  while (attempts < KBD_TIMEOUT_MAX_ATTEMPTS) {
+    if (util_sys_inb(KBD_STATUS_REG, &status)) {
+      printf("Error when reading from status register.\n");
+      return 1;
+    }
+    if ((status & KBD_TIMEOUT) != 0) {
+      ++attempts;
+    }
+    else if ((status & KBD_OUT_BUF_FULL) != 0) {
+      if ((status & KBD_PARITY_ERROR) != 0) {
+        printf("Status register indicates parity error.\n");
+        return 1;
+      }
+      if (kbd_retrieve_output(answer)) {
+        printf("Error when calling kbd_retrieve_output.\n");
+        return 1;
+      }
+      return 0;
+    }
+  }
+  printf("Couldn't retrieve status. Maximum num. of attempts reached.\n");
+  return 1;
+}
+
 
 int kbd_check() {
-  uint8_t response = 0x00;
+  uint8_t answer = KBC_CHECK_ERROR;
   bool error = false, unable_to_write_command = false;
-
+  
   // Disable Keyboard Interruptions
   if (kbd_disable_int()) {
+    printf("Error when calling kbd_disable_int.\n");
     error = true;
   }
-
+  
   // Disable Keyboard Output
   if (kbd_write_kbc_command(KBC_DISABLE_INTERFACE)) {
+    printf("Error when calling kbd_write_kbc_command.\n");
     error = true;
   }
-
+  
   // Write the command to the KBC
   if (kbd_write_kbc_command(KBC_CHECK_SELF)) {
+    printf("Error when calling kbd_write_kbc_command.\n");
     error = true;
   }
+  
   // Read the answer from the KBC
   if (!unable_to_write_command) {
-    //kbd_read_kbc_response(response);
+    if (kbc_read_kbc_response(&answer)) {
+      printf("Error when calling kbc_read_kbc_response.\n");
+      answer = KBC_CHECK_ERROR;
+    }
   }
-
+  
   // Enable Keyboard Output
   if (kbd_write_kbc_command(KBC_ENABLE_INTERFACE)) {
+    printf("Error when calling kbd_write_kbc_command.\n");
     error = true;
   }
-
+  
   // Enable Keyboard Interruptions
   if (kbd_enable_int()) {
+    printf("Error when calling kbd_enable_int.\n");
     error = true;
   }
 
@@ -210,7 +251,7 @@ int kbd_check() {
     return 1;
   }
   
-  if (response != KBC_CHECK_OK) {
+  if (answer != KBC_CHECK_OK) {
     return 1;
   }
   return 0;

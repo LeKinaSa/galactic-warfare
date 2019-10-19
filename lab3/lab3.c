@@ -47,7 +47,11 @@ int(kbd_test_scan)() {
     printf("Error when calling kbd_subscribe_int.\n");
     return 1;
   }
-  //kbd_check();
+  
+  if (kbd_check()) {
+    printf("Error when calling kbd_check.\n");
+    return 1;
+  }
   
   int ipc_status;
   message msg;
