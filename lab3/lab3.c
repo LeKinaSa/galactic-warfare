@@ -152,7 +152,9 @@ int(kbd_test_poll)() {
         /* If scancode is breakcode, MSB is set to 1 */
         is_makecode = (scancode & KBD_BREAKCODE) == 0;
 
-        kbd_print_scancode(is_makecode, size, bytes);
+        if (kbd_print_scancode(is_makecode, size, bytes)) {
+          printf("Error when calling kbd_print_scancode.\n");
+        }
       }
     }
     
