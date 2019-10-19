@@ -13,7 +13,7 @@ int kbd_retrieve_output(uint8_t *output);     /* Retrieves output (scancodes or 
 int kbd_write_kbc_command(uint8_t command);   /* Writes a KBC command to the 0x64 port */
 int kbd_write_kbc_arg(uint8_t arg);           /* Writes an argument for a KBC command to the 0x60 port */
 
-int kbd_check();                              /* Self check on KBC */
-int kbd_check_poll();                         /* Self check on KBC without interruptions */
+int kbd_check(uint8_t *output, bool *useful_output);       /* Self check on KBC */
+int kbd_check_poll(uint8_t *output, bool *useful_output);  /* Self check on KBC without interruptions */
 
 #endif /* __KEYBOARD_H */

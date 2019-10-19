@@ -205,9 +205,8 @@ int kbc_read_kbc_response(uint8_t *answer) {
 }
 
 
-int kbd_check() {
-  uint8_t answer = KBC_CHECK_ERROR;
-  bool error = false, unable_to_write_command = false;
+int kbd_check(uint8_t *output, bool *useful_output) {
+  bool error = false;
   
   // Disable Keyboard Interruptions
   if (kbd_disable_int()) {
@@ -215,29 +214,8 @@ int kbd_check() {
     error = true;
   }
   
-  // Disable Keyboard Output
-  if (kbd_write_kbc_command(KBC_DISABLE_INTERFACE)) {
-    printf("Error when calling kbd_write_kbc_command.\n");
-    error = true;
-  }
-  
-  // Write the command to the KBC
-  if (kbd_write_kbc_command(KBC_CHECK_SELF)) {
-    printf("Error when calling kbd_write_kbc_command.\n");
-    error = true;
-  }
-  
-  // Read the answer from the KBC
-  if (!unable_to_write_command) {
-    if (kbc_read_kbc_response(&answer)) {
-      printf("Error when calling kbc_read_kbc_response.\n");
-      answer = KBC_CHECK_ERROR;
-    }
-  }
-  
-  // Enable Keyboard Output
-  if (kbd_write_kbc_command(KBC_ENABLE_INTERFACE)) {
-    printf("Error when calling kbd_write_kbc_command.\n");
+  // Without Interruptions, we need to do Polling
+  if (kbd_check_poll(output, useful_output)) {
     error = true;
   }
   
@@ -250,13 +228,67 @@ int kbd_check() {
   if (error) {
     return 1;
   }
-  
-  if (answer != KBC_CHECK_OK) {
-    return 1;
-  }
   return 0;
 }
 
-int kbd_check_poll() {
+int kbd_check_poll(uint8_t *output, bool *useful_output) {
+  uint8_t answer = KBC_CHECK_ERROR, status = 0, temp_output = 0;
+  bool error = false, unable_to_write_command = false;
+  *useful_output = false;
+
+  // Disable Keyboard Output
+  if (kbd_write_kbc_command(KBC_DISABLE_INTERFACE)) {
+    printf("Error when calling kbd_write_kbc_command.\n");
+    error = true;
+  }
+
+  // Get the Status of the Output Buffer
+  if (kbd_retrieve_status(&status)) {
+    printf("Error when calling kbd_retrieve_status.\n");
+    error = true;
+  }
+
+  // If Output Buffer is Full, Retrieve the Output
+  if ((status & KBD_OUT_BUF_FULL) != 0) {
+    if ((status & (KBD_PARITY_ERROR | KBD_TIMEOUT | KBD_MOUSE_DATA)) != 0) {
+      error = true;
+    }
+    else if (kbd_retrieve_output(&temp_output)) {
+      printf("Error when calling kbd_retrieve_output.\n");
+      error = true;
+    }
+    else {
+      *output = temp_output;
+      *useful_output = true;
+    }
+  }
+
+  // Write the command to the KBC
+  if (kbd_write_kbc_command(KBC_CHECK_SELF)) {
+    printf("Error when calling kbd_write_kbc_command.\n");
+    unable_to_write_command = true;
+    error = true;
+  }
+
+  // Read the answer from the KBC
+  if (!unable_to_write_command) {
+    if (kbc_read_kbc_response(&answer)) {
+      printf("Error when calling kbc_read_kbc_response.\n");
+      answer = KBC_CHECK_ERROR;
+    }
+  }
+
+  // Enable Keyboard Output
+  if (kbd_write_kbc_command(KBC_ENABLE_INTERFACE)) {
+    printf("Error when calling kbd_write_kbc_command.\n");
+    error = true;
+  }
+
+  if (error) {
+    return 1;
+  }
+  if (answer != KBC_CHECK_OK) {
+    return 1;
+  }
   return 0;
 }

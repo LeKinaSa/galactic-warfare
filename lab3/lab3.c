@@ -38,6 +38,7 @@ int main(int argc, char *argv[]) {
 int(kbd_test_scan)() {
   sys_inb_cnt = 0;
   uint8_t bit_no = 0;
+  bool useful_output = false;
 
   uint8_t bytes[2];
   int size = 1;
@@ -48,13 +49,37 @@ int(kbd_test_scan)() {
     return 1;
   }
   
-  if (kbd_check()) {
+  if (kbd_check(&scancode, &useful_output)) {
     printf("Error when calling kbd_check.\n");
     return 1;
   }
   
   int ipc_status;
   message msg;
+
+  if (useful_output) {
+    if (scancode == KBD_TWO_BYTE_CODE) {
+      bytes[0] = scancode;
+      two_byte_scancode = true;
+    }
+    else {
+      if (two_byte_scancode) {
+        bytes[1] = scancode;
+        size = 2;
+      }
+      else {
+        bytes[0] = scancode;
+        size = 1;
+      }
+
+      /* If scancode is breakcode, MSB is set to 1 */
+      is_makecode = (scancode & KBD_BREAKCODE) == 0;
+
+      if (kbd_print_scancode(is_makecode, size, bytes)) {
+        printf("Error when calling kbd_print_scancode.\n");
+      }
+    }
+  }
 
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) { 
@@ -73,6 +98,7 @@ int(kbd_test_scan)() {
           }
           else {
             if (two_byte_scancode) {
+
               bytes[1] = scancode;
               size = 2;
             }
@@ -112,16 +138,41 @@ int(kbd_test_scan)() {
 
 int(kbd_test_poll)() {
   sys_inb_cnt = 0;
-
-  // Check if keyboard is OK
-  // notifications are off so we need to do this by polling
-  //kbd_check_poll();
+  bool useful_output = false;
 
   uint8_t bytes[2];
   int size = 1;
   bool is_makecode, two_byte_scancode = false;
   uint8_t status;
+  
+  if (kbd_check_poll(&scancode, &useful_output)) {
+    printf("Error when calling kbd_test_poll.\n");
+  }
+  
+  if (useful_output) {
+    if (scancode == KBD_TWO_BYTE_CODE) {
+      bytes[0] = scancode;
+      two_byte_scancode = true;
+    }
+    else {
+      if (two_byte_scancode) {
+        bytes[1] = scancode;
+        size = 2;
+      }
+      else {
+        bytes[0] = scancode;
+        size = 1;
+      }
 
+      /* If scancode is breakcode, MSB is set to 1 */
+      is_makecode = (scancode & KBD_BREAKCODE) == 0;
+
+      if (kbd_print_scancode(is_makecode, size, bytes)) {
+        printf("Error when calling kbd_print_scancode.\n");
+      }
+    }
+  }
+  
   while (scancode != KBD_ESC_BREAKCODE) {
     if (kbd_retrieve_status(&status)) {
       printf("Error when calling kbd_retrieve_status.\n");
@@ -130,7 +181,7 @@ int(kbd_test_poll)() {
     if ((status & (KBD_TIMEOUT | KBD_PARITY_ERROR)) != 0) {
       printf("Status register indicates keyboard timeout or parity error.\n");
     }
-    else if (status & KBD_OUT_BUF_FULL) {
+    else if ((status & KBD_OUT_BUF_FULL) != 0) {
       if (kbd_retrieve_output(&scancode)) {
         printf("Error when retrieving keyboard output.\n");
       }
