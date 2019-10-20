@@ -248,7 +248,12 @@ int(kbd_test_poll)() {
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
-  /* To be completed by the students */
+  // subscribe (both kbd and timer)
+  // check_kbd
+  // loop -> in the class powerpoint
+  // - condições de saída: ESC_BREAKCODE ou time_between_interrupts > n
+  // unsubscribe (both kbd and timer)
+
   printf("%s is not yet implemented!\n", __func__);
 
   return 1;
