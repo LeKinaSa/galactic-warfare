@@ -3,6 +3,11 @@
 #include "kbc.h"
 
 int kbc_read_status(uint8_t *status) {
+  if (status == NULL) {
+    printf("Error occurred: null pointer.\n");
+    return 1;
+  }
+
   int attempts = 0;
 
   while (attempts < KBD_TIMEOUT_MAX_ATTEMPTS) {

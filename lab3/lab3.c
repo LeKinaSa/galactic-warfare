@@ -169,14 +169,14 @@ int(kbd_test_poll)() {
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
-  uint8_t timer_no = TIMER0_IRQ, kbd_no = KBD_IRQ;
+  uint8_t timer_bit_no = 0, kbd_bit_no = 0;
 
-  if (timer_subscribe_int(&timer_no)) {
+  if (timer_subscribe_int(&timer_bit_no)) {
     printf("Error when calling timer_subscribe_int.\n");
     return 1;
   }
   
-  if (kbd_subscribe_int(&kbd_no)) {
+  if (kbd_subscribe_int(&kbd_bit_no)) {
     printf("Error when calling kbd_subscribe_int. Attempting to unsubscribe timer interrupts.\n");
 
     if (timer_unsubscribe_int()) {   /* Tries to unsubscribe timer interrupts before returning */
@@ -189,7 +189,8 @@ int(kbd_test_timed_scan)(uint8_t n) {
   int ipc_status;
   message msg;
 
-  uint8_t idle_time = 0, bytes[2];
+  uint8_t idle_time = 0;    /* Amount of seconds that the keyboard has been inactive */
+  uint8_t bytes[2];
   int size = 1;
   bool is_makecode, two_byte_scancode = false;
   counter = 0;
@@ -202,7 +203,7 @@ int(kbd_test_timed_scan)(uint8_t n) {
     if (is_ipc_notify(ipc_status)) {
       switch(_ENDPOINT_P(msg.m_source)) {
       case HARDWARE:
-        if (msg.m_notify.interrupts & BIT(kbd_no)) {
+        if (msg.m_notify.interrupts & BIT(kbd_bit_no)) {    /* Keyboard interrupt */
           kbc_ih();
           idle_time = 0;
           counter = 0;
@@ -229,8 +230,9 @@ int(kbd_test_timed_scan)(uint8_t n) {
             }
           }
         }
-        if (msg.m_notify.interrupts & BIT(timer_no)) {
+        if (msg.m_notify.interrupts & BIT(timer_bit_no)) {    /* Timer interrupt */
           timer_int_handler();
+          
           if (counter == TIMER0_INTERRUPTS_PER_SECOND) {
             counter = 0;
             idle_time++;
