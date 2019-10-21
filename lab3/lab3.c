@@ -7,6 +7,7 @@
 
 #include "keyboard.h"
 #include "i8042.h"
+#include "kbc.h"
 
 uint8_t scancode;
 uint32_t sys_inb_cnt = 0;
@@ -38,48 +39,18 @@ int main(int argc, char *argv[]) {
 int(kbd_test_scan)() {
   sys_inb_cnt = 0;
   uint8_t bit_no = 0;
-  bool useful_output = false;
-
-  uint8_t bytes[2];
-  int size = 1;
-  bool is_makecode, two_byte_scancode = false;
 
   if (kbd_subscribe_int(&bit_no)) {
     printf("Error when calling kbd_subscribe_int.\n");
     return 1;
   }
-  
-  if (kbd_check(&scancode, &useful_output)) {
-    printf("Error when calling kbd_check.\n");
-    return 1;
-  }
-  
+
+  uint8_t bytes[2];
+  int size = 1;
+  bool is_makecode, two_byte_scancode = false;
+
   int ipc_status;
   message msg;
-
-  if (useful_output) {
-    if (scancode == KBD_TWO_BYTE_CODE) {
-      bytes[0] = scancode;
-      two_byte_scancode = true;
-    }
-    else {
-      if (two_byte_scancode) {
-        bytes[1] = scancode;
-        size = 2;
-      }
-      else {
-        bytes[0] = scancode;
-        size = 1;
-      }
-
-      /* If scancode is breakcode, MSB is set to 1 */
-      is_makecode = (scancode & KBD_BREAKCODE) == 0;
-
-      if (kbd_print_scancode(is_makecode, size, bytes)) {
-        printf("Error when calling kbd_print_scancode.\n");
-      }
-    }
-  }
 
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) { 
@@ -133,49 +104,19 @@ int(kbd_test_scan)() {
   }
 
   return 0;
-  
 }
 
 int(kbd_test_poll)() {
   sys_inb_cnt = 0;
-  bool useful_output = false;
 
   uint8_t bytes[2];
   int size = 1;
   bool is_makecode, two_byte_scancode = false;
   uint8_t status;
   
-  if (kbd_check_poll(&scancode, &useful_output)) {
-    printf("Error when calling kbd_test_poll.\n");
-  }
-  
-  if (useful_output) {
-    if (scancode == KBD_TWO_BYTE_CODE) {
-      bytes[0] = scancode;
-      two_byte_scancode = true;
-    }
-    else {
-      if (two_byte_scancode) {
-        bytes[1] = scancode;
-        size = 2;
-      }
-      else {
-        bytes[0] = scancode;
-        size = 1;
-      }
-
-      /* If scancode is breakcode, MSB is set to 1 */
-      is_makecode = (scancode & KBD_BREAKCODE) == 0;
-
-      if (kbd_print_scancode(is_makecode, size, bytes)) {
-        printf("Error when calling kbd_print_scancode.\n");
-      }
-    }
-  }
-  
   while (scancode != KBD_ESC_BREAKCODE) {
-    if (kbd_retrieve_status(&status)) {
-      printf("Error when calling kbd_retrieve_status.\n");
+    if (kbc_read_status(&status)) {
+      printf("Error when calling kbc_read_status.\n");
     }
     
     if ((status & (KBD_TIMEOUT | KBD_PARITY_ERROR)) != 0) {
@@ -211,35 +152,9 @@ int(kbd_test_poll)() {
     
     tickdelay(micros_to_ticks(KBD_POLLING_INTERVAL));
   }
-  
-  // TODO: maybe improve this section
 
-  uint8_t command_byte = 0;
-
-  // Issue first KBC command
-  if (kbd_write_kbc_command(KBC_READ_COMMAND_BYTE)) {
-    printf("Error when calling kbd_write_kbc_command.\n");
-    return 1;
-  }
-
-  // Get return value from KBC command
-  if (kbd_retrieve_output(&command_byte)) {
-    printf("Error when calling kbd_retrieve_output.\n");
-    return 1;
-  }
-
-  // Enable keyboard interrupts, preserve rest of command byte
-  command_byte |= CMD_BYTE_ENABLE_KBD_INT;
-
-  // Issue second KBC command
-  if (kbd_write_kbc_command(KBC_WRITE_COMMAND_BYTE)) {
-    printf("Error when calling kbd_write_kbc_command.\n");
-    return 1;
-  }
-
-  // Write new command byte
-  if (kbd_write_kbc_arg(command_byte)) {
-    printf("Error when calling kbd_write_kbc_arg.\n");
+  if (kbd_reenable_int()) {
+    printf("Error calling kbd_reenable_int.\n");
     return 1;
   }
 

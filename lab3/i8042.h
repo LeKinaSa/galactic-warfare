@@ -33,11 +33,6 @@
 #define KBC_DISABLE_INTERFACE  0xAD      /* Disable KBD Interface */
 #define KBC_ENABLE_INTERFACE   0xAE      /* Enable KBD Interface */
 
-/* KEYBOARD KBC ANSWERS */
-
-#define KBC_CHECK_OK           0x55      /* Answer to Check KBC -  OK   */
-#define KBC_CHECK_ERROR        0xFC      /* Answer to Check KBC - ERROR */
-
 /* COMMAND BYTE */
 #define CMD_BYTE_DISABLE_MOUSE      BIT(5)    /* Bit set to 1 if mouse is disabled */
 #define CMD_BYTE_DISABLE_KBD        BIT(4)    /* Bit set to 1 if keyboard interface is disabled */
