@@ -1,6 +1,7 @@
 #include <lcom/lcf.h>
 
 #include <lcom/lab3.h>
+#include <lcom/timer.h>
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -11,6 +12,7 @@
 #include "kbc.h"
 
 uint8_t scancode;
+int counter = 0;    /* Counter for timer 0 interrupt handler */
 uint32_t sys_inb_cnt = 0;
 
 int main(int argc, char *argv[]) {
@@ -159,7 +161,11 @@ int(kbd_test_poll)() {
     return 1;
   }
 
-  kbd_print_no_sysinb(sys_inb_cnt);
+  if (kbd_print_no_sysinb(sys_inb_cnt)) {
+    printf("Error when calling kbd_print_no_sysinb.\n");
+    return 1;
+  }
+  
   return 0;
 }
 
@@ -181,8 +187,9 @@ int(kbd_test_timed_scan)(uint8_t n) {
   uint8_t idle_time = 0, bytes[2];
   int size = 1;
   bool is_makecode, two_byte_scancode = false;
+  counter = 0;
 
-  while ((scancode != KBD_ESC_BREAKCODE) || (idle_time > n)) {
+  while ((scancode != KBD_ESC_BREAKCODE) && (idle_time < n)) {
     if (driver_receive(ANY, &msg, &ipc_status)) { 
       printf("Error when calling driver_receive.\n");
       continue;
@@ -192,7 +199,9 @@ int(kbd_test_timed_scan)(uint8_t n) {
       case HARDWARE:
         if (msg.m_notify.interrupts & BIT(kbd_no)) {
           kbc_ih();
-          
+          idle_time = 0;
+          counter = 0;
+
           if (scancode == KBD_TWO_BYTE_CODE) {
             bytes[0] = scancode;
             two_byte_scancode = true;
@@ -217,6 +226,10 @@ int(kbd_test_timed_scan)(uint8_t n) {
         }
         if (msg.m_notify.interrupts & BIT(timer_no)) {
           timer_int_handler();
+          if (counter == TIMER0_INTERRUPTS_PER_SECOND) {
+            counter = 0;
+            idle_time++;
+          }
         }
         break;
       default:
