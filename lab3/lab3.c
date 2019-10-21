@@ -72,7 +72,6 @@ int(kbd_test_scan)() {
           }
           else {
             if (two_byte_scancode) {
-
               bytes[1] = scancode;
               size = 2;
             }
@@ -178,12 +177,18 @@ int(kbd_test_timed_scan)(uint8_t n) {
   }
   
   if (kbd_subscribe_int(&kbd_no)) {
-    printf("Error when calling kbd_subscribe_int.\n");
+    printf("Error when calling kbd_subscribe_int. Attempting to unsubscribe timer interrupts.\n");
+
+    if (timer_unsubscribe_int()) {   /* Tries to unsubscribe timer interrupts before returning */
+      printf("Error when trying to unsubscribe timer interrupts.\n");
+    }
+
     return 1;
   }
 
   int ipc_status;
   message msg;
+
   uint8_t idle_time = 0, bytes[2];
   int size = 1;
   bool is_makecode, two_byte_scancode = false;
@@ -239,7 +244,12 @@ int(kbd_test_timed_scan)(uint8_t n) {
   }
 
   if (kbd_unsubscribe_int()) {
-    printf("Error when calling kbd_unsubscribe_int.\n");
+    printf("Error when calling kbd_unsubscribe_int. Attempting to unsubscribe timer interrupts.\n");
+
+    if (timer_unsubscribe_int()) {   /* Tries to unsubscribe timer interrupts before returning */
+      printf("Error when trying to unsubscribe timer interrupts.\n");
+    }
+
     return 1;
   }
 

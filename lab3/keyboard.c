@@ -24,24 +24,6 @@ int kbd_subscribe_int(uint8_t *bit_no) {
   return 0;
 }
 
-int kbd_enable_int() {
-  if (sys_irqenable(&kbd_hook_id) != OK) {
-    printf("Error when calling sys_irqenable.\n");
-    return 1;
-  }
-
-  return 0;
-}
-
-int kbd_disable_int() {
-  if (sys_irqdisable(&kbd_hook_id) != OK) {
-    printf("Error when calling sys_irqdisable.\n");
-    return 1;
-  }
-
-  return 0;
-}
-
 int kbd_unsubscribe_int() {
   if (sys_irqrmpolicy(&kbd_hook_id) != OK) {
     printf("Error when calling sys_irqrmpolicy.\n");
@@ -118,7 +100,7 @@ int kbd_retrieve_output(uint8_t *output) {
   return 0;
 }
 
-int kbc_read_kbc_response(uint8_t *answer) {
+/*int kbc_read_kbc_response(uint8_t *answer) {
   int attempts = 0;
   uint8_t status;
 
@@ -149,4 +131,4 @@ int kbc_read_kbc_response(uint8_t *answer) {
 
   printf("Couldn't retrieve status. Maximum num. of attempts reached.\n");
   return 1;
-}
+}*/
