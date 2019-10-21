@@ -7,6 +7,7 @@
 
 #include "keyboard.h"
 #include "i8042.h"
+#include "i8254.h"
 #include "kbc.h"
 
 uint8_t scancode;
@@ -163,7 +164,7 @@ int(kbd_test_poll)() {
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
-  uint8_t timer_no = 0, kbd_no = KBD_IRQ;
+  uint8_t timer_no = TIMER0_IRQ, kbd_no = KBD_IRQ;
 
   if (timer_subscribe_int(&timer_no)) {
     printf("Error when calling timer_subscribe_int.\n");
@@ -215,7 +216,7 @@ int(kbd_test_timed_scan)(uint8_t n) {
           }
         }
         if (msg.m_notify.interrupts & BIT(timer_no)) {
-          //timer_int_handler();
+          timer_int_handler();
         }
         break;
       default:
@@ -223,7 +224,7 @@ int(kbd_test_timed_scan)(uint8_t n) {
       }
     }
   }
-/*
+
   if (kbd_unsubscribe_int()) {
     printf("Error when calling kbd_unsubscribe_int.\n");
     return 1;
@@ -233,6 +234,6 @@ int(kbd_test_timed_scan)(uint8_t n) {
     printf("Error when calling timer_unsubscribe_int.\n");
     return 1;
   }
-*/
+
   return 0;
 }
