@@ -248,13 +248,76 @@ int(kbd_test_poll)() {
 }
 
 int(kbd_test_timed_scan)(uint8_t n) {
-  // subscribe (both kbd and timer)
-  // check_kbd
-  // loop -> in the class powerpoint
-  // - condições de saída: ESC_BREAKCODE ou time_between_interrupts > n
-  // unsubscribe (both kbd and timer)
+  uint8_t timer_no = 0, kbd_no = KBD_IRQ;
 
-  printf("%s is not yet implemented!\n", __func__);
+  if (timer_subscribe_int(&timer_no)) {
+    printf("Error when calling timer_subscribe_int.\n");
+    return 1;
+  }
+  
+  if (kbd_subscribe_int(&kbd_no)) {
+    printf("Error when calling kbd_subscribe_int.\n");
+    return 1;
+  }
 
-  return 1;
+  int ipc_status;
+  message msg;
+  uint8_t idle_time = 0, bytes[2];
+  int size = 1;
+  bool is_makecode, two_byte_scancode = false;
+
+  while ((scancode != KBD_ESC_BREAKCODE) || (idle_time > n)) {
+    if (driver_receive(ANY, &msg, &ipc_status)) { 
+      printf("Error when calling driver_receive.\n");
+      continue;
+    }
+    if (is_ipc_notify(ipc_status)) {
+      switch(_ENDPOINT_P(msg.m_source)) {
+      case HARDWARE:
+        if (msg.m_notify.interrupts & BIT(kbd_no)) {
+          kbc_ih();
+          
+          if (scancode == KBD_TWO_BYTE_CODE) {
+            bytes[0] = scancode;
+            two_byte_scancode = true;
+          }
+          else {
+            if (two_byte_scancode) {
+              bytes[1] = scancode;
+              size = 2;
+            }
+            else {
+              bytes[0] = scancode;
+              size = 1;
+            }
+
+            /* If scancode is breakcode, MSB is set to 1 */
+            is_makecode = (scancode & KBD_BREAKCODE) == 0;
+
+            if (kbd_print_scancode(is_makecode, size, bytes)) {
+              printf("Error when calling kbd_print_scancode.\n");
+            }
+          }
+        }
+        if (msg.m_notify.interrupts & BIT(timer_no)) {
+          //timer_int_handler();
+        }
+        break;
+      default:
+        break;
+      }
+    }
+  }
+/*
+  if (kbd_unsubscribe_int()) {
+    printf("Error when calling kbd_unsubscribe_int.\n");
+    return 1;
+  }
+
+  if (timer_unsubscribe_int()) {
+    printf("Error when calling timer_unsubscribe_int.\n");
+    return 1;
+  }
+*/
+  return 0;
 }
