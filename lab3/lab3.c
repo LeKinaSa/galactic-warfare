@@ -150,12 +150,12 @@ int(kbd_test_poll)() {
         }
       }
     }
-    
+
     tickdelay(micros_to_ticks(KBD_POLLING_INTERVAL));
   }
 
   if (kbd_reenable_int()) {
-    printf("Error calling kbd_reenable_int.\n");
+    printf("Error when calling kbd_reenable_int.\n");
     return 1;
   }
 

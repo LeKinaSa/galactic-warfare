@@ -3,6 +3,8 @@
 
 #include <lcom/lcf.h>
 
+/* Constants for programming the i8042 KBC */
+
 #define KBD_IRQ   1     /* IRQ line for keyboard interrupts */
 
 /* PORTS */

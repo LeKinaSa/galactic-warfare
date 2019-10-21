@@ -3,6 +3,8 @@
 
 #include <lcom/lcf.h>
 
+/* Functions specific to the keyboard (not reusable in Lab 4) */
+
 int kbd_subscribe_int(uint8_t *bit_no);
 int kbd_enable_int();
 int kbd_disable_int();
