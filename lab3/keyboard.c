@@ -68,8 +68,8 @@ int kbd_reenable_int() {
   }
 
   // Get return value from KBC command
-  if (kbd_retrieve_output(&command_byte)) {
-    printf("Error when calling kbd_retrieve_output.\n");
+  if (kbc_read_output_buf(&command_byte)) {
+    printf("Error when calling kbc_read_output_buf.\n");
     return 1;
   }
 
@@ -99,36 +99,3 @@ int kbd_retrieve_output(uint8_t *output) {
 
   return 0;
 }
-
-/*int kbc_read_kbc_response(uint8_t *answer) {
-  int attempts = 0;
-  uint8_t status;
-
-  if (answer == NULL) {
-    printf("Error occurred: null pointer.\n");
-    return 1;
-  }
-  while (attempts < KBD_TIMEOUT_MAX_ATTEMPTS) {
-    if (util_sys_inb(KBD_STATUS_REG, &status)) {
-      printf("Error when reading from status register.\n");
-      return 1;
-    }
-    if ((status & KBD_TIMEOUT) != 0) {
-      ++attempts;
-    }
-    else if ((status & KBD_OUT_BUF_FULL) != 0) {
-      if ((status & KBD_PARITY_ERROR) != 0) {
-        printf("Status register indicates parity error.\n");
-        return 1;
-      }
-      if (kbd_retrieve_output(answer)) {
-        printf("Error when calling kbd_retrieve_output.\n");
-        return 1;
-      }
-      return 0;
-    }
-  }
-
-  printf("Couldn't retrieve status. Maximum num. of attempts reached.\n");
-  return 1;
-}*/

@@ -28,6 +28,43 @@ int kbc_read_status(uint8_t *status) {
   return 1;
 }
 
+int kbc_read_output_buf(uint8_t *output) {
+  int attempts = 0;
+  uint8_t status = 0;
+
+  if (output == NULL) {
+    printf("Error occurred: null pointer.\n");
+    return 1;
+  }
+
+  while (attempts < KBD_TIMEOUT_MAX_ATTEMPTS) {
+    if (kbc_read_status(&status)) {
+      printf("Error when reading from status register.\n");
+      return 1;
+    }
+
+    if ((status & KBD_TIMEOUT) != 0) {
+      ++attempts;
+    }
+
+    else if ((status & KBD_OUT_BUF_FULL) != 0) {
+      if ((status & KBD_PARITY_ERROR) != 0) {
+        printf("Status register indicates parity error.\n");
+      }
+
+      if (util_sys_inb(KBD_OUTPUT_BUF, output)) {
+        printf("Error when calling util_sys_inb.\n");
+        return 1;
+      }
+
+      return 0;
+    }
+  }
+
+  printf("Couldn't retrieve output. Maximum num. of attempts reached.\n");
+  return 1;
+}
+
 int kbc_write_command(uint8_t command) {
   uint8_t status;
   int wait_time = 0; /* Current wait time in microseconds */
