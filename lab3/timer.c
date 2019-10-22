@@ -5,8 +5,7 @@
 
 #include "i8254.h"
 
-
-int timer0_hook_id = TIMER0_IRQ;
+static int timer0_hook_id = TIMER0_IRQ;
 extern int counter;
 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
