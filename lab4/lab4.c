@@ -9,7 +9,7 @@
 #include "utils.h"
 
 uint8_t packet_byte;
-//int packet_byte_counter = 0;
+int packet_byte_counter = 0;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -37,9 +37,25 @@ int main(int argc, char *argv[]) {
 
 
 int (mouse_test_packet)(uint32_t cnt) {
-    /* To be completed */
-    printf("%s(%u): under construction\n", __func__, cnt);
-    return 1;
+    uint8_t bit_no = 0;
+    if (mouse_enable_data_reporting()) {
+      printf("Error when calling mouse_enable_data_reporting.\n");
+      return 1;
+    }
+    if (mouse_subscribe_int(&bit_no)) {
+      printf("Error when calling mouse_subscribe_int.\n");
+      return 1;
+    }
+    //driver_receive_loop
+    if (mouse_unsubscribe_int()) {
+      printf("Error when calling mouse_unsubscribe_int.\n");
+      return 1;
+    }
+    if (mouse_disable_data_report()) {
+      printf("Error when calling mouse_disable_data_report.\n");
+      return 1;
+    }
+    return 0;
 }
 
 int (mouse_test_remote)(uint16_t period, uint8_t cnt) {

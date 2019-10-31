@@ -10,13 +10,13 @@ int kbc_read_status(uint8_t *status) {
 
   int attempts = 0;
 
-  while (attempts < KBD_TIMEOUT_MAX_ATTEMPTS) {
-    if (util_sys_inb(KBD_STATUS_REG, status)) {
+  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
+    if (util_sys_inb(KBC_STATUS_REG, status)) {
       printf("Error when reading from status register.\n");
       return 1;
     }
 
-    if ((*status & KBD_TIMEOUT) != 0) {
+    if ((*status & KBC_TIMEOUT) != 0) {
       ++attempts;
     }
     else {
@@ -37,22 +37,22 @@ int kbc_read_output_buf(uint8_t *output) {
     return 1;
   }
 
-  while (attempts < KBD_TIMEOUT_MAX_ATTEMPTS) {
+  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
     if (kbc_read_status(&status)) {
       printf("Error when reading from status register.\n");
       return 1;
     }
 
-    if ((status & KBD_TIMEOUT) != 0) {
+    if ((status & KBC_TIMEOUT) != 0) {
       ++attempts;
     }
 
-    else if ((status & KBD_OUT_BUF_FULL) != 0) {
-      if ((status & KBD_PARITY_ERROR) != 0) {
+    else if ((status & KBC_OUT_BUF_FULL) != 0) {
+      if ((status & KBC_PARITY_ERROR) != 0) {
         printf("Status register indicates parity error.\n");
       }
 
-      if (util_sys_inb(KBD_OUTPUT_BUF, output)) {
+      if (util_sys_inb(KBC_OUTPUT_BUF, output)) {
         printf("Error when calling util_sys_inb.\n");
         return 1;
       }
@@ -76,14 +76,14 @@ int kbc_write_command(uint8_t command) {
     }
 
     // First we must check if there are any errors and if the input buffer is full
-    if ((status & (KBD_TIMEOUT | KBD_PARITY_ERROR)) != 0) {
+    if ((status & (KBC_TIMEOUT | KBC_PARITY_ERROR)) != 0) {
       printf("Status register indicates keyboard timeout or parity error.\n");
       return 1;
     }
 
-    if ((status & KBD_IN_BUF_FULL) == 0) {
+    if ((status & KBC_IN_BUF_FULL) == 0) {
       // Input buffer is not full, we can write the KBC command
-      if (sys_outb(KBD_INPUT_COMMANDS_BUF, command)) {
+      if (sys_outb(KBC_INPUT_COMMANDS_BUF, command)) {
         printf("Error when calling sys_outb: couldn't write KBC command.\n");
         return 1;
       }
@@ -109,14 +109,14 @@ int kbc_write_arg(uint8_t arg) {
     }
 
     // First we must check if there are any errors and if the input buffer is full
-    if ((status & (KBD_TIMEOUT | KBD_PARITY_ERROR)) != 0) {
+    if ((status & (KBC_TIMEOUT | KBC_PARITY_ERROR)) != 0) {
       printf("Status register indicates keyboard timeout or parity error.\n");
       return 1;
     }
 
-    if ((status & KBD_IN_BUF_FULL) == 0) {
+    if ((status & KBC_IN_BUF_FULL) == 0) {
       // Input buffer is not full, we can write the argument
-      if (sys_outb(KBD_INPUT_ARGS_BUF, arg)) {
+      if (sys_outb(KBC_INPUT_ARGS_BUF, arg)) {
         printf("Error when calling sys_outb: couldn't write argument.\n");
         return 1;
       }

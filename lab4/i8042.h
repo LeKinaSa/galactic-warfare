@@ -48,7 +48,7 @@
 /* MOUSE KBC COMMANDS */
 
 #define MOUSE_DISABLE          0xA7 /* Disable Mouse */
-#define MOUSE_ENABLE           0xA8 /* Enavle Mouse */
+#define MOUSE_ENABLE           0xA8 /* Enable Mouse */
 #define MOUSE_CHECK            0xA9 /* Check Mouse Interface */
 #define MOUSE_WRITE_BYTE       0xD4 /* Write Argument to Mouse */
 
