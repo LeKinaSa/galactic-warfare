@@ -6,25 +6,26 @@
 /* Constants for programming the i8042 KBC */
 
 #define KBD_IRQ   1     /* IRQ line for keyboard interrupts */
+#define MOUSE_IRQ 12    /* IRQ line for mouse interrupts */
 
 /* PORTS */
 
-#define KBD_STATUS_REG           0x64                 /* Status register port */
-#define KBD_OUTPUT_BUF           0x60                 /* Output buffer port */
-#define KBD_INPUT_COMMANDS_BUF   KBD_STATUS_REG       /* KBC command input port */
-#define KBD_INPUT_ARGS_BUF       KBD_OUTPUT_BUF       /* Argument input port for KBC commands */
+#define KBC_STATUS_REG           0x64                 /* Status register port */
+#define KBC_OUTPUT_BUF           0x60                 /* Output buffer port */
+#define KBC_INPUT_COMMANDS_BUF   KBC_STATUS_REG       /* KBC command input port */
+#define KBC_INPUT_ARGS_BUF       KBC_OUTPUT_BUF       /* Argument input port for KBC commands */
 
 
 /* STATUS REGISTER */
 
-#define KBD_PARITY_ERROR      BIT(7)    /* Bit set to 1 when there is a parity error */
-#define KBD_TIMEOUT           BIT(6)    /* Bit set to 1 when keyboard timeout */
-#define KBD_MOUSE_DATA        BIT(5)    /* Bit set to 1 if data comes from mouse */
-#define KBD_INHINIB_FLAG      BIT(4)    /* Bit set to 1 if keyboard is inhibit */
-#define KBD_A2                BIT(3)    /* Bit set to 1 if input is a command, 0 if input is data */
-#define KBD_SYS               BIT(2)    /* Bit set to 1 if system initialized, 1 if in reset */
-#define KBD_IN_BUF_FULL       BIT(1)    /* Bit set to 1 when input buffer is full */
-#define KBD_OUT_BUF_FULL      BIT(0)    /* Bit set to 1 when output buffer is full */
+#define KBC_PARITY_ERROR      BIT(7)    /* Bit set to 1 when there is a parity error */
+#define KBC_TIMEOUT           BIT(6)    /* Bit set to 1 when keyboard timeout */
+#define KBC_MOUSE_DATA        BIT(5)    /* Bit set to 1 if data comes from mouse */
+#define KBC_INHINIB_FLAG      BIT(4)    /* Bit set to 1 if keyboard is inhibit */
+#define KBC_A2                BIT(3)    /* Bit set to 1 if input is a command, 0 if input is data */
+#define KBC_SYS               BIT(2)    /* Bit set to 1 if system initialized, 1 if in reset */
+#define KBC_IN_BUF_FULL       BIT(1)    /* Bit set to 1 when input buffer is full */
+#define KBC_OUT_BUF_FULL      BIT(0)    /* Bit set to 1 when output buffer is full */
 
 /* KEYBOARD KBC COMMANDS */
 

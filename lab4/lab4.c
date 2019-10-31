@@ -6,6 +6,7 @@
 
 // Any header files included below this line should have been created by you
 #include "mouse.h"
+#include "utils.h"
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -50,8 +51,8 @@ int (mouse_test_async)(uint8_t idle_time) {
     return 1;
 }
 
-int (mouse_test_gesture)() {
-    /* To be completed */
+/*int (mouse_test_gesture)() {
+    // To be completed
     printf("%s: under construction\n", __func__);
     return 1;
-}
+}*/
