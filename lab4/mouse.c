@@ -4,6 +4,7 @@ int mouse_hook_id = MOUSE_IRQ;
 extern int packet_byte;
 extern int packet_byte_counter;
 
+
 void (mouse_ih)() { // kbc_ih but with packet_byte instead of scancode
   uint8_t status, output;
   int attempts = 0;
@@ -29,6 +30,10 @@ void (mouse_ih)() { // kbc_ih but with packet_byte instead of scancode
   }
 }
 
+int (mouse_enable_data_reporting) () {
+  
+  return 1;
+}
 
 void mouse_packet_parser(struct packet *p) {
   mouse_get_buttons_pressed(p);
