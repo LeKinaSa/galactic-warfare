@@ -5,7 +5,7 @@
 int kbc_read_status(uint8_t *status) {
   int attempts = 0;
 
-  while (attempts < KBD_TIMEOUT_MAX_ATTEMPTS) {
+  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
     if (util_sys_inb(KBC_STATUS_REG, status)) {
       printf("Error when reading from status register.\n");
       return 1;

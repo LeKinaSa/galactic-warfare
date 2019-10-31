@@ -37,6 +37,7 @@
 #define KBC_ENABLE_INTERFACE   0xAE      /* Enable KBD Interface */
 
 /* COMMAND BYTE */
+
 #define CMD_BYTE_DISABLE_MOUSE      BIT(5)    /* Bit set to 1 if mouse is disabled */
 #define CMD_BYTE_DISABLE_KBD        BIT(4)    /* Bit set to 1 if keyboard interface is disabled */
 #define CMD_BYTE_ENABLE_MOUSE_INT   BIT(1)    /* Bit set to 1 if mouse interrupts are enabled */
@@ -53,7 +54,27 @@
 #define KBD_POLLING_INTERVAL   20000   /* Time in microseconds to wait between two polling cicles */
 
 
-#define KBD_TIMEOUT_MAX_ATTEMPTS  5
+#define KBC_TIMEOUT_MAX_ATTEMPTS  5
 #define KBC_COMMAND_WAIT_TIME     KBD_POLLING_INTERVAL * 50   /* Max wait time, in microseconds, when issuing a KBC command */
+
+/* MOUSE PACKET PARSING */
+
+#define MOUSE_BYTE_TO_TREAT           1 - 1 
+#define MOUSE_BYTE_X                  2 - 1
+#define MOUSE_BYTE_Y                  3 - 1
+#define MOUSE_OVERFLOW_Y              BIT(7)
+#define MOUSE_OVERFLOW_X              BIT(6)
+#define MOUSE_MSB_Y                   BIT(5)
+#define MOUSE_MSB_X                   BIT(4)
+#define MOUSE_BIT_1                   BIT(3)
+#define MOUSE_MEDIUM_BUTTON_PRESSED   BIT(2)
+#define MOUSE_RIGHT_BUTTON_PRESSED    BIT(1)
+#define MOUSE_LEFT_BUTTON_PRESSED     BIT(0)
+
+/* X AND Y EXPANDING FROM 9-bits to 16-bits */
+
+#define NEGATIVE_NUMBER               0xFFFF
+#define POSITIVE_NUMBER               0x0000
+
 
 #endif /* _LCOM_I8042_H_ */

@@ -8,6 +8,9 @@
 #include "mouse.h"
 #include "utils.h"
 
+uint8_t packet_byte;
+//int packet_byte_counter = 0;
+
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
   lcf_set_language("EN-US");
