@@ -23,7 +23,19 @@ int kbc_read_output_buf(uint8_t *output) {
     return 1;
   }
 
-  int wait_time = 0;
+  int hook_id = 0;
+  
+  if (sys_irqsetpolicy(KBD_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &hook_id)) {
+    printf("Error when calling sys_irqsetpolicy.\n");
+    return 1;
+  }
+
+  if (sys_irqdisable(&hook_id)) {
+    printf("Error when calling sys_irqdisable.\n");
+    return 1;
+  }
+
+  int wait_time = 0; /* Current wait time in microseconds */
   uint8_t status = 0;
 
   while (wait_time < KBC_RETURN_VAL_WAIT_TIME) {
@@ -31,17 +43,24 @@ int kbc_read_output_buf(uint8_t *output) {
       printf("Error when reading from status register.\n");
       return 1;
     }
-    
+
     if ((status & KBC_OUT_BUF_FULL) != 0) {
       if (util_sys_inb(KBC_OUTPUT_BUF, output)) {
         printf("Error when calling util_sys_inb.\n");
+        sys_irqenable(&hook_id);
+        sys_irqrmpolicy(&hook_id);
         return 1;
       }
       
       if ((status & (KBC_TIMEOUT | KBC_PARITY_ERROR)) != 0) {
         printf("Status register indicates timeout or parity error.\n");
+        sys_irqenable(&hook_id);
+        sys_irqrmpolicy(&hook_id);
         return 1;
       }
+
+      sys_irqenable(&hook_id);
+      sys_irqrmpolicy(&hook_id);
 
       return 0;
     }
@@ -50,7 +69,7 @@ int kbc_read_output_buf(uint8_t *output) {
     tickdelay(micros_to_ticks(KBD_POLLING_INTERVAL));
   }
 
-  printf("Timeout occurred: took too long to read from output buffer.\n");
+  printf("Took too long to read from output buffer.\n");
   return 1;
 }
 

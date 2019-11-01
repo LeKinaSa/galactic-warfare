@@ -10,7 +10,6 @@
 
 uint8_t packet_byte;
 
-
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
   lcf_set_language("EN-US");
@@ -37,10 +36,10 @@ int main(int argc, char *argv[]) {
 
 
 int (mouse_test_packet)(uint32_t cnt) {
-  uint8_t packet_bytes[NUMBER_OF_BYTES_PER_MOUSE_PACKET];
   uint8_t bit_no = 0;
-    
-  if (mouse_enable_data_report()) {
+
+  // TODO: Fix our mouse_enable_data_report function and replace
+  if (mouse_enable_data_reporting()) {
     printf("Error when calling mouse_enable_data_reporting.\n");
     return 1;
   }
@@ -52,11 +51,13 @@ int (mouse_test_packet)(uint32_t cnt) {
 
   int ipc_status;
   message msg;
+
+  int packet_byte_counter = 0;
   uint32_t number_of_packets = 0;
-  int packet_byte_counter = MOUSE_PACKET_START_OVER;
+  uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
   struct packet p;
   
-  while (number_of_packets < cnt) { // Not working for cnt > 0. There s some error inside this loop
+  while (number_of_packets < cnt) {
     if (driver_receive(ANY, &msg, &ipc_status)) { 
       printf("Error when calling driver_receive.\n");
       continue;
@@ -67,28 +68,29 @@ int (mouse_test_packet)(uint32_t cnt) {
       case HARDWARE:
         if (msg.m_notify.interrupts & BIT(bit_no)) {
           mouse_ih();
-          packet_byte_counter++;
+
           switch (packet_byte_counter) {
-          case MOUSE_FIRST_BYTE:
-            if ((packet_byte & MOUSE_FIRST_BYTE_CHECK) != 0) {
-              packet_byte_counter = MOUSE_PACKET_START_OVER;
-            }
-            else {
-              packet_bytes[MOUSE_INDEX_SECOND_BYTE] = packet_byte;
-            }
+          case 0:
+            packet_bytes[0] = packet_byte;
             break;
-          case MOUSE_SECOND_BYTE:
-            packet_bytes[MOUSE_INDEX_SECOND_BYTE] = packet_byte;
+          case 1:
+            packet_bytes[1] = packet_byte;
             break;
-          case MOUSE_THIRD_BYTE:
-            packet_bytes[MOUSE_INDEX_THIRD_BYTE] = packet_byte;
-            packet_byte_counter = MOUSE_PACKET_START_OVER;
-            number_of_packets++;
-            mouse_packet_parser(&packet_byte, &p);
+          case 2:
+            packet_bytes[2] = packet_byte;
+            ++number_of_packets;
+            mouse_parse_packet(packet_bytes, &p);
             mouse_print_packet(&p);
             break;
           default:
             break;
+          }
+
+          if (packet_byte_counter == 2) {
+            packet_byte_counter = 0;
+          }
+          else {
+            ++packet_byte_counter;
           }
         }
         break;

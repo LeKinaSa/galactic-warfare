@@ -2,7 +2,6 @@
 
 static int mouse_hook_id = MOUSE_IRQ;
 extern uint8_t packet_byte;
-extern uint8_t packet_byte_counter;
 
 /* SUBSCRIBE / UNSUBSCRIBE INTERRUPTIONS */
 
@@ -14,7 +13,7 @@ int mouse_subscribe_int(uint8_t *bit_no) {
 
   *bit_no = mouse_hook_id;
 
-  if (sys_irqsetpolicy(KBD_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &mouse_hook_id) != OK) {
+  if (sys_irqsetpolicy(MOUSE_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &mouse_hook_id) != OK) {
     printf("Error when calling sys_irqsetpolicy.\n");
     return 1;
   }
@@ -61,97 +60,47 @@ void (mouse_ih)() { // kbc_ih but with packet_byte instead of scancode
 /* WRITE FUNCTION */
 
 int mouse_write(uint8_t command) {
-  uint8_t answer = 0;
-  int attempts = 0;
+  uint8_t ack = 0;
   
-  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
-    if (kbc_write_command(MOUSE_WRITE_BYTE)) {
-      printf("Error when calling kbc_write_command.\n");
-      attempts ++;
-      continue;
-    }
-    if (kbc_write_arg(command)) {
-      printf("Error when calling kbc_write_arg.\n");
-      attempts ++;
-      continue;
-    }
-    if (kbc_read_output_buf(&answer)) {
-      printf("Error when calling kbc_read_ouput_buff.\n");
-      attempts ++;
-      continue;
-    }
-    if (answer != MOUSE_ACK_OK) {
-      attempts ++;
-    }
-    else {
-      break;
-    }
-  }
-  if (attempts == KBC_TIMEOUT_MAX_ATTEMPTS) {
-    printf("Timeout occurred: took too long to write command to mouse.\n");
+  if (kbc_write_command(MOUSE_WRITE_BYTE)) {
+    printf("Error when calling kbc_write_command.\n");
     return 1;
   }
-  return 0;
+
+  if (kbc_write_arg(command)) {
+    printf("Error when calling kbc_write_arg.\n");
+    return 1;
+  }
+
+  /*
+  if (kbc_read_output_buf(&ack)) {
+    printf("Error when calling kbc_read_ouput_buf.\n");
+    return 1;
+  } 
+  */
+
+  return ack == MOUSE_ACK_OK;
 }
 
 /* ENABLE / DISABLE DATA */
 
 int mouse_enable_data_report() {
-  int attempts = 0;
-
-  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
-    if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
-      printf("Error when calling kbc_write_command.\n");
-      attempts++;
-      continue;
-    }
-    if (kbc_write_arg(MOUSE_ENABLE)) {
-      printf("Error when calling kbc_write_arg.\n");
-      attempts++;
-      continue;
-    }
-    break;
-  }
-  if (attempts == KBC_TIMEOUT_MAX_ATTEMPTS) {
-    printf("Timeout occurred: took too long to write command.\n");
+  if (mouse_set_stream_mode()) {
+    printf("Error when calling mouse_set_stream_mode.\n");
     return 1;
   }
 
-  attempts = 0;
-
-  if (mouse_write(MOUSE_ENABLE_DATA)) {
-    printf("Error occurred when trying to enable the mouse inside mouse_enable_data_report.\n");
+  if(mouse_write(MOUSE_ENABLE_DATA)) {
+    printf("Error when calling mouse_write.\n");
     return 1;
   }
+
   return 0;
 }
 
 int mouse_disable_data_report() {
-  uint8_t default_config;
-  int attempts = 0;
-
-  if (mouse_write(MOUSE_DISABLE_DATA)) {
-    printf("Error occurred when trying to disable the mouse inside mouse_disable_data_report.\n");
-  }
-
-  default_config = minix_get_dflt_kbc_cmd_byte();
-  attempts = 0;
-
-  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
-    if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
-      printf("Error when calling kbc_write_command.\n");
-      attempts++;
-      continue;
-    }
-    if (kbc_write_arg(default_config)) {
-      printf("Error when calling kbc_write_arg.\n");
-      attempts++;
-      continue;
-    }
-    break;
-  }
-  if (attempts == KBC_TIMEOUT_MAX_ATTEMPTS) {
-    printf("Timeout occurred: took too long to write command.\n");
+  if(mouse_write(MOUSE_RESET)) {
+    printf("Error when calling mouse_write.\n");
     return 1;
   }
 
@@ -180,7 +129,7 @@ int mouse_set_remote_mode() {
 
 /* PARSERS */
 
-void mouse_packet_parser(uint8_t bytes[], struct packet *p) {
+void mouse_parse_packet(uint8_t bytes[], struct packet *p) {
   mouse_put_bytes_on_packet(bytes, p);
   mouse_get_buttons_pressed(p);
   mouse_get_x_displacement(p);
@@ -192,10 +141,11 @@ void mouse_get_buttons_pressed(struct packet *p) {
   p->lb = false;
   p->mb = false;
   p->rb = false;
+
   if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_LEFT_BUTTON_PRESSED) != 0) {
     p->lb = true;
   }
-  if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_MEDIUM_BUTTON_PRESSED) != 0) {
+  if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_MIDDLE_BUTTON_PRESSED) != 0) {
     p->mb = true;
   }
   if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_RIGHT_BUTTON_PRESSED) != 0) {
@@ -205,25 +155,26 @@ void mouse_get_buttons_pressed(struct packet *p) {
 
 void mouse_get_x_displacement(struct packet *p) {
   if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_MSB_X) != 0) { // X is a negative value
-    p->delta_x = (NEGATIVE_NUMBER) & (p->bytes[MOUSE_BYTE_X]);
+    p->delta_x = (NEGATIVE_NUMBER) | (p->bytes[MOUSE_BYTE_X]);
   }
   else { // X is a positive value
-    p->delta_x = (POSITIVE_NUMBER) & (p->bytes[MOUSE_BYTE_X]);
+    p->delta_x = (POSITIVE_NUMBER) | (p->bytes[MOUSE_BYTE_X]);
   }
 }
 
 void mouse_get_y_displacement(struct packet *p) {
   if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_MSB_Y) != 0){ // Y is a negative value
-    p->delta_y = (NEGATIVE_NUMBER) & (p->bytes[MOUSE_BYTE_Y]);
+    p->delta_y = (NEGATIVE_NUMBER) | (p->bytes[MOUSE_BYTE_Y]);
   }
   else { // Y is a positive value
-    p->delta_y = (POSITIVE_NUMBER) & (p->bytes[MOUSE_BYTE_Y]);
+    p->delta_y = (POSITIVE_NUMBER) | (p->bytes[MOUSE_BYTE_Y]);
   }
 }
 
 void mouse_get_overflow(struct packet *p) {
   p->x_ov = false;
   p->y_ov = false;
+
   if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_OVERFLOW_X) != 0) {
     p->x_ov = true;
   }
@@ -233,7 +184,7 @@ void mouse_get_overflow(struct packet *p) {
 }
 
 void mouse_put_bytes_on_packet(uint8_t bytes[], struct packet *p) {
-  for (int index = 0; index < NUMBER_OF_BYTES_PER_MOUSE_PACKET; index ++) {
+  for (int index = 0; index < MOUSE_PCK_NUM_BYTES; index++) {
     p->bytes[index] = bytes[index];
   }
 }

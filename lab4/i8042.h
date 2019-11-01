@@ -81,14 +81,14 @@
 
 /* MOUSE PACKET ASSEMBLING */
 
-#define NUMBER_OF_BYTES_PER_MOUSE_PACKET    3
-#define MOUSE_FIRST_BYTE                    1
-#define MOUSE_SECOND_BYTE                   2
-#define MOUSE_THIRD_BYTE                    3
+#define MOUSE_PCK_NUM_BYTES                 3
+#define MOUSE_PCK_FIRST_BYTE                1
+#define MOUSE_PCK_SECOND_BYTE               2
+#define MOUSE_PCK_THIRD_BYTE                3
 #define MOUSE_PACKET_START_OVER             0
-#define MOUSE_INDEX_FIRST_BYTE              MOUSE_FIRST_BYTE - 1
-#define MOUSE_INDEX_SECOND_BYTE             MOUSE_SECOND_BYTE - 1
-#define MOUSE_INDEX_THIRD_BYTE              MOUSE_THIRD_BYTE - 1
+#define MOUSE_INDEX_FIRST_BYTE              MOUSE_PCK_FIRST_BYTE - 1
+#define MOUSE_INDEX_SECOND_BYTE             MOUSE_PCK_SECOND_BYTE - 1
+#define MOUSE_INDEX_THIRD_BYTE              MOUSE_PCK_THIRD_BYTE - 1
 
 /* MOUSE PACKET PARSING */
 
@@ -100,13 +100,13 @@
 #define MOUSE_MSB_Y                   BIT(5)
 #define MOUSE_MSB_X                   BIT(4)
 #define MOUSE_FIRST_BYTE_CHECK        BIT(3)
-#define MOUSE_MEDIUM_BUTTON_PRESSED   BIT(2)
+#define MOUSE_MIDDLE_BUTTON_PRESSED   BIT(2)
 #define MOUSE_RIGHT_BUTTON_PRESSED    BIT(1)
 #define MOUSE_LEFT_BUTTON_PRESSED     BIT(0)
 
 /* 9-BIT TO 16-BIT SIGN EXTENSION */
 
-#define NEGATIVE_NUMBER               0xFFFF
+#define NEGATIVE_NUMBER               0xFF00
 #define POSITIVE_NUMBER               0x0000
 
 /* POLLING */

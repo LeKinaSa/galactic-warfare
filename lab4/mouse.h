@@ -27,8 +27,8 @@ int mouse_disable_data_report();
 int mouse_set_stream_mode();
 int mouse_set_remote_mode();
 
-/*parsers */
-void mouse_packet_parser(uint8_t bytes[], struct packet *p);       // Implemented not tested
+/* parsers */
+void mouse_parse_packet(uint8_t bytes[], struct packet *p);       // Implemented not tested
 void mouse_get_buttons_pressed(struct packet *p);                   // Implemented not tested
 void mouse_get_x_displacement(struct packet *p);                    // Implemented not tested
 void mouse_get_y_displacement(struct packet *p);                    // Implemented not tested
