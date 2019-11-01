@@ -39,7 +39,7 @@ int (mouse_test_packet)(uint32_t cnt) {
   uint8_t packet_bytes[NUMBER_OF_BYTES_PER_MOUSE_PACKET];
   uint8_t bit_no = 0;
     
-  if (mouse_enable_data_reporting()) {
+  if (mouse_enable_data_report()) {
     printf("Error when calling mouse_enable_data_reporting.\n");
     return 1;
   }
