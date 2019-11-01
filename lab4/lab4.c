@@ -60,33 +60,34 @@ int (mouse_test_packet)(uint32_t cnt) {
       continue;
     }
     if (is_ipc_notify(ipc_status)) {
-      printf("Switch here.\n\n");
+      printf("Switch here.\n\n"); // -----------------------
       switch(_ENDPOINT_P(msg.m_source)) {
       case HARDWARE:
         if (msg.m_notify.interrupts & BIT(bit_no)) {
           mouse_ih();
           packet_byte_counter ++;
           switch (packet_byte_counter) {
-            case MOUSE_FIRST_BYTE:
-              if ((packet_byte & MOUSE_FIRST_BYTE_CHECK) != 0) {
-                packet_byte_counter = MOUSE_PACKET_START_OVER;
-              }
-              else {
-                packet_bytes[MOUSE_INDEX_SECOND_BYTE] = packet_byte;
-              }
-              break;
-            case MOUSE_SECOND_BYTE:
-              packet_bytes[MOUSE_INDEX_SECOND_BYTE] = packet_byte;
-              break;
-            case MOUSE_THIRD_BYTE:
-              packet_bytes[MOUSE_INDEX_THIRD_BYTE] = packet_byte;
+            printf("The other switch here.\n\n"); // ---------------------
+          case MOUSE_FIRST_BYTE:
+            if ((packet_byte & MOUSE_FIRST_BYTE_CHECK) != 0) {
               packet_byte_counter = MOUSE_PACKET_START_OVER;
-              number_of_packets ++;
-              mouse_packet_parser(&packet_byte, &p);
-              mouse_print_packet(&p);
-              break;
-            default:
-              break;
+            }
+            else {
+              packet_bytes[MOUSE_INDEX_SECOND_BYTE] = packet_byte;
+            }
+            break;
+          case MOUSE_SECOND_BYTE:
+            packet_bytes[MOUSE_INDEX_SECOND_BYTE] = packet_byte;
+            break;
+          case MOUSE_THIRD_BYTE:
+            packet_bytes[MOUSE_INDEX_THIRD_BYTE] = packet_byte;
+            packet_byte_counter = MOUSE_PACKET_START_OVER;
+            number_of_packets ++;
+            mouse_packet_parser(&packet_byte, &p);
+            mouse_print_packet(&p);
+            break;
+          default:
+            break;
           }
         }
         break;
@@ -96,15 +97,15 @@ int (mouse_test_packet)(uint32_t cnt) {
     }
   }
 
-    if (mouse_unsubscribe_int()) {
-      printf("Error when calling mouse_unsubscribe_int.\n");
-      return 1;
-    }
-    if (mouse_disable_data_report()) {
-      printf("Error when calling mouse_disable_data_report.\n");
-      return 1;
-    }
-    return 0;
+  if (mouse_unsubscribe_int()) {
+    printf("Error when calling mouse_unsubscribe_int.\n");
+    return 1;
+  }
+  if (mouse_disable_data_report()) {
+    printf("Error when calling mouse_disable_data_report.\n");
+    return 1;
+  }
+  return 0;
 }
 
 int (mouse_test_remote)(uint16_t period, uint8_t cnt) {
