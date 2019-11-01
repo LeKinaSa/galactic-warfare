@@ -4,6 +4,8 @@ int mouse_hook_id = MOUSE_IRQ;
 extern uint8_t packet_byte;
 extern uint8_t packet_byte_counter;
 
+/* SUBSCRIBE / UNSUBSCRIBE INTERRUPTIONS */
+
 int mouse_subscribe_int(uint8_t *bit_no) {
   if (bit_no == NULL) {
     printf("Error occurred: null pointer.\n");
@@ -28,6 +30,8 @@ int mouse_unsubscribe_int() {
 
   return 0;
 }
+
+/* INTERRUPT HANDLER */
 
 void (mouse_ih)() { // kbc_ih but with packet_byte instead of scancode
   uint8_t status, output;
@@ -54,8 +58,45 @@ void (mouse_ih)() { // kbc_ih but with packet_byte instead of scancode
   }
 }
 
-int mouse_enable_data_report () {
+/* WRITE FUNCTION */
+
+int mouse_write(uint8_t command) {
   uint8_t answer = 0;
+  int attempts = 0;
+  
+  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
+    if (kbc_write_command(MOUSE_WRITE_BYTE)) {
+      printf("Error when calling kbc_write_command.\n");
+      attempts ++;
+      continue;
+    }
+    if (kbc_write_arg(command)) {
+      printf("Error when calling kbc_write_arg.\n");
+      attempts ++;
+      continue;
+    }
+    if (kbc_read_output_buf(&answer)) {
+      printf("Error when calling kbc_read_ouput_buff.\n");
+      attempts ++;
+      continue;
+    }
+    if (answer != MOUSE_ACK_OK) {
+      attempts ++;
+    }
+    else {
+      break;
+    }
+  }
+  if (attempts == KBC_TIMEOUT_MAX_ATTEMPTS) {
+    printf("Timeout occurred: took too long to write command to mouse.\n");
+    return 1;
+  }
+  return 0;
+}
+
+/* ENABLE / DISABLE DATA */
+
+int mouse_enable_data_report () {
   int attempts = 0;
 
   while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
@@ -72,54 +113,25 @@ int mouse_enable_data_report () {
     break;
   }
   if (attempts == KBC_TIMEOUT_MAX_ATTEMPTS) {
-    printf("Error occurred when trying to disable the mouse inside mouse_disable_data_report.\n");
+    printf("Timeout occurred: took too long to write command.\n");
     return 1;
   }
 
   attempts = 0;
 
-  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
-    if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
-      printf("Error when calling kbc_write_command.\n");
-    }
-    if (kbc_write_arg(MOUSE_ENABLE_DATA)) {
-      printf("Error when calling kbc_write_arg.\n");
-    }
-    if (kbc_read_output_buf(&answer)) {
-      printf("Error when calling kbc_read_ouput_buff.\n");
-    }
-    if (answer != MOUSE_ACK_OK) {
-      attempts ++;
-    }
+  if (mouse_write(MOUSE_ENABLE_DATA)) {
+    printf("Error occurred when trying to enable the mouse inside mouse_enable_data_report.\n");
+    return 1;
   }
   return 0;
 }
 
 int mouse_disable_data_report() {
   uint8_t default_config;
-  uint8_t answer = 0;
   int attempts = 0;
 
-  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
-    if (kbc_write_command(MOUSE_WRITE_BYTE)) {
-      printf("Error when calling kbc_write_command.\n");
-    }
-    if (kbc_write_arg(MOUSE_DISABLE_DATA)) {
-      printf("Error when calling kbc_write_arg.\n");
-    }
-    if (kbc_read_output_buf(&answer)) {
-      printf("Error when calling kbc_read_ouput_buff.\n");
-    }
-    if (answer != MOUSE_ACK_OK) {
-      attempts ++;
-    }
-    else {
-      break;
-    }
-  }
-  if (attempts == KBC_TIMEOUT_MAX_ATTEMPTS) {
+  if (mouse_write(MOUSE_DISABLE_DATA)) {
     printf("Error occurred when trying to disable the mouse inside mouse_disable_data_report.\n");
-    return 1;
   }
 
   default_config = minix_get_dflt_kbc_cmd_byte();
@@ -138,8 +150,33 @@ int mouse_disable_data_report() {
     }
     break;
   }
+  if (attempts == KBC_TIMEOUT_MAX_ATTEMPTS) {
+    printf("Timeout occurred: took too long to write command.\n");
+    return 1;
+  }
+
   return 0;
 }
+
+/* MODES */
+
+int mouse_set_stream_mode() {
+  if (mouse_write(MOUSE_STREAM_MODE)) {
+    printf("Error when setting mouse to stream mode.\n");
+    return 1;
+  }
+  return 0;
+}
+
+int mouse_set_remote_mode() {
+  if (mouse_write(MOUSE_REMOTE_MODE)) {
+    printf("Error when setting mouse to remote mode.\n");
+    return 1;
+  }
+  return 0;
+}
+
+/* PARSERS */
 
 void mouse_packet_parser(uint8_t bytes[], struct packet *p) {
   mouse_put_bytes_on_packet(bytes, p);
