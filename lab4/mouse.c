@@ -1,8 +1,8 @@
 #include "mouse.h"
 
 int mouse_hook_id = MOUSE_IRQ;
-extern int packet_byte;
-extern int packet_byte_counter;
+extern uint8_t packet_byte;
+extern uint8_t packet_byte_counter;
 
 int mouse_subscribe_int(uint8_t *bit_no) {
   if (bit_no == NULL) {
@@ -54,14 +54,35 @@ void (mouse_ih)() { // kbc_ih but with packet_byte instead of scancode
   }
 }
 
-int (mouse_enable_data_report) () {
+int mouse_enable_data_report () {
+  uint8_t answer = 0;
   int attempts = 0;
 
   while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
-    if (kbc_write_command(MOUSE_DISABLE_DATA)) {
+    if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
+      printf("Error when calling kbc_write_command.\n");
+      attempts ++;
+      continue;
+    }
+    if (kbc_write_arg(MOUSE_ENABLE)) {
+      printf("Error when calling kbc_write_arg.\n");
+      attempts ++;
+      continue;
+    }
+    break;
+  }
+  if (attempts == KBC_TIMEOUT_MAX_ATTEMPTS) {
+    printf("Error occurred when trying to disable the mouse inside mouse_disable_data_report.\n");
+    return 1;
+  }
+
+  attempts = 0;
+
+  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
+    if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
       printf("Error when calling kbc_write_command.\n");
     }
-    if (kbc_write_arg(MOUSE_DISABLE_DATA)) {
+    if (kbc_write_arg(MOUSE_ENABLE_DATA)) {
       printf("Error when calling kbc_write_arg.\n");
     }
     if (kbc_read_output_buf(&answer)) {
@@ -70,30 +91,6 @@ int (mouse_enable_data_report) () {
     if (answer != MOUSE_ACK_OK) {
       attempts ++;
     }
-    else {
-      break;
-    }
-  }
-  if (attempts == KBC_TIMEOUT_MAX_ATTEMPTS) {
-    printf("Error occurred when trying to disable the mouse inside mouse_disable_data_report.\n");
-    return 1;
-  }
-
-  default_config = minix_get_dflt_kbc_cmd_byte();
-  attempts = 0;
-
-  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
-    if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
-      printf("Error when calling kbc_write_command.\n");
-      attempts ++;
-      continue;
-    }
-    if (kbc_write_arg(default_config)) {
-      printf("Error when calling kbc_write_arg.\n");
-      attempts ++;
-      continue;
-    }
-    break;
   }
   return 0;
 }
@@ -144,7 +141,8 @@ int mouse_disable_data_report() {
   return 0;
 }
 
-void mouse_packet_parser(struct packet *p) {
+void mouse_packet_parser(uint8_t bytes[], struct packet *p) {
+  mouse_put_bytes_on_packet(bytes, p);
   mouse_get_buttons_pressed(p);
   mouse_get_x_displacement(p);
   mouse_get_y_displacement(p);
@@ -192,5 +190,11 @@ void mouse_get_overflow(struct packet *p) {
   }
   if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_OVERFLOW_Y) != 0) {
     p->y_ov = true;
+  }
+}
+
+void mouse_put_bytes_on_packet(uint8_t bytes[], struct packet *p) {
+  for (int index = 0; index < NUMBER_OF_BYTES_PER_MOUSE_PACKET; index ++) {
+    p->bytes[index] = bytes[index];
   }
 }

@@ -79,16 +79,27 @@
 #define KBD_TWO_BYTE_CODE      0xE0      /* Most significant byte for a two byte scancode */
 #define KBD_ESC_BREAKCODE      0x81      /* ESC breakcode */
 
+/* MOUSE PACKET ASSEMBLING */
+
+#define NUMBER_OF_BYTES_PER_MOUSE_PACKET    3
+#define MOUSE_FIRST_BYTE                    1
+#define MOUSE_SECOND_BYTE                   2
+#define MOUSE_THIRD_BYTE                    3
+#define MOUSE_PACKET_START_OVER             0
+#define MOUSE_INDEX_FIRST_BYTE              MOUSE_FIRST_BYTE - 1
+#define MOUSE_INDEX_SECOND_BYTE             MOUSE_SECOND_BYTE - 1
+#define MOUSE_INDEX_THIRD_BYTE              MOUSE_THIRD_BYTE - 1
+
 /* MOUSE PACKET PARSING */
 
-#define MOUSE_BYTE_TO_TREAT           1 - 1 
-#define MOUSE_BYTE_X                  2 - 1
-#define MOUSE_BYTE_Y                  3 - 1
+#define MOUSE_BYTE_TO_TREAT           MOUSE_INDEX_FIRST_BYTE
+#define MOUSE_BYTE_X                  MOUSE_INDEX_SECOND_BYTE
+#define MOUSE_BYTE_Y                  MOUSE_INDEX_THIRD_BYTE
 #define MOUSE_OVERFLOW_Y              BIT(7)
 #define MOUSE_OVERFLOW_X              BIT(6)
 #define MOUSE_MSB_Y                   BIT(5)
 #define MOUSE_MSB_X                   BIT(4)
-#define MOUSE_BIT_1                   BIT(3)
+#define MOUSE_FIRST_BYTE_CHECK        BIT(3)
 #define MOUSE_MEDIUM_BUTTON_PRESSED   BIT(2)
 #define MOUSE_RIGHT_BUTTON_PRESSED    BIT(1)
 #define MOUSE_LEFT_BUTTON_PRESSED     BIT(0)
