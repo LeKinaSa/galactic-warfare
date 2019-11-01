@@ -5,8 +5,8 @@
 
 /* Constants for programming the i8042 KBC */
 
-#define KBD_IRQ   1     /* IRQ line for keyboard interrupts */
-#define MOUSE_IRQ 12    /* IRQ line for mouse interrupts */
+#define KBD_IRQ     1     /* IRQ line for keyboard interrupts */
+#define MOUSE_IRQ   12    /* IRQ line for mouse interrupts */
 
 /* PORTS */
 
@@ -20,7 +20,7 @@
 #define KBC_PARITY_ERROR      BIT(7)    /* Bit set to 1 when there is a parity error */
 #define KBC_TIMEOUT           BIT(6)    /* Bit set to 1 when keyboard timeout */
 #define KBC_MOUSE_DATA        BIT(5)    /* Bit set to 1 if data comes from mouse */
-#define KBC_INHINIB_FLAG      BIT(4)    /* Bit set to 1 if keyboard is inhibit */
+#define KBC_INHIBIT           BIT(4)    /* Bit set to 1 if keyboard is inhibited */
 #define KBC_A2                BIT(3)    /* Bit set to 1 if input is a command, 0 if input is data */
 #define KBC_SYS               BIT(2)    /* Bit set to 1 if system initialized, 1 if in reset */
 #define KBC_IN_BUF_FULL       BIT(1)    /* Bit set to 1 when input buffer is full */
@@ -40,38 +40,38 @@
 #define CMD_BYTE_ENABLE_MOUSE_INT   BIT(1)    /* Bit set to 1 if mouse interrupts are enabled */
 #define CMD_BYTE_ENABLE_KBD_INT     BIT(0)    /* Bit set to 1 if keyboard interrupts are enabled */
 
-/* KEYBOARD KBC COMMANDS */
+/* KEYBOARD-SPECIFIC KBC COMMANDS */
 
-#define KBD_DISABLE_INTERFACE  0xAD      /* Disable KBD Interface */
-#define KBD_ENABLE_INTERFACE   0xAE      /* Enable KBD Interface */
+#define KBD_DISABLE_INTERFACE  0xAD      /* Disable keyboard interface */
+#define KBD_ENABLE_INTERFACE   0xAE      /* Enable keyboard interface */
 
-/* MOUSE KBC COMMANDS */
+/* MOUSE-SPECIFIC KBC COMMANDS */
 
-#define MOUSE_DISABLE          0xA7 /* Disable Mouse */
-#define MOUSE_ENABLE           0xA8 /* Enable Mouse */
-#define MOUSE_CHECK            0xA9 /* Check Mouse Interface */
-#define MOUSE_WRITE_BYTE       0xD4 /* Write Argument to Mouse */
+#define MOUSE_DISABLE          0xA7   /* Disable mouse */
+#define MOUSE_ENABLE           0xA8   /* Enable mouse */
+#define MOUSE_CHECK            0xA9   /* Check mouse interface */
+#define MOUSE_WRITE_BYTE       0xD4   /* Write argument to mouse */
 
 /* MOUSE COMMANDS */
 
-#define MOUSE_RESET             0xFF /* Mouse Reset */
-#define MOUSE_RESEND            0xFE /* Resend the byte for serial communication errors */
-#define MOUSE_SET_DEFAULT       0xF6 /* Set default values */
-#define MOUSE_DISABLE_DATA      0xF5 /* In stream mode */
-#define MOUSE_ENABLE_DATA       0xF4 /* Only in stream mode */
-#define MOUSE_SET_SAMPLE_RATE   0xF3 /* Sets state sampling rate */
-#define MOUSE_REMOTE_MODE       0xF0 /* Sets the mouse to Remote Mode, only send data on request */
-#define MOUSE_READ_DATA         0xEB /* Send data packet request */
-#define MOUSE_STREAM_MODE       0xEA /* Sets the mouse to Stream Mode, send data on events */
-#define MOUSE_STATUS_REQUEST    0xE9 /* Gets mouse configuration (3 bytes) */
-#define MOUSE_ACCELERATION_MODE 0xE7 /* Set scaling 2:1 acceleration mode */
-#define MOUSE_LINEAR_MODE       0xE6 /* Set scaling 1:1 linear mode */
+#define MOUSE_RESET             0xFF  /* Mouse reset */
+#define MOUSE_RESEND            0xFE  /* Resend the byte for serial communication errors */
+#define MOUSE_SET_DEFAULT       0xF6  /* Set default values */
+#define MOUSE_DISABLE_DATA      0xF5  /* In stream mode */
+#define MOUSE_ENABLE_DATA       0xF4  /* Only in stream mode */
+#define MOUSE_SET_SAMPLE_RATE   0xF3  /* Sets state sampling rate */
+#define MOUSE_REMOTE_MODE       0xF0  /* Sets the mouse to Remote Mode, only send data on request */
+#define MOUSE_READ_DATA         0xEB  /* Send data packet request */
+#define MOUSE_STREAM_MODE       0xEA  /* Sets the mouse to Stream Mode, send data on events */
+#define MOUSE_STATUS_REQUEST    0xE9  /* Gets mouse configuration (3 bytes) */
+#define MOUSE_ACCELERATION_MODE 0xE7  /* Set scaling 2:1 acceleration mode */
+#define MOUSE_LINEAR_MODE       0xE6  /* Set scaling 1:1 linear mode */
 
 /* ACKNOLEDGMENT BYTES */
 
-#define MOUSE_ACK_OK        0xFA /* Everything OK */
-#define MOUSE_ACK_INVALID   0xFE /* Invalid byte */
-#define MOUSE_ACK_ERROR     0xFC /* Second consecutive invalid byte */
+#define MOUSE_ACK_OK          0xFA    /* Everything OK */
+#define MOUSE_ACK_INVALID     0xFE    /* Invalid byte */
+#define MOUSE_ACK_ERROR       0xFC    /* Second consecutive invalid byte */
 
 /* SCANCODES */
 
@@ -104,7 +104,7 @@
 #define MOUSE_RIGHT_BUTTON_PRESSED    BIT(1)
 #define MOUSE_LEFT_BUTTON_PRESSED     BIT(0)
 
-/* X AND Y EXPANDING FROM 9-bits to 16-bits */
+/* 9-BIT TO 16-BIT SIGN EXTENSION */
 
 #define NEGATIVE_NUMBER               0xFFFF
 #define POSITIVE_NUMBER               0x0000
@@ -114,6 +114,7 @@
 #define KBD_POLLING_INTERVAL   20000   /* Time in microseconds to wait between two polling cicles */
 
 #define KBC_TIMEOUT_MAX_ATTEMPTS  5
-#define KBC_COMMAND_WAIT_TIME     KBD_POLLING_INTERVAL * 50   /* Max wait time, in microseconds, when issuing a KBC command */
+#define KBC_COMMAND_WAIT_TIME     KBD_POLLING_INTERVAL * 25   /* Max wait time, in microseconds, when issuing a KBC command */
+#define KBC_RETURN_VAL_WAIT_TIME  KBC_COMMAND_WAIT_TIME       /* Max wait time, in microseconds, when waiting for a return value to a KBC command */
 
 #endif /* _LCOM_I8042_H_ */

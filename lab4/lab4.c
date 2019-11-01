@@ -10,6 +10,7 @@
 
 uint8_t packet_byte;
 
+
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
   lcf_set_language("EN-US");
@@ -43,11 +44,12 @@ int (mouse_test_packet)(uint32_t cnt) {
     printf("Error when calling mouse_enable_data_reporting.\n");
     return 1;
   }
+
   if (mouse_subscribe_int(&bit_no)) {
     printf("Error when calling mouse_subscribe_int.\n");
     return 1;
   }
-    
+
   int ipc_status;
   message msg;
   uint32_t number_of_packets = 0;
@@ -59,15 +61,14 @@ int (mouse_test_packet)(uint32_t cnt) {
       printf("Error when calling driver_receive.\n");
       continue;
     }
+    
     if (is_ipc_notify(ipc_status)) {
-      printf("Switch here.\n\n"); // -----------------------
       switch(_ENDPOINT_P(msg.m_source)) {
       case HARDWARE:
         if (msg.m_notify.interrupts & BIT(bit_no)) {
           mouse_ih();
-          packet_byte_counter ++;
+          packet_byte_counter++;
           switch (packet_byte_counter) {
-            printf("The other switch here.\n\n"); // ---------------------
           case MOUSE_FIRST_BYTE:
             if ((packet_byte & MOUSE_FIRST_BYTE_CHECK) != 0) {
               packet_byte_counter = MOUSE_PACKET_START_OVER;
@@ -82,7 +83,7 @@ int (mouse_test_packet)(uint32_t cnt) {
           case MOUSE_THIRD_BYTE:
             packet_bytes[MOUSE_INDEX_THIRD_BYTE] = packet_byte;
             packet_byte_counter = MOUSE_PACKET_START_OVER;
-            number_of_packets ++;
+            number_of_packets++;
             mouse_packet_parser(&packet_byte, &p);
             mouse_print_packet(&p);
             break;
@@ -101,12 +102,15 @@ int (mouse_test_packet)(uint32_t cnt) {
     printf("Error when calling mouse_unsubscribe_int.\n");
     return 1;
   }
+
   if (mouse_disable_data_report()) {
     printf("Error when calling mouse_disable_data_report.\n");
     return 1;
   }
+
   return 0;
 }
+
 
 int (mouse_test_remote)(uint16_t period, uint8_t cnt) {
     /* To be completed */
@@ -114,11 +118,13 @@ int (mouse_test_remote)(uint16_t period, uint8_t cnt) {
     return 1;
 }
 
+
 int (mouse_test_async)(uint8_t idle_time) {
     /* To be completed */
     printf("%s(%u): under construction\n", __func__, idle_time);
     return 1;
 }
+
 
 int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
     // To be completed

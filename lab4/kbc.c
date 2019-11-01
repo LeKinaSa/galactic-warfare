@@ -1,6 +1,6 @@
-
 #include "i8042.h"
 #include "kbc.h"
+
 
 int kbc_read_status(uint8_t *status) {
   if (status == NULL) {
@@ -8,62 +8,52 @@ int kbc_read_status(uint8_t *status) {
     return 1;
   }
 
-  int attempts = 0;
-
-  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
-    if (util_sys_inb(KBC_STATUS_REG, status)) {
-      printf("Error when reading from status register.\n");
-      return 1;
-    }
-
-    if ((*status & KBC_TIMEOUT) != 0) {
-      ++attempts;
-    }
-    else {
-      return 0;
-    }
+  if (util_sys_inb(KBC_STATUS_REG, status)) {
+    printf("Error when callign util_sys_inb.\n");
+    return 1;
   }
 
-  printf("Couldn't retrieve status. Maximum num. of attempts reached.\n");
-  return 1;
+  return 0;
 }
 
-int kbc_read_output_buf(uint8_t *output) {
-  int attempts = 0;
-  uint8_t status = 0;
 
+int kbc_read_output_buf(uint8_t *output) {
   if (output == NULL) {
     printf("Error occurred: null pointer.\n");
     return 1;
   }
 
-  while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
+  int wait_time = 0;
+  uint8_t status = 0;
+
+  while (wait_time < KBC_RETURN_VAL_WAIT_TIME) {
     if (kbc_read_status(&status)) {
       printf("Error when reading from status register.\n");
       return 1;
     }
-
-    if ((status & KBC_TIMEOUT) != 0) {
-      ++attempts;
-    }
-
-    else if ((status & KBC_OUT_BUF_FULL) != 0) {
-      if ((status & KBC_PARITY_ERROR) != 0) {
-        printf("Status register indicates parity error.\n");
-      }
-
+    
+    if ((status & KBC_OUT_BUF_FULL) != 0) {
       if (util_sys_inb(KBC_OUTPUT_BUF, output)) {
         printf("Error when calling util_sys_inb.\n");
+        return 1;
+      }
+      
+      if ((status & (KBC_TIMEOUT | KBC_PARITY_ERROR)) != 0) {
+        printf("Status register indicates timeout or parity error.\n");
         return 1;
       }
 
       return 0;
     }
+
+    wait_time += KBD_POLLING_INTERVAL;
+    tickdelay(micros_to_ticks(KBD_POLLING_INTERVAL));
   }
 
-  printf("Couldn't retrieve output. Maximum num. of attempts reached.\n");
+  printf("Timeout occurred: took too long to read from output buffer.\n");
   return 1;
 }
+
 
 int kbc_write_command(uint8_t command) {
   uint8_t status;
@@ -77,7 +67,7 @@ int kbc_write_command(uint8_t command) {
 
     // First we must check if there are any errors and if the input buffer is full
     if ((status & (KBC_TIMEOUT | KBC_PARITY_ERROR)) != 0) {
-      printf("Status register indicates keyboard timeout or parity error.\n");
+      printf("Status register indicates timeout or parity error.\n");
       return 1;
     }
 
@@ -97,6 +87,7 @@ int kbc_write_command(uint8_t command) {
   printf("Timeout occurred: took too long to write command.\n");
   return 1;
 }
+
 
 int kbc_write_arg(uint8_t arg) {
   uint8_t status;

@@ -1,6 +1,6 @@
 #include "mouse.h"
 
-int mouse_hook_id = MOUSE_IRQ;
+static int mouse_hook_id = MOUSE_IRQ;
 extern uint8_t packet_byte;
 extern uint8_t packet_byte_counter;
 
@@ -96,18 +96,18 @@ int mouse_write(uint8_t command) {
 
 /* ENABLE / DISABLE DATA */
 
-int mouse_enable_data_report () {
+int mouse_enable_data_report() {
   int attempts = 0;
 
   while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
     if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
       printf("Error when calling kbc_write_command.\n");
-      attempts ++;
+      attempts++;
       continue;
     }
     if (kbc_write_arg(MOUSE_ENABLE)) {
       printf("Error when calling kbc_write_arg.\n");
-      attempts ++;
+      attempts++;
       continue;
     }
     break;
@@ -140,12 +140,12 @@ int mouse_disable_data_report() {
   while (attempts < KBC_TIMEOUT_MAX_ATTEMPTS) {
     if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
       printf("Error when calling kbc_write_command.\n");
-      attempts ++;
+      attempts++;
       continue;
     }
     if (kbc_write_arg(default_config)) {
       printf("Error when calling kbc_write_arg.\n");
-      attempts ++;
+      attempts++;
       continue;
     }
     break;
@@ -165,6 +165,7 @@ int mouse_set_stream_mode() {
     printf("Error when setting mouse to stream mode.\n");
     return 1;
   }
+
   return 0;
 }
 
@@ -173,6 +174,7 @@ int mouse_set_remote_mode() {
     printf("Error when setting mouse to remote mode.\n");
     return 1;
   }
+
   return 0;
 }
 
