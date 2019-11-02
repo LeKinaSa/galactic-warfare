@@ -3,6 +3,7 @@
 static int mouse_hook_id = MOUSE_IRQ;
 extern uint8_t packet_byte;
 
+
 /* SUBSCRIBE / UNSUBSCRIBE INTERRUPTIONS */
 
 int mouse_subscribe_int(uint8_t *bit_no) {
@@ -99,8 +100,21 @@ int mouse_enable_data_report() {
 }
 
 int mouse_disable_data_report() {
-  if(mouse_write(MOUSE_RESET)) {
+  uint8_t default_command_byte;
+
+  if(mouse_write(MOUSE_SET_DEFAULT)) {
     printf("Error when calling mouse_write.\n");
+    return 1;
+  }
+
+  default_command_byte = minix_get_dflt_kbc_cmd_byte();
+
+  if (kbc_write_command(default_command_byte)) {
+    printf("Error when calling kbc_write_command.\n");
+    return 1;
+  }
+  if (kbc_write_arg(default_command_byte)) {
+    printf("Error when caalling kbc_write_arg.\n");
     return 1;
   }
 
