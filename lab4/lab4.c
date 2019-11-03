@@ -51,12 +51,12 @@ int (mouse_test_packet)(uint32_t cnt) {
   int ipc_status;
   message msg;
 
-  uint32_t number_of_packets = 0;
+  uint32_t num_packets = 0;
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
   int packet_byte_counter = 0;
   struct packet p;
   
-  while (number_of_packets < cnt) {
+  while (num_packets < cnt) {
     if (driver_receive(ANY, &msg, &ipc_status)) { 
       printf("Error when calling driver_receive.\n");
       continue;
@@ -68,25 +68,15 @@ int (mouse_test_packet)(uint32_t cnt) {
         if (msg.m_notify.interrupts & BIT(bit_no)) {
           mouse_ih();
 
-          switch (packet_byte_counter) {
-          case 0:
-            packet_bytes[0] = packet_byte;
-            break;
-          case 1:
-            packet_bytes[1] = packet_byte;
-            break;
-          case 2:
-            packet_bytes[2] = packet_byte;
-            ++number_of_packets;
-            mouse_parse_packet(packet_bytes, &p);
-            mouse_print_packet(&p);
-            break;
-          default:
-            break;
-          }
+          // TODO: Add condition: if first byte and BIT(3) is not one, discard byte and don't increment counter
+          packet_bytes[packet_byte_counter] = packet_byte;
 
           if (packet_byte_counter == 2) {
             packet_byte_counter = 0;
+            ++num_packets;
+
+            mouse_parse_packet(packet_bytes, &p);
+            mouse_print_packet(&p);
           }
           else {
             ++packet_byte_counter;
@@ -106,6 +96,11 @@ int (mouse_test_packet)(uint32_t cnt) {
 
   if (mouse_disable_data_report()) {
     printf("Error when calling mouse_disable_data_report.\n");
+    return 1;
+  }
+
+  if (kbc_reset_cmd_byte()) {
+    printf("Error when calling kbc_reset_cmd_byte.\n");
     return 1;
   }
 

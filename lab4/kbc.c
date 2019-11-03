@@ -121,3 +121,20 @@ int kbc_write_arg(uint8_t arg) {
   printf("Timeout occurred: took too long to write argument.\n");
   return 1;
 }
+
+
+int kbc_reset_cmd_byte() {
+  uint8_t default_cmd_byte = minix_get_dflt_kbc_cmd_byte();
+
+  if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
+    printf("Error when calling kbc_write_command.\n");
+    return 1;
+  }
+
+  if (kbc_write_arg(default_cmd_byte)) {
+    printf("Error when calling kbc_write_arg.\n");
+    return 1;
+  }
+
+  return 0;
+}

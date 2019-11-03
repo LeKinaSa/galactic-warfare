@@ -18,7 +18,7 @@
 /* STATUS REGISTER */
 
 #define KBC_PARITY_ERROR      BIT(7)    /* Bit set to 1 when there is a parity error */
-#define KBC_TIMEOUT           BIT(6)    /* Bit set to 1 when keyboard timeout */
+#define KBC_TIMEOUT           BIT(6)    /* Bit set to 1 when a timeout occurred */
 #define KBC_MOUSE_DATA        BIT(5)    /* Bit set to 1 if data comes from mouse */
 #define KBC_INHIBIT_SWITCH    BIT(4)    /* Bit set to 0 if keyboard is inhibited */
 #define KBC_A2                BIT(3)    /* Bit set to 1 if input is a command, 0 if input is data */
@@ -52,26 +52,26 @@
 #define MOUSE_CHECK            0xA9   /* Check mouse interface */
 #define MOUSE_WRITE_BYTE       0xD4   /* Write argument to mouse */
 
-/* MOUSE COMMANDS */
+/* PS/2 MOUSE COMMANDS */
 
 #define MOUSE_RESET             0xFF  /* Mouse reset */
 #define MOUSE_RESEND            0xFE  /* Resend the byte for serial communication errors */
 #define MOUSE_SET_DEFAULT       0xF6  /* Set default values */
-#define MOUSE_DISABLE_DATA      0xF5  /* In stream mode */
-#define MOUSE_ENABLE_DATA       0xF4  /* Only in stream mode */
+#define MOUSE_DISABLE_DATA      0xF5  /* Disables data reporting */
+#define MOUSE_ENABLE_DATA       0xF4  /* Enables data reporting in stream mode */
 #define MOUSE_SET_SAMPLE_RATE   0xF3  /* Sets state sampling rate */
-#define MOUSE_REMOTE_MODE       0xF0  /* Sets the mouse to Remote Mode, only send data on request */
+#define MOUSE_REMOTE_MODE       0xF0  /* Sets the mouse to remote mode, only send data on request */
 #define MOUSE_READ_DATA         0xEB  /* Send data packet request */
-#define MOUSE_STREAM_MODE       0xEA  /* Sets the mouse to Stream Mode, send data on events */
+#define MOUSE_STREAM_MODE       0xEA  /* Sets the mouse to stream mode, send data on events */
 #define MOUSE_STATUS_REQUEST    0xE9  /* Gets mouse configuration (3 bytes) */
 #define MOUSE_ACCELERATION_MODE 0xE7  /* Set scaling 2:1 acceleration mode */
 #define MOUSE_LINEAR_MODE       0xE6  /* Set scaling 1:1 linear mode */
 
-/* ACKNOLEDGMENT BYTES */
+/* ACKNOWLEDGMENT BYTES */
 
-#define MOUSE_ACK_OK          0xFA    /* Everything OK */
-#define MOUSE_ACK_INVALID     0xFE    /* Invalid byte */
-#define MOUSE_ACK_ERROR       0xFC    /* Second consecutive invalid byte */
+#define MOUSE_ACK_OK            0xFA     /* Everything OK */
+#define MOUSE_ACK_INVALID       0xFE     /* Invalid byte */
+#define MOUSE_ACK_ERROR         0xFC     /* Second consecutive invalid byte */
 
 /* SCANCODES */
 

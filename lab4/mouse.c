@@ -33,7 +33,7 @@ int mouse_unsubscribe_int() {
 
 /* INTERRUPT HANDLER */
 
-void (mouse_ih)() { // kbc_ih but with packet_byte instead of scancode
+void (mouse_ih)(void) {
   uint8_t status, output;
   int attempts = 0;
 
@@ -89,13 +89,8 @@ int mouse_write(uint8_t command) {
     return 1;
   }
 
-  if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
-    printf("Error when calling kbc_write_command.\n");
-    return 1;
-  }
-
-  if (kbc_write_arg(minix_get_dflt_kbc_cmd_byte())) {
-    printf("Error when calling kbc_write_arg.\n");
+  if (kbc_reset_cmd_byte()) {
+    printf("Error when calling kbc_reset_cmd_byte.\n");
     return 1;
   }
 
@@ -126,18 +121,6 @@ int mouse_enable_data_report() {
 int mouse_disable_data_report() {
   if(mouse_write(MOUSE_DISABLE_DATA)) {
     printf("Error when calling mouse_write.\n");
-    return 1;
-  }
-
-  uint8_t default_command_byte = minix_get_dflt_kbc_cmd_byte();
-
-  if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
-    printf("Error when calling kbc_write_command.\n");
-    return 1;
-  }
-
-  if (kbc_write_arg(default_command_byte)) {
-    printf("Error when caalling kbc_write_arg.\n");
     return 1;
   }
 
