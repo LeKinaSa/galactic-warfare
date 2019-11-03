@@ -38,9 +38,8 @@ int main(int argc, char *argv[]) {
 int (mouse_test_packet)(uint32_t cnt) {
   uint8_t bit_no = 0;
 
-  // TODO: Fix our mouse_enable_data_report function and replace
-  if (mouse_enable_data_reporting()) {
-    printf("Error when calling mouse_enable_data_reporting.\n");
+  if (mouse_enable_data_report()) {
+    printf("Error when calling mouse_enable_data_report.\n");
     return 1;
   }
 
@@ -52,9 +51,9 @@ int (mouse_test_packet)(uint32_t cnt) {
   int ipc_status;
   message msg;
 
-  int packet_byte_counter = 0;
   uint32_t number_of_packets = 0;
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
+  int packet_byte_counter = 0;
   struct packet p;
   
   while (number_of_packets < cnt) {

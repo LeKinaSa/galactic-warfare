@@ -20,7 +20,7 @@
 #define KBC_PARITY_ERROR      BIT(7)    /* Bit set to 1 when there is a parity error */
 #define KBC_TIMEOUT           BIT(6)    /* Bit set to 1 when keyboard timeout */
 #define KBC_MOUSE_DATA        BIT(5)    /* Bit set to 1 if data comes from mouse */
-#define KBC_INHIBIT           BIT(4)    /* Bit set to 1 if keyboard is inhibited */
+#define KBC_INHIBIT_SWITCH    BIT(4)    /* Bit set to 0 if keyboard is inhibited */
 #define KBC_A2                BIT(3)    /* Bit set to 1 if input is a command, 0 if input is data */
 #define KBC_SYS               BIT(2)    /* Bit set to 1 if system initialized, 1 if in reset */
 #define KBC_IN_BUF_FULL       BIT(1)    /* Bit set to 1 when input buffer is full */
@@ -114,7 +114,7 @@
 #define KBD_POLLING_INTERVAL   20000   /* Time in microseconds to wait between two polling cicles */
 
 #define KBC_TIMEOUT_MAX_ATTEMPTS  5
-#define KBC_COMMAND_WAIT_TIME     KBD_POLLING_INTERVAL * 25   /* Max wait time, in microseconds, when issuing a KBC command */
+#define KBC_COMMAND_WAIT_TIME     KBD_POLLING_INTERVAL * 10   /* Max wait time, in microseconds, when issuing a KBC command */
 #define KBC_RETURN_VAL_WAIT_TIME  KBC_COMMAND_WAIT_TIME       /* Max wait time, in microseconds, when waiting for a return value to a KBC command */
 
 #endif /* _LCOM_I8042_H_ */
