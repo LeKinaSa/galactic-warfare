@@ -124,7 +124,7 @@ int mouse_enable_data_report() {
 }
 
 int mouse_disable_data_report() {
-  if(mouse_write(MOUSE_SET_DEFAULT)) {
+  if(mouse_write(MOUSE_DISABLE_DATA)) {
     printf("Error when calling mouse_write.\n");
     return 1;
   }
