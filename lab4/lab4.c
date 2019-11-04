@@ -274,16 +274,8 @@ int (mouse_test_async)(uint8_t idle_time) {
 }
 
 
-enum states {
-  START_OVER,
-  GOING_UP,
-  ON_VERTICE,
-  GOING_DOWN,
-  FINISHED
-};
-
 int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
-    uint8_t bit_no = 0;
+  uint8_t bit_no = 0;
 
   if (mouse_enable_data_report()) {
     printf("Error when calling mouse_enable_data_report.\n");
@@ -302,9 +294,9 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
   int packet_byte_counter = 0;
   struct packet p;
-  enum states state;
+  enum state s;
   
-  while (state == FINISHED) { // STOP CONDITION
+  while (s != FINISHED) {
     if (driver_receive(ANY, &msg, &ipc_status)) { 
       printf("Error when calling driver_receive.\n");
       continue;
