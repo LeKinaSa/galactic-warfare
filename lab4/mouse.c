@@ -60,45 +60,41 @@ void (mouse_ih)(void) {
 
 /* WRITE FUNCTION */
 
-int mouse_write(uint8_t command) {
+int mouse_write_command(uint8_t command) {
   // TODO: clean up this function
   uint8_t ack = 0;
   
-  if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
-    printf("Error when calling kbc_write_command.\n");
-    return 1;
-  }
+  for (uint i = 0; i < MOUSE_WRITE_MAX_ATTEMPTS; i++) {
+    if (kbc_disable_int()) {
+      printf("Error when calling kbc_disable_int.\n");
+      return 1;
+    }
 
-  if (kbc_write_arg(minix_get_dflt_kbc_cmd_byte() & 0x11111100)) {
-    printf("Error when calling kbc_write_arg.\n");
-    return 1;
-  }
+    if (kbc_write_command(MOUSE_WRITE_BYTE)) {
+      printf("Error when calling kbc_write_command.\n");
+      return 1;
+    }
 
-  if (kbc_write_command(MOUSE_WRITE_BYTE)) {
-    printf("Error when calling kbc_write_command.\n");
-    return 1;
-  }
+    if (kbc_write_arg(command)) {
+      printf("Error when calling kbc_write_arg.\n");
+      return 1;
+    }
 
-  if (kbc_write_arg(command)) {
-    printf("Error when calling kbc_write_arg.\n");
-    return 1;
-  }
+    if (kbc_read_output_buf(&ack)) {
+      printf("Error when calling kbc_read_ouput_buf.\n");
+      return 1;
+    }
 
-  if (kbc_read_output_buf(&ack)) {
-    printf("Error when calling kbc_read_ouput_buf.\n");
-    return 1;
-  }
+    if (kbc_reset_cmd_byte()) {
+      printf("Error when calling kbc_reset_cmd_byte.\n");
+      return 1;
+    }
 
-  if (kbc_reset_cmd_byte()) {
-    printf("Error when calling kbc_reset_cmd_byte.\n");
-    return 1;
+    if (ack == MOUSE_ACK_OK) {
+      return 0;
+    }
   }
-
-  printf("ACK: 0x%x\n", ack);
-
-  if (ack == MOUSE_ACK_OK) {
-    return 0;
-  }
+  
   return 1;
 }
 
@@ -110,7 +106,7 @@ int mouse_enable_data_report() {
     return 1;
   }
 
-  if(mouse_write(MOUSE_ENABLE_DATA)) {
+  if(mouse_write_command(MOUSE_ENABLE_DATA)) {
     printf("Error when calling mouse_write.\n");
     return 1;
   }
@@ -119,7 +115,7 @@ int mouse_enable_data_report() {
 }
 
 int mouse_disable_data_report() {
-  if(mouse_write(MOUSE_DISABLE_DATA)) {
+  if(mouse_write_command(MOUSE_DISABLE_DATA)) {
     printf("Error when calling mouse_write.\n");
     return 1;
   }
@@ -130,7 +126,7 @@ int mouse_disable_data_report() {
 /* MODES */
 
 int mouse_set_stream_mode() {
-  if (mouse_write(MOUSE_STREAM_MODE)) {
+  if (mouse_write_command(MOUSE_STREAM_MODE)) {
     printf("Error when setting mouse to stream mode.\n");
     return 1;
   }
@@ -139,7 +135,7 @@ int mouse_set_stream_mode() {
 }
 
 int mouse_set_remote_mode() {
-  if (mouse_write(MOUSE_REMOTE_MODE)) {
+  if (mouse_write_command(MOUSE_REMOTE_MODE)) {
     printf("Error when setting mouse to remote mode.\n");
     return 1;
   }

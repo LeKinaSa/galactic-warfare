@@ -116,5 +116,6 @@
 #define KBC_TIMEOUT_MAX_ATTEMPTS  5
 #define KBC_COMMAND_WAIT_TIME     KBD_POLLING_INTERVAL * 10   /* Max wait time, in microseconds, when issuing a KBC command */
 #define KBC_RETURN_VAL_WAIT_TIME  KBC_COMMAND_WAIT_TIME       /* Max wait time, in microseconds, when waiting for a return value to a KBC command */
+#define MOUSE_WRITE_MAX_ATTEMPTS  3
 
 #endif /* _LCOM_I8042_H_ */
