@@ -125,6 +125,10 @@ int mouse_set_stream_mode() {
 }
 
 int mouse_set_remote_mode() {
+  if (mouse_write_command(MOUSE_DISABLE_DATA)) {
+    printf("Error when disabling mouse data.\n");
+    return 1;
+  }
   if (mouse_write_command(MOUSE_REMOTE_MODE)) {
     printf("Error when setting mouse to remote mode.\n");
     return 1;

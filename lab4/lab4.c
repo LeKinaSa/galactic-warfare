@@ -114,9 +114,66 @@ int (mouse_test_packet)(uint32_t cnt) {
 
 
 int (mouse_test_remote)(uint16_t period, uint8_t cnt) {
-    /* To be completed */
-    printf("%s(%u, %u): under construction\n", __func__, period, cnt);
+  uint32_t num_packets = 0;
+  uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
+  int packet_byte_counter = 0;
+  struct packet p;
+  uint8_t status;
+
+  while (num_packets < cnt) {
+    if (mouse_write_command(MOUSE_READ_DATA)) {
+      printf("Error when calling mouse_write_command.\n");
+    }
+
+    packet_byte_counter = 0;
+
+    while (packet_byte_counter <= MOUSE_INDEX_THIRD_BYTE) {
+      if (kbc_read_status(&status)) {
+        printf("Error when reading from status register.\n");
+      }
+
+      if (((status & KBC_OUT_BUF_FULL) != 0) && ((status & KBC_MOUSE_DATA) != 0)) {
+        if (util_sys_inb(KBC_OUTPUT_BUF, &packet_byte)) {
+          printf("Error when calling util_sys_inb.\n");
+        }
+        
+        if ((status & (KBC_TIMEOUT | KBC_PARITY_ERROR)) != 0) {
+          printf("Status register indicates timeout or parity error.\n");
+        }
+        else {
+          packet_bytes[packet_byte_counter] = packet_byte;
+
+          if (packet_byte_counter == MOUSE_INDEX_THIRD_BYTE) {
+            ++num_packets;
+
+            mouse_parse_packet(packet_bytes, &p);
+            mouse_print_packet(&p);
+          }
+
+          ++packet_byte_counter;
+        }
+      }
+    }
+
+    tickdelay(micros_to_ticks(period * 1000));
+  }
+
+  if (mouse_set_stream_mode()) {
+    printf("Error when calling mouse_set_stream_mode.\n");
     return 1;
+  }
+
+  if (mouse_disable_data_report()) {
+    printf("Error when calling mouse_disable_data_report.\n");
+    return 1;
+  }
+
+  if (kbc_reset_cmd_byte()) {
+    printf("Error when calling kbc_reset_cmd_byte.\n");
+    return 1;
+  }
+
+  return 0;
 }
 
 
