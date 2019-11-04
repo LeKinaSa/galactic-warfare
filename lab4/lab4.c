@@ -68,10 +68,13 @@ int (mouse_test_packet)(uint32_t cnt) {
         if (msg.m_notify.interrupts & BIT(bit_no)) {
           mouse_ih();
 
-          // TODO: Add condition: if first byte and BIT(3) is not one, discard byte and don't increment counter
+          if ((packet_byte_counter == MOUSE_INDEX_FIRST_BYTE) && ((packet_byte & MOUSE_FIRST_BYTE_CHECK) == 0)) {
+            continue;
+          }
+          
           packet_bytes[packet_byte_counter] = packet_byte;
 
-          if (packet_byte_counter == 2) {
+          if (packet_byte_counter == MOUSE_INDEX_THIRD_BYTE) {
             packet_byte_counter = 0;
             ++num_packets;
 
