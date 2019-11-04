@@ -144,49 +144,36 @@ void mouse_parse_packet(uint8_t bytes[], struct packet *p) {
 }
 
 void mouse_get_buttons_pressed(struct packet *p) {
-  p->lb = false;
-  p->mb = false;
-  p->rb = false;
-
-  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_LEFT_BUTTON_PRESSED) != 0) {
-    p->lb = true;
-  }
-  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_MIDDLE_BUTTON_PRESSED) != 0) {
-    p->mb = true;
-  }
-  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_RIGHT_BUTTON_PRESSED) != 0) {
-    p->rb = true;
-  }
+  p->lb = ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_LEFT_BUTTON_PRESSED) != 0);
+  p->mb = ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_MIDDLE_BUTTON_PRESSED) != 0);
+  p->rb = ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_RIGHT_BUTTON_PRESSED) != 0);
 }
 
 void mouse_get_x_displacement(struct packet *p) {
-  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_MSB_X) != 0) { // X is a negative value
+  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_MSB_X) != 0) { 
+    // X is a negative value
     p->delta_x = (NEGATIVE_NUMBER) | (p->bytes[MOUSE_BYTE_X]);
   }
-  else { // X is a positive value
+  else { 
+    // X is a positive value
     p->delta_x = (POSITIVE_NUMBER) | (p->bytes[MOUSE_BYTE_X]);
   }
 }
 
 void mouse_get_y_displacement(struct packet *p) {
-  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_MSB_Y) != 0){ // Y is a negative value
+  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_MSB_Y) != 0){ 
+    // Y is a negative value
     p->delta_y = (NEGATIVE_NUMBER) | (p->bytes[MOUSE_BYTE_Y]);
   }
-  else { // Y is a positive value
+  else { 
+    // Y is a positive value
     p->delta_y = (POSITIVE_NUMBER) | (p->bytes[MOUSE_BYTE_Y]);
   }
 }
 
 void mouse_get_overflow(struct packet *p) {
-  p->x_ov = false;
-  p->y_ov = false;
-
-  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_OVERFLOW_X) != 0) {
-    p->x_ov = true;
-  }
-  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_OVERFLOW_Y) != 0) {
-    p->y_ov = true;
-  }
+  p->x_ov = ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_OVERFLOW_X) != 0);
+  p->y_ov = ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_OVERFLOW_Y) != 0);
 }
 
 void mouse_put_bytes_on_packet(uint8_t bytes[], struct packet *p) {
