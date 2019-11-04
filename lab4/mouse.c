@@ -61,15 +61,9 @@ void (mouse_ih)(void) {
 /* WRITE FUNCTION */
 
 int mouse_write_command(uint8_t command) {
-  // TODO: clean up this function
   uint8_t ack = 0;
   
-  for (uint i = 0; i < MOUSE_WRITE_MAX_ATTEMPTS; i++) {
-    if (kbc_disable_int()) {
-      printf("Error when calling kbc_disable_int.\n");
-      return 1;
-    }
-
+  for (uint i = 0; i < MOUSE_COMMAND_MAX_ATTEMPTS; i++) {
     if (kbc_write_command(MOUSE_WRITE_BYTE)) {
       printf("Error when calling kbc_write_command.\n");
       return 1;
@@ -85,16 +79,12 @@ int mouse_write_command(uint8_t command) {
       return 1;
     }
 
-    if (kbc_reset_cmd_byte()) {
-      printf("Error when calling kbc_reset_cmd_byte.\n");
-      return 1;
-    }
-
     if (ack == MOUSE_ACK_OK) {
       return 0;
     }
   }
   
+  printf("Max num. of attempts reached: couldn't write command.\n");
   return 1;
 }
 
@@ -106,7 +96,7 @@ int mouse_enable_data_report() {
     return 1;
   }
 
-  if(mouse_write_command(MOUSE_ENABLE_DATA)) {
+  if (mouse_write_command(MOUSE_ENABLE_DATA)) {
     printf("Error when calling mouse_write.\n");
     return 1;
   }
@@ -115,7 +105,7 @@ int mouse_enable_data_report() {
 }
 
 int mouse_disable_data_report() {
-  if(mouse_write_command(MOUSE_DISABLE_DATA)) {
+  if (mouse_write_command(MOUSE_DISABLE_DATA)) {
     printf("Error when calling mouse_write.\n");
     return 1;
   }
@@ -158,19 +148,19 @@ void mouse_get_buttons_pressed(struct packet *p) {
   p->mb = false;
   p->rb = false;
 
-  if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_LEFT_BUTTON_PRESSED) != 0) {
+  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_LEFT_BUTTON_PRESSED) != 0) {
     p->lb = true;
   }
-  if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_MIDDLE_BUTTON_PRESSED) != 0) {
+  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_MIDDLE_BUTTON_PRESSED) != 0) {
     p->mb = true;
   }
-  if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_RIGHT_BUTTON_PRESSED) != 0) {
+  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_RIGHT_BUTTON_PRESSED) != 0) {
     p->rb = true;
   }
 }
 
 void mouse_get_x_displacement(struct packet *p) {
-  if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_MSB_X) != 0) { // X is a negative value
+  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_MSB_X) != 0) { // X is a negative value
     p->delta_x = (NEGATIVE_NUMBER) | (p->bytes[MOUSE_BYTE_X]);
   }
   else { // X is a positive value
@@ -179,7 +169,7 @@ void mouse_get_x_displacement(struct packet *p) {
 }
 
 void mouse_get_y_displacement(struct packet *p) {
-  if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_MSB_Y) != 0){ // Y is a negative value
+  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_MSB_Y) != 0){ // Y is a negative value
     p->delta_y = (NEGATIVE_NUMBER) | (p->bytes[MOUSE_BYTE_Y]);
   }
   else { // Y is a positive value
@@ -191,10 +181,10 @@ void mouse_get_overflow(struct packet *p) {
   p->x_ov = false;
   p->y_ov = false;
 
-  if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_OVERFLOW_X) != 0) {
+  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_OVERFLOW_X) != 0) {
     p->x_ov = true;
   }
-  if ((p->bytes[MOUSE_BYTE_TO_TREAT] & MOUSE_OVERFLOW_Y) != 0) {
+  if ((p->bytes[MOUSE_BYTE_INFO] & MOUSE_OVERFLOW_Y) != 0) {
     p->y_ov = true;
   }
 }

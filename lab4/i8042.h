@@ -42,21 +42,21 @@
 
 /* KEYBOARD-SPECIFIC KBC COMMANDS */
 
-#define KBD_DISABLE_INTERFACE  0xAD      /* Disable keyboard interface */
-#define KBD_ENABLE_INTERFACE   0xAE      /* Enable keyboard interface */
+#define KBC_DISABLE_KBD_INTERFACE  0xAD    /* Disable keyboard interface */
+#define KBC_ENABLE_KBD_INTERFACE   0xAE    /* Enable keyboard interface */
 
 /* MOUSE-SPECIFIC KBC COMMANDS */
 
-#define MOUSE_DISABLE          0xA7   /* Disable mouse */
-#define MOUSE_ENABLE           0xA8   /* Enable mouse */
-#define MOUSE_CHECK            0xA9   /* Check mouse interface */
-#define MOUSE_WRITE_BYTE       0xD4   /* Write argument to mouse */
+#define KBC_DISABLE_MOUSE         0xA7   /* Disable mouse */
+#define KBC_ENABLE_MOUSE          0xA8   /* Enable mouse */
+#define KBC_CHECK_MOUSE           0xA9   /* Check mouse interface */
+#define MOUSE_WRITE_BYTE          0xD4   /* Write byte to mouse */
 
 /* PS/2 MOUSE COMMANDS */
 
 #define MOUSE_RESET             0xFF  /* Mouse reset */
 #define MOUSE_RESEND            0xFE  /* Resend the byte for serial communication errors */
-#define MOUSE_SET_DEFAULT       0xF6  /* Set default values */
+#define MOUSE_SET_DEFAULTS      0xF6  /* Set default values */
 #define MOUSE_DISABLE_DATA      0xF5  /* Disables data reporting */
 #define MOUSE_ENABLE_DATA       0xF4  /* Enables data reporting in stream mode */
 #define MOUSE_SET_SAMPLE_RATE   0xF3  /* Sets state sampling rate */
@@ -75,9 +75,9 @@
 
 /* SCANCODES */
 
-#define KBD_BREAKCODE          BIT(7)    /* Bit set to 1 for breakcodes, 0 for makecodes */
-#define KBD_TWO_BYTE_CODE      0xE0      /* Most significant byte for a two byte scancode */
-#define KBD_ESC_BREAKCODE      0x81      /* ESC breakcode */
+#define KBD_BREAKCODE           BIT(7)    /* Bit set to 1 for breakcodes, 0 for makecodes */
+#define KBD_TWO_BYTE_CODE       0xE0      /* Most significant byte for a two byte scancode */
+#define KBD_ESC_BREAKCODE       0x81      /* ESC breakcode */
 
 /* MOUSE PACKET ASSEMBLING */
 
@@ -85,14 +85,13 @@
 #define MOUSE_PCK_FIRST_BYTE                1
 #define MOUSE_PCK_SECOND_BYTE               2
 #define MOUSE_PCK_THIRD_BYTE                3
-#define MOUSE_PACKET_START_OVER             0
 #define MOUSE_INDEX_FIRST_BYTE              MOUSE_PCK_FIRST_BYTE - 1
 #define MOUSE_INDEX_SECOND_BYTE             MOUSE_PCK_SECOND_BYTE - 1
 #define MOUSE_INDEX_THIRD_BYTE              MOUSE_PCK_THIRD_BYTE - 1
 
 /* MOUSE PACKET PARSING */
 
-#define MOUSE_BYTE_TO_TREAT           MOUSE_INDEX_FIRST_BYTE
+#define MOUSE_BYTE_INFO               MOUSE_INDEX_FIRST_BYTE
 #define MOUSE_BYTE_X                  MOUSE_INDEX_SECOND_BYTE
 #define MOUSE_BYTE_Y                  MOUSE_INDEX_THIRD_BYTE
 #define MOUSE_OVERFLOW_Y              BIT(7)
@@ -113,9 +112,11 @@
 
 #define KBD_POLLING_INTERVAL   20000   /* Time in microseconds to wait between two polling cicles */
 
-#define KBC_TIMEOUT_MAX_ATTEMPTS  5
-#define KBC_COMMAND_WAIT_TIME     KBD_POLLING_INTERVAL * 10   /* Max wait time, in microseconds, when issuing a KBC command */
-#define KBC_RETURN_VAL_WAIT_TIME  KBC_COMMAND_WAIT_TIME       /* Max wait time, in microseconds, when waiting for a return value to a KBC command */
-#define MOUSE_WRITE_MAX_ATTEMPTS  3
+/* ERROR HANDLING */
+
+#define KBC_TIMEOUT_MAX_ATTEMPTS      5                           /* Max attempts upon a timeout error */
+#define KBC_COMMAND_WAIT_TIME         KBD_POLLING_INTERVAL * 10   /* Max wait time, in microseconds, when issuing a KBC command */
+#define KBC_RETURN_VAL_WAIT_TIME      KBC_COMMAND_WAIT_TIME       /* Max wait time, in microseconds, when waiting for a return value to a KBC command */
+#define MOUSE_COMMAND_MAX_ATTEMPTS    3                         /* Max attempts when sending a command to the PS/2 mouse */
 
 #endif /* _LCOM_I8042_H_ */

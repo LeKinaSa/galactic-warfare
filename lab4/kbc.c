@@ -124,7 +124,7 @@ int kbc_write_arg(uint8_t arg) {
 
 
 int kbc_disable_int() {
-  uint8_t cmd_byte = minix_get_dflt_kbc_cmd_byte() & ~(CMD_BYTE_ENABLE_KBD_INT | CMD_BYTE_ENABLE_MOUSE_INT)
+  uint8_t cmd_byte = minix_get_dflt_kbc_cmd_byte() & ~(CMD_BYTE_ENABLE_KBD_INT | CMD_BYTE_ENABLE_MOUSE_INT);
 
   if (kbc_write_command(KBC_WRITE_COMMAND_BYTE)) {
     printf("Error when calling kbc_write_command.\n");
