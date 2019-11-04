@@ -294,9 +294,8 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
   int packet_byte_counter = 0;
   struct packet p;
-  enum state s;
   
-  while (s != FINISHED) {
+  while (true) { // TODO: Add stop condition
     if (driver_receive(ANY, &msg, &ipc_status)) { 
       printf("Error when calling driver_receive.\n");
       continue;
@@ -320,7 +319,7 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
 
             mouse_parse_packet(packet_bytes, &p);
             mouse_print_packet(&p);
-            // update_state_machine();
+            //update_state_machine();
           }
           else {
             ++packet_byte_counter;
