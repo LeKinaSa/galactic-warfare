@@ -7,7 +7,7 @@
 
 
 static int timer_hook_id = TIMER0_IRQ;
-//extern int counter; // TODO: Add counter variable to lab4 and uncomment timer_int_handler
+extern int counter;
 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   uint8_t status;
@@ -101,7 +101,7 @@ int (timer_unsubscribe_int)() {
 }
 
 void (timer_int_handler)() {
-  //++counter;
+  ++counter;
 }
 
 int (timer_get_conf)(uint8_t timer, uint8_t *st) {

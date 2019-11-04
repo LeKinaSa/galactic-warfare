@@ -7,8 +7,10 @@
 // Any header files included below this line should have been created by you
 #include "mouse.h"
 #include "utils.h"
+#include "i8254.h"
 
 uint8_t packet_byte;
+int counter;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -119,9 +121,99 @@ int (mouse_test_remote)(uint16_t period, uint8_t cnt) {
 
 
 int (mouse_test_async)(uint8_t idle_time) {
-    /* To be completed */
-    printf("%s(%u): under construction\n", __func__, idle_time);
+  uint8_t timer_bit_no = 0, mouse_bit_no = 0;
+
+  if (mouse_enable_data_report()) {
+    printf("Error when calling mouse_enable_data_report.\n");
     return 1;
+  }
+
+  if (timer_subscribe_int(&timer_bit_no)) {
+    printf("Error when calling timer_subscribe_int.\n");
+    return 1;
+  }
+
+  if (mouse_subscribe_int(&mouse_bit_no)) {
+    printf("Error when calling mouse_subscribe_int.\n");
+    return 1;
+  }
+
+  int ipc_status;
+  message msg;
+
+  uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
+  int packet_byte_counter = 0;
+  struct packet p;
+
+  uint8_t num_seconds = 0;
+  
+  while (num_seconds < idle_time) {
+    if (driver_receive(ANY, &msg, &ipc_status)) { 
+      printf("Error when calling driver_receive.\n");
+      continue;
+    }
+    
+    if (is_ipc_notify(ipc_status)) {
+      switch(_ENDPOINT_P(msg.m_source)) {
+      case HARDWARE:
+        if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
+          mouse_ih();
+
+          num_seconds = 0;
+          counter = 0;
+
+          if ((packet_byte_counter == MOUSE_INDEX_FIRST_BYTE) && ((packet_byte & MOUSE_FIRST_BYTE_CHECK) == 0)) {
+            continue;
+          }
+
+          packet_bytes[packet_byte_counter] = packet_byte;
+
+          if (packet_byte_counter == 2) {
+            packet_byte_counter = 0;
+
+            mouse_parse_packet(packet_bytes, &p);
+            mouse_print_packet(&p);
+          }
+          else {
+            ++packet_byte_counter;
+          }
+        }
+        if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
+          timer_int_handler();
+
+          if (counter == TIMER0_INTERRUPTS_PER_SECOND) {
+            counter = 0;
+            ++num_seconds;
+          }
+        }
+        break;
+      default:
+        break;
+      }
+    }
+  }
+
+  if (timer_unsubscribe_int()) {
+    printf("Error when calling timer_unsubscribe_int.\n");
+    return 1;
+  }
+
+  if (mouse_unsubscribe_int()) {
+    printf("Error when calling mouse_unsubscribe_int.\n");
+    return 1;
+  }
+
+  if (mouse_disable_data_report()) {
+    printf("Error when calling mouse_disable_data_report.\n");
+    return 1;
+  }
+
+  if (kbc_reset_cmd_byte()) {
+    printf("Error when calling kbc_reset_cmd_byte.\n");
+    return 1;
+  }
+
+  return 0;
 }
 
 
