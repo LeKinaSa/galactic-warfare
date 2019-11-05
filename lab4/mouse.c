@@ -5,7 +5,7 @@ static int mouse_hook_id = MOUSE_IRQ;
 extern uint8_t packet_byte;
 
 
-/* SUBSCRIBE / UNSUBSCRIBE INTERRUPTIONS */
+/* MOUSE INTERRUPTS */
 
 int mouse_subscribe_int(uint8_t *bit_no) {
   if (bit_no == NULL) {
@@ -26,6 +26,24 @@ int mouse_subscribe_int(uint8_t *bit_no) {
 int mouse_unsubscribe_int() {
   if (sys_irqrmpolicy(&mouse_hook_id) != OK) {
     printf("Error when calling sys_irqrmpolicy.\n");
+    return 1;
+  }
+
+  return 0;
+}
+
+int mouse_enable_int() {
+  if (sys_irqenable(&mouse_hook_id) != OK) {
+    printf("Error when calling sys_irqenable.\n");
+    return 1;
+  }
+
+  return 0;
+}
+
+int mouse_disable_int() {
+  if (sys_irqdisable(&mouse_hook_id) != OK) {
+    printf("Error when calling sys_irqdisable.\n");
     return 1;
   }
 

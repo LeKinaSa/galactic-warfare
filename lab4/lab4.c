@@ -41,13 +41,23 @@ int main(int argc, char *argv[]) {
 int (mouse_test_packet)(uint32_t cnt) {
   uint8_t bit_no = 0;
 
+  if (mouse_subscribe_int(&bit_no)) {
+    printf("Error when calling mouse_subscribe_int.\n");
+    return 1;
+  }
+
+  if (mouse_disable_int()) {
+    printf("Error when calling mouse_disable_int.\n");
+    return 1;
+  }
+
   if (mouse_enable_data_report()) {
     printf("Error when calling mouse_enable_data_report.\n");
     return 1;
   }
 
-  if (mouse_subscribe_int(&bit_no)) {
-    printf("Error when calling mouse_subscribe_int.\n");
+  if (mouse_enable_int()) {
+    printf("Error when calling mouse_enable_int.\n");
     return 1;
   }
 
@@ -95,13 +105,23 @@ int (mouse_test_packet)(uint32_t cnt) {
     }
   }
 
-  if (mouse_unsubscribe_int()) {
-    printf("Error when calling mouse_unsubscribe_int.\n");
+  if (mouse_disable_int()) {
+    printf("Error when calling mouse_disable_int.\n");
     return 1;
   }
 
   if (mouse_disable_data_report()) {
     printf("Error when calling mouse_disable_data_report.\n");
+    return 1;
+  }
+
+  if (mouse_enable_int()) {
+    printf("Error when calling mouse_enable_int.\n");
+    return 1;
+  }
+
+  if (mouse_unsubscribe_int()) {
+    printf("Error when calling mouse_unsubscribe_int.\n");
     return 1;
   }
 
@@ -181,18 +201,28 @@ int (mouse_test_remote)(uint16_t period, uint8_t cnt) {
 int (mouse_test_async)(uint8_t idle_time) {
   uint8_t timer_bit_no = 0, mouse_bit_no = 0;
 
+  if (mouse_subscribe_int(&mouse_bit_no)) {
+    printf("Error when calling mouse_subscribe_int.\n");
+    return 1;
+  }
+
+  if (mouse_disable_int()) {
+    printf("Error when calling mouse_disable_int.\n");
+    return 1;
+  }
+
   if (mouse_enable_data_report()) {
     printf("Error when calling mouse_enable_data_report.\n");
     return 1;
   }
 
-  if (timer_subscribe_int(&timer_bit_no)) {
-    printf("Error when calling timer_subscribe_int.\n");
+  if (mouse_enable_int()) {
+    printf("Error when calling mouse_enable_int.\n");
     return 1;
   }
 
-  if (mouse_subscribe_int(&mouse_bit_no)) {
-    printf("Error when calling mouse_subscribe_int.\n");
+  if (timer_subscribe_int(&timer_bit_no)) {
+    printf("Error when calling timer_subscribe_int.\n");
     return 1;
   }
 
@@ -256,13 +286,23 @@ int (mouse_test_async)(uint8_t idle_time) {
     return 1;
   }
 
-  if (mouse_unsubscribe_int()) {
-    printf("Error when calling mouse_unsubscribe_int.\n");
+  if (mouse_disable_int()) {
+    printf("Error when calling mouse_disable_int.\n");
     return 1;
   }
 
   if (mouse_disable_data_report()) {
     printf("Error when calling mouse_disable_data_report.\n");
+    return 1;
+  }
+
+  if (mouse_enable_int()) {
+    printf("Error when calling mouse_enable_int.\n");
+    return 1;
+  }
+
+  if (mouse_unsubscribe_int()) {
+    printf("Error when calling mouse_unsubscribe_int.\n");
     return 1;
   }
 
@@ -278,13 +318,23 @@ int (mouse_test_async)(uint8_t idle_time) {
 int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
   uint8_t bit_no = 0;
 
+  if (mouse_subscribe_int(&bit_no)) {
+    printf("Error when calling mouse_subscribe_int.\n");
+    return 1;
+  }
+
+  if (mouse_disable_int()) {
+    printf("Error when calling mouse_disable_int.\n");
+    return 1;
+  }
+
   if (mouse_enable_data_report()) {
     printf("Error when calling mouse_enable_data_report.\n");
     return 1;
   }
 
-  if (mouse_subscribe_int(&bit_no)) {
-    printf("Error when calling mouse_subscribe_int.\n");
+  if (mouse_enable_int()) {
+    printf("Error when calling mouse_enable_int.\n");
     return 1;
   }
 
@@ -335,13 +385,23 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
     }
   }
 
-  if (mouse_unsubscribe_int()) {
-    printf("Error when calling mouse_unsubscribe_int.\n");
+  if (mouse_disable_int()) {
+    printf("Error when calling mouse_disable_int.\n");
     return 1;
   }
 
   if (mouse_disable_data_report()) {
     printf("Error when calling mouse_disable_data_report.\n");
+    return 1;
+  }
+
+  if (mouse_enable_int()) {
+    printf("Error when calling mouse_enable_int.\n");
+    return 1;
+  }
+
+  if (mouse_unsubscribe_int()) {
+    printf("Error when calling mouse_unsubscribe_int.\n");
     return 1;
   }
 

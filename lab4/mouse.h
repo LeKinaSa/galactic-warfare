@@ -11,6 +11,8 @@
 
 int mouse_subscribe_int(uint8_t *bit_no);   /* Subscribes mouse interrupts */
 int mouse_unsubscribe_int();                /* Unsubscribes mouse interrupts */
+int mouse_enable_int();                     /* Enables mouse interrupts */
+int mouse_disable_int();                    /* Disables mouse interrupts */
 
 int mouse_write_command(uint8_t command);   /* Writes a command to the PS/2 mouse. Interrupts must be disabled or else the ACK bytes may be automatically processed by Minix. */
 
