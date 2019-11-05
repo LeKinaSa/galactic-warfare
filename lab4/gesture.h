@@ -2,7 +2,7 @@
 #define __GESTURE_H
  
 #include <lcom/lcf.h>
-#include <mouse_gesture.h>
+#include <lcom/lab4.h>
 
 enum state {
   START,
@@ -12,5 +12,6 @@ enum state {
   FINISHED
 };
 
+struct mouse_ev mouse_get_event(struct packet *p);
 
 #endif /* __GESTURE_H */
