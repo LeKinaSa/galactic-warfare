@@ -1,6 +1,6 @@
 #include "gesture.h"
 
-static struct packet lastPacket = { .rb = false, .mb = false, .lb = false };
+static struct packet last_packet = { .rb = false, .mb = false, .lb = false };
 
 /* MOUSE EVENT DETECTION */
 
@@ -17,7 +17,7 @@ struct mouse_ev mouse_get_event(struct packet *p) {
     event.delta_y = p->delta_y;
   }
 
-  if (!lastPacket.rb && !lastPacket.mb && !lastPacket.lb) {   
+  if (!last_packet.rb && !last_packet.mb && !last_packet.lb) {   
     // No buttons were pressed in the previous packet
     if (p->rb && !p->mb && !p->lb) {
       // Only right button was just pressed
@@ -30,21 +30,21 @@ struct mouse_ev mouse_get_event(struct packet *p) {
   }
   else if (!p->rb && !p->mb && !p->lb) {
     // No buttons are pressed in the current packet */
-    if (lastPacket.rb && !lastPacket.mb && !lastPacket.lb) {
+    if (last_packet.rb && !last_packet.mb && !last_packet.lb) {
       // Only right button was pressed in the previous packet
       event.type = RB_RELEASED;
     }
-    if (lastPacket.lb && !lastPacket.mb && !lastPacket.rb) {
+    if (last_packet.lb && !last_packet.mb && !last_packet.rb) {
       // Only left button was pressed in the previous packet
       event.type = LB_RELEASED;
     }
   }
-  else if (p->mb || (p->rb && p->lb) || (lastPacket.rb && lastPacket.lb)) { 
-    // TODO: Might need a bit more work
+  else if (p->mb || last_packet.mb || (p->rb && p->lb) || (last_packet.rb && last_packet.lb)) {
+    // Some other button-related event
     event.type = BUTTON_EV;
   }
 
-  lastPacket = *p;
+  last_packet = *p;
   return event;
 }
 

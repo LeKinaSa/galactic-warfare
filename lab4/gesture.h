@@ -4,6 +4,8 @@
 #include <lcom/lcf.h>
 #include <lcom/lab4.h>
 
+/* Functions specific to the mouse_test_gesture method implementation */
+
 enum state {
   START,
   GOING_UP,
@@ -12,7 +14,8 @@ enum state {
   FINISHED
 };
 
-struct mouse_ev mouse_get_event(struct packet *p);
+struct mouse_ev mouse_get_event(struct packet *p);      /* Converts a packet's information into a mouse event, using information from last packet */
+
 void update_state_machine(enum state *current_state, struct mouse_ev event);
 
 #endif /* __GESTURE_H */
