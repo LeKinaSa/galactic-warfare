@@ -1,4 +1,5 @@
 #include "mouse.h"
+#include "gesture.h"
 
 static int mouse_hook_id = MOUSE_IRQ;
 extern uint8_t packet_byte;

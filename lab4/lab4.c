@@ -8,6 +8,7 @@
 #include "mouse.h"
 #include "utils.h"
 #include "i8254.h"
+#include "gesture.h"
 
 uint8_t packet_byte;
 int counter;
@@ -294,8 +295,10 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
   int packet_byte_counter = 0;
   struct packet p;
+
+  enum state current_state = START;
   
-  while (true) { // TODO: Add stop condition
+  while (current_state != FINISHED) {
     if (driver_receive(ANY, &msg, &ipc_status)) { 
       printf("Error when calling driver_receive.\n");
       continue;
@@ -319,7 +322,7 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
 
             mouse_parse_packet(packet_bytes, &p);
             mouse_print_packet(&p);
-            //update_state_machine();
+            update_state_machine(&current_state, mouse_get_event(&p));
           }
           else {
             ++packet_byte_counter;
