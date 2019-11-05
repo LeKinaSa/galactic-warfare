@@ -50,39 +50,57 @@ struct mouse_ev mouse_get_event(struct packet *p) {
 
 /* HIGHER-LEVEL STATE MACHINE IMPLEMENTATION */
 
-void update_state_machine(enum state *current_state, struct mouse_ev event) {
-  switch (*current_state) {
-  case START:
-    if (event.type == LB_PRESSED) {
-      *current_state = GOING_UP;
-    }
-    break;
-  case GOING_UP:
-    if (event.type == LB_RELEASED) {
-      // check x_len
-    }
-    else if (event.type == MOUSE_MOV) {
-      // check slope
-      // add to x_len
-    }
-    else if (event.type == LB_PRESSED) {
-      // reset x_len
-    }
-    else {
-      *current_state = START;
-    }
-    break;
-  case ON_VERTEX:
-    if (event.type == RB_PRESSED) {
-      *current_state = GOING_DOWN;
-    }
-    break;
-  case GOING_DOWN:
-    break;
-  case FINISHED:
-    break;
-  default:
-    *current_state = START;
-    break;
+void update_state_machine(state *s, struct mouse_ev event, uint8_t x_len, uint8_t tolerance) {
+  static int16_t delta_x;
+  
+  switch (*s) {
+    case START:
+      if (event.type == LB_PRESSED) {
+        delta_x = 0;
+        *s = GOING_UP;
+      }
+      break;
+    
+    case GOING_UP:
+      if (event.type == MOUSE_MOV) {
+        delta_x += event.delta_x;
+      }
+      else if ((event.type == LB_RELEASED) && (delta_x >= x_len)) {
+        *s = ON_VERTEX;
+      }
+      else {
+        *s = START;
+      }
+      break;
+
+    case ON_VERTEX:
+      if ((event.type == RB_PRESSED) && (event.delta_x*event.delta_x + event.delta_y*event.delta_y <= tolerance*tolerance)) {
+        delta_x = 0;
+        *s = GOING_DOWN;
+      }
+      else {
+        *s = START;
+      }
+      break;
+
+    case GOING_DOWN:
+      if (event.type == MOUSE_MOV) {
+        delta_x += event.delta_x;
+      }
+      else if (event.type == RB_RELEASED) && (delta_x >= x_len){
+        *s = FINISHED;
+      }
+      else {
+        *s = START;
+      }
+      break;
+    
+    case FINISHED:
+      break;
+    
+    case default:
+      *s = START;
+      break;
   }
 }
+

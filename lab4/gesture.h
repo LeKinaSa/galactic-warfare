@@ -16,6 +16,6 @@ enum state {
 
 struct mouse_ev mouse_get_event(struct packet *p);      /* Converts a packet's information into a mouse event, using information from last packet */
 
-void update_state_machine(enum state *current_state, struct mouse_ev event);
-
+void update_state_machine(state *s, struct mouse_ev event, uint8_t x_len, uint8_t tolerance);
+/* Updates the current state of the state machine */
 #endif /* __GESTURE_H */

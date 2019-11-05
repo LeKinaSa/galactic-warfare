@@ -162,6 +162,10 @@ int (mouse_test_remote)(uint16_t period, uint8_t cnt) {
           printf("Status register indicates timeout or parity error.\n");
         }
         else {
+          if ((packet_byte_counter == MOUSE_INDEX_FIRST_BYTE) && ((packet_byte & MOUSE_FIRST_BYTE_CHECK) == 0)) {
+            continue;
+          }
+
           packet_bytes[packet_byte_counter] = packet_byte;
 
           if (packet_byte_counter == MOUSE_INDEX_THIRD_BYTE) {
@@ -372,8 +376,7 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
 
             mouse_parse_packet(packet_bytes, &p);
             mouse_print_packet(&p);
-            update_state_machine(&current_state, mouse_get_event(&p));
-          }
+            update_state_machine(&s, mouse_get_event(&p), x_len, tolerance);
           else {
             ++packet_byte_counter;
           }
