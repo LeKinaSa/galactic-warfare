@@ -376,7 +376,8 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
 
             mouse_parse_packet(packet_bytes, &p);
             mouse_print_packet(&p);
-            update_state_machine(&s, mouse_get_event(&p), x_len, tolerance);
+            update_state_machine(&current_state, mouse_get_event(&p), x_len, tolerance);
+          }
           else {
             ++packet_byte_counter;
           }

@@ -50,8 +50,8 @@ struct mouse_ev mouse_get_event(struct packet *p) {
 
 /* HIGHER-LEVEL STATE MACHINE IMPLEMENTATION */
 
-void update_state_machine(state *s, struct mouse_ev event, uint8_t x_len, uint8_t tolerance) {
-  static int16_t delta_x;
+void update_state_machine(enum state *s, struct mouse_ev event, uint8_t x_len, uint8_t tolerance) {
+  static int16_t delta_x, delta_y;
   
   switch (*s) {
     case START:
@@ -63,9 +63,16 @@ void update_state_machine(state *s, struct mouse_ev event, uint8_t x_len, uint8_
     
     case GOING_UP:
       if (event.type == MOUSE_MOV) {
-        delta_x += event.delta_x;
+        if (((event.delta_y > event.delta_x) && (event.delta_x > 0) && (event.delta_y > 0)) || (event.delta_x*event.delta_x + event.delta_y*event.delta_y <= tolerance*tolerance))  {
+          delta_x += event.delta_x;
+        }
+        else {
+          *s = START;
+        }
       }
       else if ((event.type == LB_RELEASED) && (delta_x >= x_len)) {
+        delta_x = 0;
+        delta_y = 0;
         *s = ON_VERTEX;
       }
       else {
@@ -74,7 +81,11 @@ void update_state_machine(state *s, struct mouse_ev event, uint8_t x_len, uint8_
       break;
 
     case ON_VERTEX:
-      if ((event.type == RB_PRESSED) && (event.delta_x*event.delta_x + event.delta_y*event.delta_y <= tolerance*tolerance)) {
+      if (event.type == MOUSE_MOV) {
+        delta_x += event.delta_x;
+        delta_y += event.delta_y;
+      }
+      else if ((event.type == RB_PRESSED) && (delta_x*delta_x + delta_y*delta_y <= tolerance*tolerance)) {
         delta_x = 0;
         *s = GOING_DOWN;
       }
@@ -85,9 +96,14 @@ void update_state_machine(state *s, struct mouse_ev event, uint8_t x_len, uint8_
 
     case GOING_DOWN:
       if (event.type == MOUSE_MOV) {
-        delta_x += event.delta_x;
+        if (((-event.delta_y > event.delta_x) && (event.delta_x > 0) && (event.delta_y < 0)) || (event.delta_x*event.delta_x + event.delta_y*event.delta_y <= tolerance*tolerance)) {
+          delta_x += event.delta_x;
+        }
+        else {
+          *s = START;
+        }
       }
-      else if (event.type == RB_RELEASED) && (delta_x >= x_len){
+      else if ((event.type == RB_RELEASED) && (delta_x >= x_len)) {
         *s = FINISHED;
       }
       else {
@@ -98,7 +114,7 @@ void update_state_machine(state *s, struct mouse_ev event, uint8_t x_len, uint8_
     case FINISHED:
       break;
     
-    case default:
+    default:
       *s = START;
       break;
   }
