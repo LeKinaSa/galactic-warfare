@@ -18,4 +18,5 @@ struct mouse_ev mouse_get_event(struct packet *p);      /* Converts a packet's i
 
 void update_state_machine(enum state *s, struct mouse_ev event, uint8_t x_len, uint8_t tolerance);
 /* Updates the current state of the state machine */
+
 #endif /* __GESTURE_H */
