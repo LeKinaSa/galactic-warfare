@@ -180,7 +180,7 @@ int (mouse_test_remote)(uint16_t period, uint8_t cnt) {
       }
     }
 
-    tickdelay(micros_to_ticks(period * 1000));
+    tickdelay(micros_to_ticks(period * MILI_TO_MICRO));
   }
 
   if (mouse_set_stream_mode()) {

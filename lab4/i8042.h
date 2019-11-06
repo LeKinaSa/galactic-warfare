@@ -50,7 +50,7 @@
 #define KBC_DISABLE_MOUSE         0xA7   /* Disable mouse */
 #define KBC_ENABLE_MOUSE          0xA8   /* Enable mouse */
 #define KBC_CHECK_MOUSE           0xA9   /* Check mouse interface */
-#define MOUSE_WRITE_BYTE          0xD4   /* Write byte to mouse */
+#define KBC_WRITE_BYTE_TO_MOUSE   0xD4   /* Write byte to mouse */
 
 /* PS/2 MOUSE COMMANDS */
 
@@ -79,15 +79,12 @@
 #define KBD_TWO_BYTE_CODE       0xE0      /* Most significant byte for a two byte scancode */
 #define KBD_ESC_BREAKCODE       0x81      /* ESC breakcode */
 
-/* MOUSE PACKET ASSEMBLING */
+/* MOUSE PACKET ASSEMBLY */
 
 #define MOUSE_PCK_NUM_BYTES                 3
-#define MOUSE_PCK_FIRST_BYTE                1
-#define MOUSE_PCK_SECOND_BYTE               2
-#define MOUSE_PCK_THIRD_BYTE                3
-#define MOUSE_INDEX_FIRST_BYTE              MOUSE_PCK_FIRST_BYTE - 1
-#define MOUSE_INDEX_SECOND_BYTE             MOUSE_PCK_SECOND_BYTE - 1
-#define MOUSE_INDEX_THIRD_BYTE              MOUSE_PCK_THIRD_BYTE - 1
+#define MOUSE_INDEX_FIRST_BYTE              0
+#define MOUSE_INDEX_SECOND_BYTE             1
+#define MOUSE_INDEX_THIRD_BYTE              2
 
 /* MOUSE PACKET PARSING */
 
@@ -110,7 +107,8 @@
 
 /* POLLING */
 
-#define KBD_POLLING_INTERVAL   20000   /* Time in microseconds to wait between two polling cicles */
+#define KBD_POLLING_INTERVAL  20000   /* Time in microseconds to wait between two polling cicles */
+#define MILI_TO_MICRO         1000    /* Number of microseconds in a milisecond */
 
 /* ERROR HANDLING */
 

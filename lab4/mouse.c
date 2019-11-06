@@ -83,7 +83,7 @@ int mouse_write_command(uint8_t command) {
   uint8_t ack = 0;
   
   for (uint i = 0; i < MOUSE_COMMAND_MAX_ATTEMPTS; i++) {
-    if (kbc_write_command(MOUSE_WRITE_BYTE)) {
+    if (kbc_write_command(KBC_WRITE_BYTE_TO_MOUSE)) {
       printf("Error when calling kbc_write_command.\n");
       return 1;
     }
