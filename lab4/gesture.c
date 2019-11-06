@@ -1,10 +1,10 @@
 #include "gesture.h"
 
-static struct packet last_packet = { .rb = false, .mb = false, .lb = false };
 
 /* MOUSE EVENT DETECTION */
 
 struct mouse_ev mouse_get_event(struct packet *p) {
+  static struct packet last_packet = { .rb = false, .mb = false, .lb = false };
   struct mouse_ev event;
 
   event.type = MOUSE_MOV;   // Default event type is mouse movement, may be overridden by event types with greater priority, like button presses
@@ -51,8 +51,6 @@ struct mouse_ev mouse_get_event(struct packet *p) {
 /* HIGHER-LEVEL STATE MACHINE IMPLEMENTATION */
 
 void update_state_machine(enum state *s, struct mouse_ev event, uint8_t x_len, uint8_t tolerance) {
-  /* TODO: remove print statements */
-  
   static int16_t delta_x = 0, delta_y = 0;
   
   switch (*s) {
@@ -60,7 +58,6 @@ void update_state_machine(enum state *s, struct mouse_ev event, uint8_t x_len, u
     if (event.type == LB_PRESSED) {
       delta_x = 0;
       *s = GOING_UP;
-      //printf("GOING UP\n");
     }
     break;
   case GOING_UP:
@@ -70,9 +67,8 @@ void update_state_machine(enum state *s, struct mouse_ev event, uint8_t x_len, u
           // Absolute slope is greater than 1
           delta_x += event.delta_x;
         }
-        else if (abs(delta_x) > tolerance || abs(delta_y) > tolerance) {
+        else {
           *s = START;
-          //printf("START\n");
         }
       }
       else if ((event.delta_x < 0 && abs(event.delta_x) < tolerance) || (event.delta_y < 0 && abs(event.delta_y) < tolerance)) {
@@ -80,19 +76,15 @@ void update_state_machine(enum state *s, struct mouse_ev event, uint8_t x_len, u
       }
       else {
         *s = START;
-        //printf("START\n");
       }
     }
     else if (event.type == LB_RELEASED && delta_x >= x_len) {
-      //printf("delta_x: %d | x_len: %d\n", delta_x, x_len);
       delta_x = 0;
       delta_y = 0;
       *s = ON_VERTEX;
-      //printf("ON VERTEX\n");
     }
     else {
       *s = START;
-      //printf("START\n");
     }
     break;
   case ON_VERTEX:
@@ -102,13 +94,11 @@ void update_state_machine(enum state *s, struct mouse_ev event, uint8_t x_len, u
       
       if (abs(delta_x) > tolerance || abs(delta_y) > tolerance) {
         *s = START;
-        //printf("START\n");
       }
     }
     else if (event.type == RB_PRESSED) {
       delta_x = 0;
       *s = GOING_DOWN;
-      //printf("GOING DOWN\n");
     }
     else if (event.type == LB_PRESSED) {
       delta_x = 0;
@@ -116,7 +106,6 @@ void update_state_machine(enum state *s, struct mouse_ev event, uint8_t x_len, u
     }
     else {
       *s = START;
-      //printf("START\n");
     }
     break;
   case GOING_DOWN:
@@ -128,7 +117,6 @@ void update_state_machine(enum state *s, struct mouse_ev event, uint8_t x_len, u
         }
         else if (abs(delta_x) > tolerance || abs(delta_y) > tolerance) {
           *s = START;
-          //printf("START\n");
         }
       }
       else if ((event.delta_x < 0 && abs(event.delta_x) < tolerance) || (event.delta_y > 0 && abs(event.delta_y) < tolerance)) {
@@ -136,16 +124,13 @@ void update_state_machine(enum state *s, struct mouse_ev event, uint8_t x_len, u
       }
       else {
         *s = START;
-        //printf("START\n");
       }
     }
     else if (event.type == RB_RELEASED && delta_x >= x_len) {
       *s = FINISHED;
-      //printf("FINISHED\n");
     }
     else {
       *s = START;
-      //printf("START\n");
     }
     break;
   case FINISHED:
