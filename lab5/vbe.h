@@ -3,7 +3,7 @@
 
 #include <lcom/lcf.h>
 
-#define SERVICE_VIDEO_CARD 0x10
+#define SERVICE_VIDEO_CARD      0x10
 
 /* Graphics Mode */
 
