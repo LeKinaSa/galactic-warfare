@@ -18,11 +18,11 @@
 
 #define VBE_FUNCTION_AH                     0x4F
 
-#define FUNCTION_RETURN_VBE_CONTROLLER_INFO 0x00
-#define FUNCTION_RETURN_VBE_MODE_INFO       0x01
-#define FUNCTION_SET_VBE_MODE               0x02
+#define FUNC_RETURN_VBE_CONTROLLER_INFO     0x00
+#define FUNC_RETURN_VBE_MODE_INFO           0x01
+#define FUNC_SET_VBE_MODE                   0x02
 
 #define RETURN_TO_TEXT_MODE_AH              0x00
 #define RETURN_TO_TEXT_MODE_AL              0x03
 
-#endif _LCOM_VGE_H_
+#endif /* _LCOM_VGE_H_ */
