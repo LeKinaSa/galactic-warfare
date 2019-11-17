@@ -32,5 +32,6 @@
 #define RETURN_TO_TEXT_MODE_AL              0x03
 
 #define MIBIBYTE                            BIT(20)
+#define BITS_PER_BYTE                       8
 
 #endif /* _LCOM_VGE_H_ */

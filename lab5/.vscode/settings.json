@@ -12,6 +12,16 @@
     "video.h": "c",
     "vbe_constants.h": "c",
     "vbe.h": "c",
-    "lcf.h": "c"
+    "lcf.h": "c",
+    "__split_buffer": "c",
+    "__tree": "c",
+    "bitset": "c",
+    "initializer_list": "c",
+    "iterator": "c",
+    "map": "c",
+    "memory": "c",
+    "string": "c",
+    "utility": "c",
+    "vector": "c"
   },
 }

@@ -8,13 +8,9 @@ extern void* frame_buffer;
 static uint16_t x_res, y_res;
 static uint8_t bits_per_pixel;
 
+
 void* (vg_init)(uint16_t mode) {
   static void* video_mem;
-
-  if (video_set_mode(mode)) {
-    printf("Error when calling video_set_mode.\n");
-    return MAP_FAILED;
-  }
 
   vbe_mode_info_t info;
   if (vbe_get_mode_info(mode, &info)) {
@@ -38,6 +34,11 @@ void* (vg_init)(uint16_t mode) {
 
   video_mem = vm_map_phys(SELF, (void*) mr.mr_base, vram_size);
 
+  if (video_set_mode(mode)) {
+    printf("Error when calling video_set_mode.\n");
+    return MAP_FAILED;
+  }
+
   return video_mem;
 }
 
@@ -48,15 +49,21 @@ int (vg_draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color) {
     return 1;
   }
 
-  uint8_t bytes_per_pixel = bits_per_pixel / 8;
+  uint8_t bytes_per_pixel = bits_per_pixel / BITS_PER_BYTE;
   uint8_t* start_addr = (uint8_t*)(frame_buffer) + bytes_per_pixel * (x + y * x_res);
 
-  for (size_t i = 0; i < len; i++) {
-    *(start_addr + i * bytes_per_pixel) = color;
+  uint8_t bit_shift;
+
+  for (uint16_t i = 0; i < len; i++) {
+    for (uint8_t j = 0; j < bytes_per_pixel; j++) {
+      bit_shift = j * BITS_PER_BYTE;
+      *(start_addr + i * bytes_per_pixel + j) = (uint8_t)(color >> bit_shift);
+    }
   }
 
   return 0;
 }
+
 
 int (vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
   if (frame_buffer == NULL) {

@@ -8,6 +8,7 @@
 
 // Any header files included below this line should have been created by you
 #include "video.h"
+#include "i8042.h"
 #include "keyboard.h"
 
 uint8_t scancode;
@@ -55,6 +56,13 @@ int(video_test_init)(uint16_t mode, uint8_t delay) {
 
 int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
                           uint16_t width, uint16_t height, uint32_t color) {  
+  uint8_t kbd_bit_no = 0;
+  
+  if (kbd_subscribe_int(&kbd_bit_no)) {
+    printf("Error when calling kbd_subscribe_int.\n");
+    return 1;
+  }
+  
   frame_buffer = vg_init(mode);
 
   if (frame_buffer == MAP_FAILED) {
@@ -67,8 +75,36 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
     return 1;
   }
 
+
+  int ipc_status;
+  message msg;
+
+  while (scancode != KBD_ESC_BREAKCODE) {
+    if (driver_receive(ANY, &msg, &ipc_status)) {
+      printf("Error when calling driver_receive.\n");
+      continue;
+    }
+    if (is_ipc_notify(ipc_status)) {
+      switch (_ENDPOINT_P(msg.m_source)) {
+      case HARDWARE:
+        if (msg.m_notify.interrupts & BIT(kbd_bit_no)) {
+          kbc_ih();
+        }
+        break;
+      default:
+        break;
+      }
+    }
+  }
+
+
   if (vg_exit()) {
     printf("Error when calling vg_exit.\n");
+    return 1;
+  }
+
+  if (kbd_unsubscribe_int()) {
+    printf("Error when calling kbd_unsubscribe_int.\n");
     return 1;
   }
 
