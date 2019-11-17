@@ -38,6 +38,6 @@
 #define MIBIBYTE                            BIT(20) 
 #define BITS_PER_BYTE                       8         /* Number of bits in a byte */
 
-#define BITMASK(start, end)                 ((BIT(end - start) - 1) << start)     /* Creates a bitmask where the bits from start to end are set to 1 and all other bits are set to 0 */
+#define BITMASK(start, n_bits)              ((BIT(n_bits) - 1) << start)    /* Creates a bitmask starting at bit start with length n_bits */
 
 #endif /* _LCOM_VGE_H_ */
