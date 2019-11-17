@@ -10,6 +10,8 @@
     "lab5.h": "c",
     "video_gr.h": "c",
     "video.h": "c",
-    "vbe_constants.h": "c"
+    "vbe_constants.h": "c",
+    "vbe.h": "c",
+    "lcf.h": "c"
   },
 }

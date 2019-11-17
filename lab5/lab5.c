@@ -8,8 +8,10 @@
 
 // Any header files included below this line should have been created by you
 #include "video.h"
+#include "keyboard.h"
 
 uint8_t scancode;
+void* frame_buffer;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -52,11 +54,16 @@ int(video_test_init)(uint16_t mode, uint8_t delay) {
 }
 
 int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
-                          uint16_t width, uint16_t height, uint32_t color) {
-  void *frame_buffer = vg_init(mode);
+                          uint16_t width, uint16_t height, uint32_t color) {  
+  frame_buffer = vg_init(mode);
 
   if (frame_buffer == MAP_FAILED) {
     printf("Error occurred: couldn't map video memory.\n");
+    return 1;
+  }
+
+  if (vg_draw_rectangle(x, y, width, height, color)) {
+    printf("Error when calling vg_draw_rectangle.\n");
     return 1;
   }
 
