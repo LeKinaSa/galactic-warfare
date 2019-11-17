@@ -113,7 +113,7 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
 
 int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
   uint8_t kbd_bit_no = 0;
-  
+
   if (kbd_subscribe_int(&kbd_bit_no)) {
     printf("Error when calling kbd_subscribe_int.\n");
     return 1;

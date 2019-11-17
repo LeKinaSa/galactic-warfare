@@ -130,9 +130,9 @@ int vg_draw_pattern(uint8_t no_rectangles, uint32_t first_color, uint8_t step) {
   uint32_t current_color;
 
   /* Color components of first color */
-  uint16_t red_first = BITMASK(info.RedFieldPosition, info.RedMaskSize) & first_color;
-  uint16_t green_first = BITMASK(info.GreenFieldPosition, info.GreenMaskSize) & first_color;
-  uint16_t blue_first = BITMASK(info.BlueFieldPosition, info.BlueMaskSize) & first_color;
+  uint16_t red_first = (BITMASK(info.RedFieldPosition, info.RedMaskSize) & first_color) >> info.RedFieldPosition;
+  uint16_t green_first = (BITMASK(info.GreenFieldPosition, info.GreenMaskSize) & first_color) >> info.GreenFieldPosition;
+  uint16_t blue_first = (BITMASK(info.BlueFieldPosition, info.BlueMaskSize) & first_color) >> info.BlueFieldPosition;
   
   /* Color components for direct mode */
   uint16_t red, green, blue;
