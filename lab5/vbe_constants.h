@@ -25,13 +25,19 @@
 #define FUNC_RETURN_VBE_MODE_INFO           0x01
 #define FUNC_SET_VBE_MODE                   0x02
 
-#define VBE_FUNC_AX(func)                   ((VBE_FUNCTION_AH << 8) | func)
-#define VBE_MODE_BX_LINEAR(mode)            (LINEAR_FRAME_BUFFER_MODEL | mode)
+#define VBE_FUNC_AX(func)                   ((VBE_FUNCTION_AH << 8) | func)     /* AX register for a VBE function */
+#define VBE_MODE_BX_LINEAR(mode)            (LINEAR_FRAME_BUFFER_MODEL | mode)  /* BX register for a VBE mode with linear frame buffer set */
 
 #define RETURN_TO_TEXT_MODE_AH              0x00
 #define RETURN_TO_TEXT_MODE_AL              0x03
 
-#define MIBIBYTE                            BIT(20)
-#define BITS_PER_BYTE                       8
+/* Memory model */
+#define VBE_PACKED_PIXEL      0x04    /* Indexed color */
+#define VBE_DIRECT_COLOR      0x06    /* Direct color */
+
+#define MIBIBYTE                            BIT(20) 
+#define BITS_PER_BYTE                       8         /* Number of bits in a byte */
+
+#define BITMASK(start, end)                 ((BIT(end - start) - 1) << start)     /* Creates a bitmask where the bits from start to end are set to 1 and all other bits are set to 0 */
 
 #endif /* _LCOM_VGE_H_ */
