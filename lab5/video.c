@@ -213,6 +213,11 @@ int vg_draw_pattern(uint8_t no_rectangles, uint32_t first_color, uint8_t step) {
 
 
 int vg_draw_xpm(xpm_map_t xpm, uint16_t x, uint16_t y, uint16_t mode) {
+  if (frame_buffer == NULL) {
+    printf("Error occurred: frame buffer not set.\n");
+    return 1;
+  }
+
   enum xpm_image_type type;
   xpm_image_t img;
 
@@ -260,10 +265,7 @@ int vg_draw_xpm(xpm_map_t xpm, uint16_t x, uint16_t y, uint16_t mode) {
       current_color = pixelmap[col + row * img.width];
       
       if (current_color != transparency_color) {
-        if (vg_draw_hline(x + col, y + row, 1, pixelmap[col + row * img.width])) {
-          printf("Error occurred when calling vg_draw_hline.\n");
-          return 1;
-        }
+        vg_draw_hline(x + col, y + row, 1, pixelmap[col + row * img.width]);
       }
     }
   }
