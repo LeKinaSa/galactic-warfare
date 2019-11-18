@@ -255,6 +255,7 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
     if (kbd_unsubscribe_int()) {
       printf("Error when calling kbd_unsubscribe_int.\n");
     }
+    vg_exit();
     return 1;
   }
 

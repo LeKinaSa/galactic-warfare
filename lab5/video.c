@@ -122,6 +122,17 @@ int video_set_mode(uint16_t mode) {
   return 0;
 }
 
+int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color) {
+  if (frame_buffer == NULL) {
+    printf("Error occurred: frame buffer not set.\n");
+    return 1;
+  }
+
+  uint8_t *addr = (uint8_t *)(frame_buffer) + bytes_per_pixel * (x + y * info.XResolution);
+  memcpy(addr, &color, bytes_per_pixel);
+
+  return 0;
+}
 
 int (vg_draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color) {
   if (frame_buffer == NULL) {
@@ -129,14 +140,8 @@ int (vg_draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color) {
     return 1;
   }
 
-  uint8_t *start_addr = (uint8_t *)(frame_buffer) + bytes_per_pixel * (x + y * info.XResolution);
-  uint8_t bit_shift;
-
   for (uint16_t i = 0; i < len; i++) {
-    for (uint8_t j = 0; j < bytes_per_pixel; j++) {
-      bit_shift = j * BITS_PER_BYTE;
-      *(start_addr + i * bytes_per_pixel + j) = (uint8_t)(color >> bit_shift);
-    }
+    vg_draw_pixel(x + i, y, color);
   }
 
   return 0;
@@ -268,7 +273,7 @@ int vg_draw_xpm(xpm_map_t xpm, uint16_t x, uint16_t y, uint16_t mode) {
       current_color = pixelmap[col + row * img.width];
       
       if (current_color != transparency_color) {
-        vg_draw_hline(x + col, y + row, 1, pixelmap[col + row * img.width]);
+        vg_draw_pixel(x + col, y + row, pixelmap[col + row * img.width]);
       }
     }
   }
