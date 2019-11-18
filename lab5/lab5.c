@@ -13,6 +13,7 @@
 #include "vbe_constants.h"
 
 uint8_t scancode;
+int counter; // FIXME: not needed
 void* frame_buffer;   // FIXME: Variable might not be needed
 
 int main(int argc, char *argv[]) {
@@ -260,6 +261,33 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
   int ipc_status;
   message msg;
 
+  uint8_t step_x, step_y;
+  uint8_t time_per_step;
+  if (speed > 0) {
+    step_x = speed;
+    step_y = speed;
+    time_per_step = 1;
+    if (xi == xf) {
+      step_x = 0;
+    }
+    if (yi == yf) {
+      step_y = 0;
+    }
+  }
+  if (speed < 0) {
+    step_x = 1;
+    step_y = 1;
+    time_per_step = -speed;
+    if (xi == xf) {
+      step_x = 0;
+    }
+    if (yi == yf) {
+      step_y = 0;
+    }
+  }
+
+  uint8_t time_till_step = time_per_step;
+
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
       printf("Error when calling driver_receive.\n");
@@ -272,7 +300,22 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
           kbc_ih();
         }
         if (msg.m_notify.interrupts & BIT(timer0_bit_no)) {
-          //vg_draw_xpm(xpm, xi, yi, mode);
+          if (time_till_step == 1) {
+            xi += step_x;
+            yi += step_y;
+            if (xi > xf) {
+              xi = xf;
+            }
+            if (yi > yf) {
+              yi = yf;
+            }
+            // TODO: DRAW
+            vg_draw_xpm(xpm, xi, yi, mode);
+            time_till_step = time_per_step;
+          }
+          else {
+            time_till_step --;
+          }
         }
         break;
       default:
