@@ -14,7 +14,7 @@ void *(vg_init)(uint16_t mode) {
 
   memset(&info, 0, sizeof(info)); // Zero the struct
 
-  if (vbe_get_mode_info(mode, &info)) {   // TODO: Implement our own version of vbe_get_mode_info
+  if (vbe_return_mode_info(mode, &info)) {
     return MAP_FAILED;
   }
 
@@ -53,7 +53,6 @@ int vbe_return_mode_info(uint16_t mode, vbe_mode_info_t *info_ptr) {
   }
 
   mmap_t map;
-  map.virt = (void*)info_ptr;
   lm_alloc(sizeof(*info_ptr), &map);
   phys_bytes buf = map.phys;
 
@@ -69,22 +68,26 @@ int vbe_return_mode_info(uint16_t mode, vbe_mode_info_t *info_ptr) {
 
   /* BIOS call */
   if (sys_int86(&reg) != OK) {
+    lm_free(&map);
     printf("Error when calling sys_int86.\n");
     return 1;
   }
-  
-  lm_free(&map);
 
   /* Check return value  */
   if (reg.ah != VBE_RETURN_SUCCESS) {
+    lm_free(&map);
     printf("Error occurred: VBE function not successful (AH = 0x%x).\n", reg.ah);
     return 1;
   }
 
   if (reg.al != VBE_RETURN_FUNC_SUPPORTED) {
+    lm_free(&map);
     printf("Error occurred: VBE function not supported.\n");
     return 1;
   }
+
+  *info_ptr = *((vbe_mode_info_t *)(map.virt));
+  lm_free(&map);
 
   return 0;
 }
