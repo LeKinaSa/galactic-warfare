@@ -243,6 +243,8 @@ int vg_draw_xpm(xpm_map_t xpm, uint16_t x, uint16_t y, uint16_t mode) {
     return 1;
   }
 
+  uint32_t transparency_color = xpm_transparency_color(type);
+
   /* Obtain pixelmap */
   uint8_t *pixelmap = xpm_load(xpm, type, &img);
   if (pixelmap == NULL) {
@@ -250,12 +252,18 @@ int vg_draw_xpm(xpm_map_t xpm, uint16_t x, uint16_t y, uint16_t mode) {
     return 1;
   }
 
+  uint32_t current_color;
+
   /* Draw pixelmap */
-  for (int line = 0; line < img.height; line ++) {
-    for (int column = 0; column < img.width; column ++) {
-      if (vg_draw_hline(x + line, y + column, 1, pixelmap[column + line * img.width])) {
-        printf("Error occurred when calling vg_draw_line.\n");
-        return 1;
+  for (uint16_t row = 0; row < img.height; row++) {
+    for (uint16_t col = 0; col < img.width; col++) {
+      current_color = pixelmap[col + row * img.width];
+      
+      if (current_color != transparency_color) {
+        if (vg_draw_hline(x + col, y + row, 1, pixelmap[col + row * img.width])) {
+          printf("Error occurred when calling vg_draw_hline.\n");
+          return 1;
+        }
       }
     }
   }
