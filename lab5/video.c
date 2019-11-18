@@ -5,12 +5,12 @@
 #include "video.h"
 #include "vbe_constants.h"
 
-extern void* frame_buffer;
+extern void *frame_buffer;
 static vbe_mode_info_t info;
+static uint8_t bytes_per_pixel;
 
-
-void* (vg_init)(uint16_t mode) {
-  static void* video_mem;
+void *(vg_init)(uint16_t mode) {
+  static void *video_mem;
 
   memset(&info, 0, sizeof(info)); // Zero the struct
 
@@ -18,7 +18,13 @@ void* (vg_init)(uint16_t mode) {
     return MAP_FAILED;
   }
 
-  unsigned int vram_size = info.XResolution * info.YResolution * info.BitsPerPixel / 8;
+  bytes_per_pixel = info.BitsPerPixel / 8;
+  if (info.BitsPerPixel % 8 != 0) {
+    // Bits per pixel isn't a multiple of 8: add an extra byte
+    ++bytes_per_pixel;
+  }
+
+  unsigned int vram_size = info.XResolution * info.YResolution * bytes_per_pixel;
   
   struct minix_mem_range mr;
   mr.mr_base = info.PhysBasePtr;
@@ -29,7 +35,7 @@ void* (vg_init)(uint16_t mode) {
     return MAP_FAILED;
   }
 
-  video_mem = vm_map_phys(SELF, (void*) mr.mr_base, vram_size);
+  video_mem = vm_map_phys(SELF, (void *) mr.mr_base, vram_size);
 
   if (video_set_mode(mode)) {
     printf("Error when calling video_set_mode.\n");
@@ -40,25 +46,66 @@ void* (vg_init)(uint16_t mode) {
 }
 
 
-int video_set_mode(uint16_t mode) {
-  /* Set register values */
+int vbe_return_mode_info(uint16_t mode, vbe_mode_info_t *info_ptr) {
+  if (info_ptr == NULL) {
+    printf("Error occurred: null pointer.\n");
+    return 1;
+  }
 
+  mmap_t map;
+  map.virt = (void*)info_ptr;
+  lm_alloc(sizeof(*info_ptr), &map);
+  phys_bytes buf = map.phys;
+
+  struct reg86 reg;
+  memset(&reg, 0, sizeof(reg)); // Zero the reg86 struct
+
+  /* Set register values */
+  reg.intno = SERVICE_VIDEO_CARD;
+  reg.ax = VBE_FUNC_AX(FUNC_RETURN_VBE_MODE_INFO);
+  reg.cx = VBE_MODE_BX_LINEAR(mode);
+  reg.es = PB2BASE(buf);
+  reg.di = PB2OFF(buf);
+
+  /* BIOS call */
+  if (sys_int86(&reg) != OK) {
+    printf("Error when calling sys_int86.\n");
+    return 1;
+  }
+  
+  lm_free(&map);
+
+  /* Check return value  */
+  if (reg.ah != VBE_RETURN_SUCCESS) {
+    printf("Error occurred: VBE function not successful (AH = 0x%x).\n", reg.ah);
+    return 1;
+  }
+
+  if (reg.al != VBE_RETURN_FUNC_SUPPORTED) {
+    printf("Error occurred: VBE function not supported.\n");
+    return 1;
+  }
+
+  return 0;
+}
+
+
+int video_set_mode(uint16_t mode) {
   struct reg86 reg;
   memset(&reg, 0, sizeof(reg)); // Zero the struct
 
+  /* Set register values */
   reg.intno = SERVICE_VIDEO_CARD;
   reg.ax = VBE_FUNC_AX(FUNC_SET_VBE_MODE);
   reg.bx = VBE_MODE_BX_LINEAR(mode);
 
   /* BIOS call */
-
   if (sys_int86(&reg) != OK) {
     printf("Error when calling sys_int86.\n");
     return 1;
   }
 
   /* Check return value */
-
   if (reg.al != VBE_RETURN_FUNC_SUPPORTED) {
     printf("Error occurred: VBE function not supported.\n");
     return 1;
@@ -79,9 +126,7 @@ int (vg_draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color) {
     return 1;
   }
 
-  uint8_t bytes_per_pixel = info.BitsPerPixel / BITS_PER_BYTE;
-  uint8_t* start_addr = (uint8_t*)(frame_buffer) + bytes_per_pixel * (x + y * info.XResolution);
-
+  uint8_t *start_addr = (uint8_t *)(frame_buffer) + bytes_per_pixel * (x + y * info.XResolution);
   uint8_t bit_shift;
 
   for (uint16_t i = 0; i < len; i++) {
