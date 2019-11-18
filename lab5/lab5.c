@@ -265,15 +265,30 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
 
   uint8_t step_x, step_y;
   uint8_t int_count;
+  bool positive_movement;
   if (speed > 0) {
-    step_x = speed;
-    step_y = speed;
     int_count = TIMER0_INTERRUPTS_PER_SECOND / fr_rate;
     if (xi == xf) {
       step_x = 0;
+      if (yi < yf) {
+        step_y = speed;
+        positive_movement = true;
+      }
+      else {
+        step_y = -speed;
+        positive_movement = false;
+      }
     }
     if (yi == yf) {
       step_y = 0;
+      if (xi < xf) {
+        step_x = speed;
+        positive_movement = true;
+      }
+      else {
+        step_x = -speed;
+        positive_movement = false;
+      }
     }
   }
   if (speed < 0) {
@@ -305,12 +320,23 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
             counter = 0;
             xi += step_x;
             yi += step_y;
-            if (xi > xf) {
-              xi = xf;
+            if (positive_movement) {
+              if (xi > xf) {
+                xi = xf;
+              }
+              if (yi > yf) {
+                yi = yf;
+              }
             }
-            if (yi > yf) {
-              yi = yf;
+            else {
+              if (xi < xf) {
+                xi = xf;
+              }
+              if (yi < yf) {
+                yi = yf;
+              }
             }
+            // TODO: reagrupar esta funcao em 2 (load_pixelmap e draw_pixelmap)
             vg_draw_xpm(xpm, xi, yi, mode);
           }
         }
