@@ -8,9 +8,10 @@
 
 // Any header files included below this line should have been created by you
 #include "video.h"
+#include "vbe_constants.h"
 #include "i8042.h"
 #include "keyboard.h"
-#include "vbe_constants.h"
+#include "i8254.h"
 
 uint8_t scancode;
 int counter; // FIXME: not needed
@@ -263,11 +264,11 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
   message msg;
 
   uint8_t step_x, step_y;
-  uint8_t time_per_step;
+  uint8_t int_count;
   if (speed > 0) {
     step_x = speed;
     step_y = speed;
-    time_per_step = 1;
+    int_count = TIMER0_INTERRUPTS_PER_SECOND / fr_rate;
     if (xi == xf) {
       step_x = 0;
     }
@@ -278,7 +279,7 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
   if (speed < 0) {
     step_x = 1;
     step_y = 1;
-    time_per_step = -speed;
+    int_count = TIMER0_INTERRUPTS_PER_SECOND / fr_rate * (-speed);
     if (xi == xf) {
       step_x = 0;
     }
@@ -286,8 +287,6 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
       step_y = 0;
     }
   }
-
-  uint8_t time_till_step = time_per_step;
 
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
@@ -301,7 +300,9 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
           kbc_ih();
         }
         if (msg.m_notify.interrupts & BIT(timer0_bit_no)) {
-          if (time_till_step == 1) {
+          timer_int_handler();
+          if (counter == int_count) {
+            counter = 0;
             xi += step_x;
             yi += step_y;
             if (xi > xf) {
@@ -310,12 +311,7 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
             if (yi > yf) {
               yi = yf;
             }
-            // TODO: DRAW
             vg_draw_xpm(xpm, xi, yi, mode);
-            time_till_step = time_per_step;
-          }
-          else {
-            time_till_step --;
           }
         }
         break;
