@@ -10,6 +10,7 @@
 #include "video.h"
 #include "i8042.h"
 #include "keyboard.h"
+#include "vbe_constants.h"
 
 uint8_t scancode;
 void* frame_buffer;   // FIXME: Variable might not be needed
@@ -166,10 +167,59 @@ int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, ui
 }
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
-  /* To be completed */
-  printf("%s(%8p, %u, %u): under construction\n", __func__, xpm, x, y);
+  uint16_t mode = MODE_GRAPHIC_INDEXED;
+  uint8_t kbd_bit_no = 0;
 
-  return 1;
+  if (kbd_subscribe_int(&kbd_bit_no)) {
+    printf("Error when calling kbd_subscribe_int.\n");
+    return 1;
+  }
+
+  frame_buffer = vg_init(mode);
+
+  if (frame_buffer == MAP_FAILED) {
+    printf("Error occurred: couldn't map video memory.\n");
+    return 1;
+  }
+
+  if (vg_draw_xpm(xpm, x, y, mode)) {
+    printf("Error when calling vg_draw_pixmap.\n");
+    return 1;
+  }
+
+  int ipc_status;
+  message msg;
+
+  while (scancode != KBD_ESC_BREAKCODE) {
+    if (driver_receive(ANY, &msg, &ipc_status)) {
+      printf("Error when calling driver_receive.\n");
+      continue;
+    }
+    if (is_ipc_notify(ipc_status)) {
+      switch (_ENDPOINT_P(msg.m_source)) {
+      case HARDWARE:
+        if (msg.m_notify.interrupts & BIT(kbd_bit_no)) {
+          kbc_ih();
+        }
+        break;
+      default:
+        break;
+      }
+    }
+  }
+
+
+  if (vg_exit()) {
+    printf("Error when calling vg_exit.\n");
+    return 1;
+  }
+
+  if (kbd_unsubscribe_int()) {
+    printf("Error when calling kbd_unsubscribe_int.\n");
+    return 1;
+  }
+  
+  return 0;
 }
 
 int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf,

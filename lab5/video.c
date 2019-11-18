@@ -1,5 +1,6 @@
 #include <machine/int86.h>
 #include <lcom/vbe.h>
+#include <lcom/lcf.h>
 #include <stdbool.h>
 #include "video.h"
 #include "vbe_constants.h"
@@ -159,6 +160,58 @@ int vg_draw_pattern(uint8_t no_rectangles, uint32_t first_color, uint8_t step) {
       }
 
       vg_draw_rectangle(x_pos, y_pos, rect_width, rect_height, current_color);
+    }
+  }
+
+  return 0;
+}
+
+
+int vg_draw_xpm(xpm_map_t xpm, uint16_t x, uint16_t y, uint16_t mode) {
+  enum xpm_image_type type;
+  xpm_image_t img;
+
+  /* Choose type */
+  switch (mode) {
+    case MODE_GRAPHIC_INDEXED:
+      type = XPM_INDEXED;
+      break;
+    case MODE_DIRECT_SMALLER_RESOLUTION:
+      type = XPM_1_5_5_5;
+      break;
+    case MODE_DIRECT_COLOR_MODE:
+      type = XPM_8_8_8;
+      break;
+    case MODE_DIRECT_BIGGER_RESOLUTION:
+      type = XPM_5_6_5;
+      break;
+    case MODE_DIRECT_32_BITS:
+      type = XPM_8_8_8_8;
+      break;
+    default:
+      type = INVALID_XPM;
+      break;
+  }
+
+  if (type == INVALID_XPM) {
+    printf("Error occurred: couldn't define xpm type.\n");
+    return 1;
+  }
+
+  /* Obtain pixelmap */
+  uint8_t *pixelmap = xpm_load(xpm, type, &img);
+  if (pixelmap == NULL) {
+    printf("Error occurred: couldn't load xpm.\n");
+    return 1;
+  }
+
+  /* Draw pixelmap */
+  for (int line = 0; line < img.height; line ++) {
+    for (int column = 0; column < img.width; column ++) {
+      if (vg_draw_hline(x + line, y + column, 1, pixelmap[column + line * img.width])) {
+        printf("Error occurred when calling vg_draw_line.\n");
+        return 1;
+      }
     }
   }
 
