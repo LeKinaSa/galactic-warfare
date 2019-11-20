@@ -14,7 +14,7 @@
 #include "i8254.h"
 
 uint8_t scancode;
-int counter; // FIXME: not needed
+int counter = 0;
 void* frame_buffer;   // FIXME: Variable might not be needed
 
 int main(int argc, char *argv[]) {
@@ -326,6 +326,11 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
     vg_exit();
 
     return 1;
+  }
+
+  /* Draw the xpm in its initial position */
+  if (vg_draw_xpm(pixmap, img, xi, yi, false)) {
+    printf("Error when drawing xpm.\n");
   }
 
   while (scancode != KBD_ESC_BREAKCODE) {
