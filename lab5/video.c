@@ -220,46 +220,18 @@ int vg_draw_pattern(uint8_t no_rectangles, uint32_t first_color, uint8_t step) {
 }
 
 
-int vg_draw_xpm(xpm_map_t xpm, uint16_t x, uint16_t y, uint16_t mode) {
+int vg_draw_xpm(xpm_map_t xpm, uint16_t x, uint16_t y) {
   if (frame_buffer == NULL) {
     printf("Error occurred: frame buffer not set.\n");
     return 1;
   }
 
-  enum xpm_image_type type;
   xpm_image_t img;
 
-  /* Choose type */
-  switch (mode) {
-    case MODE_GRAPHIC_INDEXED:
-      type = XPM_INDEXED;
-      break;
-    case MODE_DIRECT_SMALLER_RESOLUTION:
-      type = XPM_1_5_5_5;
-      break;
-    case MODE_DIRECT_COLOR_MODE:
-      type = XPM_8_8_8;
-      break;
-    case MODE_DIRECT_BIGGER_RESOLUTION:
-      type = XPM_5_6_5;
-      break;
-    case MODE_DIRECT_32_BITS:
-      type = XPM_8_8_8_8;
-      break;
-    default:
-      type = INVALID_XPM;
-      break;
-  }
-
-  if (type == INVALID_XPM) {
-    printf("Error occurred: couldn't define xpm type.\n");
-    return 1;
-  }
-
-  uint32_t transparency_color = xpm_transparency_color(type);
+  uint32_t transparency_color = xpm_transparency_color(XPM_INDEXED);
 
   /* Obtain pixelmap */
-  uint8_t *pixelmap = xpm_load(xpm, type, &img);
+  uint8_t *pixelmap = xpm_load(xpm, XPM_INDEXED, &img);
   if (pixelmap == NULL) {
     printf("Error occurred: couldn't load xpm.\n");
     return 1;

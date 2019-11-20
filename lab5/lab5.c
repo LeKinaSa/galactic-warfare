@@ -172,7 +172,6 @@ int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, ui
 }
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
-  uint16_t mode = MODE_GRAPHIC_INDEXED;
   uint8_t kbd_bit_no = 0;
 
   if (kbd_subscribe_int(&kbd_bit_no)) {
@@ -180,14 +179,14 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
     return 1;
   }
 
-  frame_buffer = vg_init(mode);
+  frame_buffer = vg_init(MODE_GRAPHIC_INDEXED);
 
   if (frame_buffer == MAP_FAILED) {
     printf("Error occurred: couldn't map video memory.\n");
     return 1;
   }
 
-  if (vg_draw_xpm(xpm, x, y, mode)) {
+  if (vg_draw_xpm(xpm, x, y)) {
     printf("Error when calling vg_draw_pixmap.\n");
     return 1;
   }
@@ -229,7 +228,6 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
 
 int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf,
                      int16_t speed, uint8_t fr_rate) {
-  uint16_t mode = MODE_GRAPHIC_INDEXED;
   uint8_t kbd_bit_no = 0;
   uint8_t timer0_bit_no = 0;
 
@@ -246,7 +244,7 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
     return 1;
   }
 
-  frame_buffer = vg_init(mode);
+  frame_buffer = vg_init(MODE_GRAPHIC_INDEXED);
 
   if (frame_buffer == MAP_FAILED) {
     printf("Error occurred: couldn't map video memory.\n");
@@ -266,6 +264,7 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
   uint8_t step_x, step_y;
   uint8_t int_count;
   bool positive_movement;
+  
   if (speed > 0) {
     int_count = TIMER0_INTERRUPTS_PER_SECOND / fr_rate;
     if (xi == xf) {
@@ -336,8 +335,7 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
                 yi = yf;
               }
             }
-            // TODO: reagrupar esta funcao em 2 (load_pixelmap e draw_pixelmap)
-            vg_draw_xpm(xpm, xi, yi, mode);
+            vg_draw_xpm(xpm, xi, yi);
           }
         }
         break;
