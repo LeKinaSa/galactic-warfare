@@ -186,13 +186,13 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
     return 1;
   }
 
-  uint8_t *pixmap = 0; // Initialize pixmap pointer to silence compiler warning
   xpm_image_t img;
+  uint8_t *pixmap = xpm_load(xpm, XPM_INDEXED, &img);
 
-  if (vg_xpm_to_pixmap(xpm, &pixmap, &img)) {
+  if (pixmap == NULL) {
     kbd_unsubscribe_int();
     vg_exit();
-    printf("Error when calling vg_xpm_to_pixmap.\n");
+    printf("Error occurred: couldn't load pixmap.\n");
     return 1;
   }
 
@@ -315,11 +315,11 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
     }
   }
 
-  uint8_t *pixmap = 0; // Initialize pixmap pointer to silence compiler warning
   xpm_image_t img;
+  uint8_t *pixmap = xpm_load(xpm, XPM_INDEXED, &img);
 
-  if (vg_xpm_to_pixmap(xpm, &pixmap, &img)) {
-    printf("Error when calling vg_xpm_to_pixmap.\n");
+  if (pixmap == NULL) {
+    printf("Error occurred: couldn't load pixmap.\n");
 
     timer_unsubscribe_int();
     kbd_unsubscribe_int();

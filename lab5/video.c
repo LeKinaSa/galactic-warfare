@@ -122,6 +122,7 @@ int video_set_mode(uint16_t mode) {
   return 0;
 }
 
+
 int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color, void **buffer) {
   if (buffer == NULL) {
     printf("Error occurred: buffer not set.\n");
@@ -133,6 +134,7 @@ int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color, void **buffer) {
 
   return 0;
 }
+
 
 int (vg_draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color) {
   if (frame_buffer == NULL) {
@@ -219,22 +221,6 @@ int vg_draw_pattern(uint8_t no_rectangles, uint32_t first_color, uint8_t step) {
   return 0;
 }
 
-int vg_xpm_to_pixmap(xpm_map_t xpm, uint8_t **pixmap, xpm_image_t *img) {
-  if (pixmap == NULL || img == NULL) {
-    printf("Error occurred: null pointer passed as arg.\n");
-    return 1;
-  }
-
-  /* Load pixmap from xpm */
-  *pixmap = xpm_load(xpm, XPM_INDEXED, img);
-
-  if (*pixmap == NULL) {
-    printf("Error occurred: couldn't load pixmap.\n");
-    return 1;
-  }
-
-  return 0;
-}
 
 int vg_draw_xpm(uint8_t *pixmap, xpm_image_t img, uint16_t x, uint16_t y, bool double_buffered) {
   if (pixmap == NULL) {
