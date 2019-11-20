@@ -186,8 +186,20 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
     return 1;
   }
 
-  if (vg_draw_xpm(xpm, x, y)) {
-    printf("Error when calling vg_draw_pixmap.\n");
+  uint8_t *pixmap = 0; // Initialize pixmap pointer to silence compiler warning
+  xpm_image_t img;
+
+  if (vg_xpm_to_pixmap(xpm, &pixmap, &img)) {
+    kbd_unsubscribe_int();
+    vg_exit();
+    printf("Error when calling vg_xpm_to_pixmap.\n");
+    return 1;
+  }
+
+  if (vg_draw_xpm(pixmap, img, x, y, false)) {
+    kbd_unsubscribe_int();
+    vg_exit();
+    printf("Error when calling vg_draw_xpm.\n");
     return 1;
   }
 
@@ -214,6 +226,7 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
 
 
   if (vg_exit()) {
+    kbd_unsubscribe_int();
     printf("Error when calling vg_exit.\n");
     return 1;
   }
@@ -302,6 +315,19 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
     }
   }
 
+  uint8_t *pixmap = 0; // Initialize pixmap pointer to silence compiler warning
+  xpm_image_t img;
+
+  if (vg_xpm_to_pixmap(xpm, &pixmap, &img)) {
+    printf("Error when calling vg_xpm_to_pixmap.\n");
+
+    timer_unsubscribe_int();
+    kbd_unsubscribe_int();
+    vg_exit();
+
+    return 1;
+  }
+
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
       printf("Error when calling driver_receive.\n");
@@ -335,7 +361,7 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
                 yi = yf;
               }
             }
-            vg_draw_xpm(xpm, xi, yi);
+            vg_draw_xpm(pixmap, img, xi, yi, true);
           }
         }
         break;

@@ -122,13 +122,13 @@ int video_set_mode(uint16_t mode) {
   return 0;
 }
 
-int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color) {
-  if (frame_buffer == NULL) {
-    printf("Error occurred: frame buffer not set.\n");
+int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color, void **buffer) {
+  if (buffer == NULL) {
+    printf("Error occurred: buffer not set.\n");
     return 1;
   }
 
-  uint8_t *addr = (uint8_t *)(frame_buffer) + bytes_per_pixel * (x + y * info.XResolution);
+  uint8_t *addr = (uint8_t *)(*buffer) + bytes_per_pixel * (x + y * info.XResolution);
   memcpy(addr, &color, bytes_per_pixel);
 
   return 0;
@@ -141,7 +141,7 @@ int (vg_draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color) {
   }
 
   for (uint16_t i = 0; i < len; i++) {
-    vg_draw_pixel(x + i, y, color);
+    vg_draw_pixel(x + i, y, color, &frame_buffer);
   }
 
   return 0;
@@ -219,35 +219,63 @@ int vg_draw_pattern(uint8_t no_rectangles, uint32_t first_color, uint8_t step) {
   return 0;
 }
 
+int vg_xpm_to_pixmap(xpm_map_t xpm, uint8_t **pixmap, xpm_image_t *img) {
+  if (pixmap == NULL || img == NULL) {
+    printf("Error occurred: null pointer passed as arg.\n");
+    return 1;
+  }
 
-int vg_draw_xpm(xpm_map_t xpm, uint16_t x, uint16_t y) {
+  /* Load pixmap from xpm */
+  *pixmap = xpm_load(xpm, XPM_INDEXED, img);
+
+  if (*pixmap == NULL) {
+    printf("Error occurred: couldn't load pixmap.\n");
+    return 1;
+  }
+
+  return 0;
+}
+
+int vg_draw_xpm(uint8_t *pixmap, xpm_image_t img, uint16_t x, uint16_t y, bool double_buffered) {
+  if (pixmap == NULL) {
+    printf("Error occurred: null pixmap.\n");
+    return 1;
+  }
+
   if (frame_buffer == NULL) {
     printf("Error occurred: frame buffer not set.\n");
     return 1;
   }
 
-  xpm_image_t img;
-
   uint32_t transparency_color = xpm_transparency_color(XPM_INDEXED);
-
-  /* Obtain pixelmap */
-  uint8_t *pixelmap = xpm_load(xpm, XPM_INDEXED, &img);
-  if (pixelmap == NULL) {
-    printf("Error occurred: couldn't load xpm.\n");
-    return 1;
-  }
-
   uint32_t current_color;
+
+  /* Auxiliary buffer used for double buffering */
+  void *aux_buffer;
+  if (double_buffered) {
+    /* Allocate required memory */
+    aux_buffer = malloc(info.XResolution * info.YResolution * bytes_per_pixel);
+  }
 
   /* Draw pixelmap */
   for (uint16_t row = 0; row < img.height; row++) {
     for (uint16_t col = 0; col < img.width; col++) {
-      current_color = pixelmap[col + row * img.width];
+      current_color = pixmap[col + row * img.width];
       
       if (current_color != transparency_color) {
-        vg_draw_pixel(x + col, y + row, pixelmap[col + row * img.width]);
+        if (double_buffered) {
+          vg_draw_pixel(x + col, y + row, pixmap[col + row * img.width], &(aux_buffer));
+        }
+        else {
+          vg_draw_pixel(x + col, y + row, pixmap[col + row * img.width], &frame_buffer);
+        }
       }
     }
+  }
+
+  if (double_buffered) {
+    /* Copy resulting image to frame buffer */
+    memcpy(frame_buffer, aux_buffer, info.XResolution * info.YResolution * bytes_per_pixel);
   }
 
   return 0;
