@@ -273,48 +273,8 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
 
   int ipc_status;
   message msg;
-
-  uint8_t step_x, step_y;
-  uint8_t int_count;
-  bool positive_movement;
   
-  if (speed > 0) {
-    int_count = TIMER0_INTERRUPTS_PER_SECOND / fr_rate;
-    if (xi == xf) {
-      step_x = 0;
-      if (yi < yf) {
-        step_y = speed;
-        positive_movement = true;
-      }
-      else {
-        step_y = -speed;
-        positive_movement = false;
-      }
-    }
-    if (yi == yf) {
-      step_y = 0;
-      if (xi < xf) {
-        step_x = speed;
-        positive_movement = true;
-      }
-      else {
-        step_x = -speed;
-        positive_movement = false;
-      }
-    }
-  }
-  if (speed < 0) {
-    step_x = 1;
-    step_y = 1;
-    int_count = TIMER0_INTERRUPTS_PER_SECOND / fr_rate * (-speed);
-    if (xi == xf) {
-      step_x = 0;
-    }
-    if (yi == yf) {
-      step_y = 0;
-    }
-  }
-
+  /* Convert xpm to pixmap */
   xpm_image_t img;
   uint8_t *pixmap = xpm_load(xpm, XPM_INDEXED, &img);
 
@@ -325,6 +285,17 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
     kbd_unsubscribe_int();
     vg_exit();
 
+    return 1;
+  }
+
+  /* Get movement information from arguments */
+  movement_info info;
+  if (vg_get_movement_info(xi, yi, xf, yf, speed, fr_rate, &info)) {
+    timer_unsubscribe_int();
+    kbd_unsubscribe_int();
+    vg_exit();
+
+    printf("Error occurred: one or more invalid args.\n");
     return 1;
   }
 
@@ -346,25 +317,27 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
         }
         if (msg.m_notify.interrupts & BIT(timer0_bit_no)) {
           timer_int_handler();
-          if (counter == int_count) {
+          if (counter == info.int_count) {
             counter = 0;
-            xi += step_x;
-            yi += step_y;
-            if (positive_movement) {
-              if (xi > xf) {
-                xi = xf;
-              }
-              if (yi > yf) {
-                yi = yf;
-              }
-            }
-            else {
-              if (xi < xf) {
-                xi = xf;
-              }
-              if (yi < yf) {
-                yi = yf;
-              }
+            switch(info.type) {
+              case POSITIVE_X:
+                xi += info.step;
+                if (xi > xf) xi = xf;
+                break;
+              case NEGATIVE_X:
+                xi += info.step;
+                if (xi < xf) xi = xf;
+                break;
+              case POSITIVE_Y:
+                yi += info.step;
+                if (yi > yf) yi = yf;
+                break;
+              case NEGATIVE_Y:
+                yi += info.step;
+                if (yi < yf) yi = yf;
+                break;
+              default:
+                break;
             }
             vg_draw_xpm(pixmap, img, xi, yi, true);
           }

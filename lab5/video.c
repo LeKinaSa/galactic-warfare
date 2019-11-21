@@ -2,8 +2,11 @@
 #include <lcom/vbe.h>
 #include <lcom/lcf.h>
 #include <stdbool.h>
+#include <limits.h>
+
 #include "video.h"
 #include "vbe_constants.h"
+#include "i8254.h"
 
 extern void *frame_buffer;
 static vbe_mode_info_t info;
@@ -262,6 +265,59 @@ int vg_draw_xpm(uint8_t *pixmap, xpm_image_t img, uint16_t x, uint16_t y, bool d
   if (double_buffered) {
     /* Copy resulting image to frame buffer */
     memcpy(frame_buffer, aux_buffer, info.XResolution * info.YResolution * bytes_per_pixel);
+  }
+
+  return 0;
+}
+
+
+int vg_get_movement_info(uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf, int16_t speed, 
+uint8_t fr_rate, movement_info *info) {
+  if (fr_rate == 0 || (xi != xf && yi != yf)) {
+    return 1;
+  }
+
+  /* Calculate interrupt count and step */
+  if (speed == 0) {
+    info->int_count = UCHAR_MAX;
+    info->type = NO_MOVEMENT;
+  }
+  else if (speed > 0) {
+    info->int_count = TIMER0_INTERRUPTS_PER_SECOND / fr_rate;
+    info->step = speed;
+  }
+  else {
+    info->int_count = TIMER0_INTERRUPTS_PER_SECOND / fr_rate * (-speed);
+    info->step = 1;
+  }
+
+  /* Calculate movement type */
+  if (xi == xf) {
+    if (yi == yf) {
+      info->type = NO_MOVEMENT;
+    }
+    else if (yi < yf) {
+      info->type = POSITIVE_Y;
+    }
+    else {
+      info->type = NEGATIVE_Y;
+    }
+  }
+  else {
+    if (xi < xf) {
+      info->type = POSITIVE_X;
+    }
+    else {
+      info->type = NEGATIVE_X;
+    }
+  }
+
+  /* Final adjustments to step */
+  if (info->type == NO_MOVEMENT) {
+    info->step = 0;
+  }
+  else if (info->type == NEGATIVE_X || info->type == NEGATIVE_Y) {
+    info->step = -info->step;
   }
 
   return 0;
