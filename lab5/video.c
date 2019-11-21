@@ -332,7 +332,7 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
   mmap_t map;
 
   /* Allocate memory */
-  lm_alloc(64, &map);
+  lm_alloc(VBE_INFO_BLOCK_SIZE, &map);
   phys_bytes buf = map.phys;
 
   struct reg86 reg;
@@ -371,9 +371,10 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
     return 1;
   }
 
-  /* Copying the selected fields from VbeInfoBlock to vg_vbe_contr_info_t */
+  /* Copying and parsing the selected fields from VbeInfoBlock to vg_vbe_contr_info_t */
   //TODO : select needed fields
   *info_p = *((vg_vbe_contr_info_t *)(info_ptr));
+  // TODO: Covert far pointers to physical address and then to virtual memory
 
   /* Set VBE Signature to VBE2 */
   (*info_p).VBESignature[0] = 'V';

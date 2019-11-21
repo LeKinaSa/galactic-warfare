@@ -38,6 +38,8 @@
 #define MIBIBYTE                            BIT(20) 
 #define BITS_PER_BYTE                       8         /* Number of bits in a byte */
 
+#define VBE_INFO_BLOCK_SIZE     64      /* Bytes needed to allocate the buffer for VbeInfoBlock */
+
 #define BITMASK(start, n_bits)              ((BIT(n_bits) - 1) << start)    /* Creates a bitmask starting at bit start with length n_bits */
 
 #endif /* _LCOM_VGE_H_ */
