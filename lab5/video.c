@@ -65,7 +65,7 @@ int vbe_return_mode_info(uint16_t mode, vbe_mode_info_t *info_ptr) {
   /* Set register values */
   reg.intno = SERVICE_VIDEO_CARD;
   reg.ax = VBE_FUNC_AX(FUNC_RETURN_VBE_MODE_INFO);
-  reg.cx = VBE_MODE_BX_LINEAR(mode);
+  reg.cx = VBE_MODE_LINEAR(mode);
   reg.es = PB2BASE(buf);
   reg.di = PB2OFF(buf);
 
@@ -103,7 +103,7 @@ int video_set_mode(uint16_t mode) {
   /* Set register values */
   reg.intno = SERVICE_VIDEO_CARD;
   reg.ax = VBE_FUNC_AX(FUNC_SET_VBE_MODE);
-  reg.bx = VBE_MODE_BX_LINEAR(mode);
+  reg.bx = VBE_MODE_LINEAR(mode);
 
   /* BIOS call */
   if (sys_int86(&reg) != OK) {
@@ -332,9 +332,8 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
   }
 
   mmap_t map;
-
-  /* Allocate memory */
-  lm_alloc(VBE_INFO_BLOCK_SIZE, &map);
+  /* Allocate low memory */
+  void* virt = lm_alloc(VBE_INFO_BLOCK_SIZE, &map);
   phys_bytes buf = map.phys;
 
   struct reg86 reg;
@@ -346,8 +345,7 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
   reg.es = PB2BASE(buf);
   reg.di = PB2OFF(buf);
 
-  /* Set VBE Signature to VBE2 */
-  vg_vbe_contr_info_t *info_ptr = (vg_vbe_contr_info_t *) (map.virt);
+  vbe_info_block *info_ptr = (vbe_info_block *)(map.virt);
   strcpy((*info_ptr).VBESignature, "VBE2");
 
   /* BIOS call */
@@ -370,18 +368,38 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
     return 1;
   }
 
-  /* Copying and parsing the selected fields from VbeInfoBlock to vg_vbe_contr_info_t */
-  //TODO : select needed fields
-  *info_p = *((vg_vbe_contr_info_t *)(info_ptr));
-  // TODO: Covert far pointers to physical address and then to virtual memory
+  strcpy((*info_p).VBESignature, "VBE2");
 
-  /* Set VBE Signature to VBE2 */
-  (*info_p).VBESignature[0] = 'V';
-  (*info_p).VBESignature[1] = 'B';
-  (*info_p).VBESignature[2] = 'E';
-  (*info_p).VBESignature[3] = '2';
-  
+  uint8_t msb, lsb;
+
+  if (util_get_MSB((*info_ptr).VBEVersion, &msb)) {
+  }
+
+  if (util_get_LSB((*info_ptr).VBEVersion, &lsb)) {
+  }
+
+  /* Copying and parsing the selected fields from VbeInfoBlock to vg_vbe_contr_info_t */
+  (*info_p).VBEVersion[0] = lsb;
+  (*info_p).VBEVersion[1] = msb;
+
+  (*info_p).TotalMemory = (*info_ptr).TotalMemory * 64;
+
+  uint32_t base = (uint32_t)virt - map.phys;
+  (*info_p).VideoModeList = (uint16_t *)(base + far_ptr_to_linear((*info_ptr).VideoModePtr));
+  (*info_p).OEMString = (char *)(base + far_ptr_to_linear((*info_ptr).OEMStringPtr));
+  (*info_p).OEMVendorNamePtr = (char *)(base + far_ptr_to_linear((*info_ptr).OEMVendorNamePtr));
+  (*info_p).OEMProductNamePtr = (char *)(base + far_ptr_to_linear((*info_ptr).OEMProductNamePtr));
+  (*info_p).OEMProductRevPtr = (char *)(base + far_ptr_to_linear((*info_ptr).OEMProductRevPtr));
+
   lm_free(&map);
 
   return 0;
 }
+
+uint32_t far_ptr_to_linear(uint32_t far_ptr) {
+  uint32_t base = (far_ptr >> (BITS_PER_BYTE * 2)) << 4;
+  uint32_t offset = far_ptr & BITMASK(0, BITS_PER_BYTE * 2);
+
+  return base + offset;
+}
+

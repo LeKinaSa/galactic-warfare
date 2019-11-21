@@ -22,6 +22,8 @@
     "memory": "c",
     "string": "c",
     "utility": "c",
-    "vector": "c"
+    "vector": "c",
+    "functional": "c",
+    "tuple": "c"
   },
 }

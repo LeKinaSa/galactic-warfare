@@ -19,6 +19,23 @@ typedef struct {
   uint8_t int_count;
 } movement_info;
 
+/* Structure to be passed to VBE function 00h */
+typedef struct __attribute__((packed)) {
+  char VBESignature[4];
+  uint16_t VBEVersion;
+  uint32_t OEMStringPtr;
+  uint8_t Capabilities[4];
+  uint32_t VideoModePtr;
+  uint16_t TotalMemory;
+  uint16_t OEMSoftwareRev;
+  uint32_t OEMVendorNamePtr;
+  uint32_t OEMProductNamePtr;
+  uint32_t OEMProductRevPtr;
+  uint8_t Reserved[222];
+  uint8_t OEMData[256];
+} vbe_info_block;
+
+
 
 /* Our implementation of vbe_get_mode_info */
 int vbe_return_mode_info(uint16_t mode, vbe_mode_info_t *info_ptr);
@@ -43,5 +60,7 @@ uint8_t fr_rate, movement_info *info);
 
 /* Gets the controller info */
 int vbe_return_controller_info(vg_vbe_contr_info_t *info_p);
+
+uint32_t far_ptr_to_linear(uint32_t far_ptr);
 
 #endif /* __VIDEO_H */

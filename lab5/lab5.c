@@ -187,6 +187,8 @@ int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
   frame_buffer = vg_init(MODE_GRAPHIC_INDEXED);
 
   if (frame_buffer == MAP_FAILED) {
+    kbd_unsubscribe_int();
+    vg_exit();
     printf("Error occurred: couldn't map video memory.\n");
     return 1;
   }
