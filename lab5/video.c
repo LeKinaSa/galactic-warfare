@@ -330,10 +330,9 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
   }
 
   mmap_t map;
-  /* Set VBE Signature to VBE2 */
-  //TODO
-  //info_p->VBESignature = "VBE2";
-  lm_alloc(sizeof(*info_p), &map);
+
+  /* Allocate memory */
+  lm_alloc(64, &map);
   phys_bytes buf = map.phys;
 
   struct reg86 reg;
@@ -344,8 +343,13 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
   reg.ax = VBE_FUNC_AX(FUNC_RETURN_VBE_CONTROLLER_INFO);
   reg.es = PB2BASE(buf);
   reg.di = PB2OFF(buf);
+
   /* Set VBE Signature to VBE2 */
-  //TODO
+  vg_vbe_contr_info_t *info_ptr = (vg_vbe_contr_info_t *) (map.virt);
+  (*info_ptr).VBESignature[0] = 'V';
+  (*info_ptr).VBESignature[1] = 'B';
+  (*info_ptr).VBESignature[2] = 'E';
+  (*info_ptr).VBESignature[3] = '2';
 
   /* BIOS call */
   if (sys_int86(&reg) != OK) {
@@ -366,11 +370,16 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
     printf("Error occurred: VBE function not supported.\n");
     return 1;
   }
+
   /* Copying the selected fields from VbeInfoBlock to vg_vbe_contr_info_t */
-  *info_p = *((vg_vbe_contr_info_t *)(map.virt));
+  //TODO : select needed fields
+  *info_p = *((vg_vbe_contr_info_t *)(info_ptr));
+
   /* Set VBE Signature to VBE2 */
-  //TODO
-  //*(*info_p).VBESignature = "VBE2";
+  (*info_p).VBESignature[0] = 'V';
+  (*info_p).VBESignature[1] = 'B';
+  (*info_p).VBESignature[2] = 'E';
+  (*info_p).VBESignature[3] = '2';
   
   lm_free(&map);
 
