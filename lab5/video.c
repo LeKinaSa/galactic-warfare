@@ -346,7 +346,7 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
   reg.di = PB2OFF(buf);
 
   vbe_info_block *info_ptr = (vbe_info_block *)(map.virt);
-  strcpy((*info_ptr).VBESignature, "VBE2");
+  strcpy(((vg_vbe_contr_info_t *)(virt))->VBESignature, "VBE2");
 
   /* BIOS call */
   if (sys_int86(&reg) != OK) {
@@ -368,8 +368,6 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
     return 1;
   }
 
-  strcpy((*info_p).VBESignature, "VBE2");
-
   uint8_t msb, lsb;
 
   if (util_get_MSB((*info_ptr).VBEVersion, &msb)) {
@@ -379,6 +377,7 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
   }
 
   /* Copying and parsing the selected fields from VbeInfoBlock to vg_vbe_contr_info_t */
+  strcpy((*info_p).VBESignature, (*info_ptr).VBESignature);
   (*info_p).VBEVersion[0] = lsb;
   (*info_p).VBEVersion[1] = msb;
 
