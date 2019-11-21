@@ -322,3 +322,57 @@ uint8_t fr_rate, movement_info *info) {
 
   return 0;
 }
+
+int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
+  if (info_p == NULL) {
+    printf("Error occurred: null pointer.\n");
+    return 1;
+  }
+
+  mmap_t map;
+  /* Set VBE Signature to VBE2 */
+  //TODO
+  //info_p->VBESignature = "VBE2";
+  lm_alloc(sizeof(*info_p), &map);
+  phys_bytes buf = map.phys;
+
+  struct reg86 reg;
+  memset(&reg, 0, sizeof(reg)); // Zero the reg86 struct
+
+  /* Set register values */
+  reg.intno = SERVICE_VIDEO_CARD;
+  reg.ax = VBE_FUNC_AX(FUNC_RETURN_VBE_CONTROLLER_INFO);
+  reg.es = PB2BASE(buf);
+  reg.di = PB2OFF(buf);
+  /* Set VBE Signature to VBE2 */
+  //TODO
+
+  /* BIOS call */
+  if (sys_int86(&reg) != OK) {
+    lm_free(&map);
+    printf("Error when calling sys_int86.\n");
+    return 1;
+  }
+
+  /* Check return value */
+  if (reg.ah != VBE_RETURN_SUCCESS) {
+    lm_free(&map);
+    printf("Error occurred: VBE function not successful (AH = 0x%x).\n", reg.ah);
+    return 1;
+  }
+
+  if (reg.al != VBE_RETURN_FUNC_SUPPORTED) {
+    lm_free(&map);
+    printf("Error occurred: VBE function not supported.\n");
+    return 1;
+  }
+  /* Copying the selected fields from VbeInfoBlock to vg_vbe_contr_info_t */
+  *info_p = *((vg_vbe_contr_info_t *)(map.virt));
+  /* Set VBE Signature to VBE2 */
+  //TODO
+  //*(*info_p).VBESignature = "VBE2";
+  
+  lm_free(&map);
+
+  return 0;
+}

@@ -378,8 +378,15 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
 }
 
 int(video_test_controller)() {
-  /* To be completed */
-  printf("%s(): under construction\n", __func__);
-
-  return 1;
+  vg_vbe_contr_info_t info_p;
+  memset(&info_p, 0, sizeof(info_p));
+  if (vbe_return_controller_info(&info_p)) {
+    printf("Error when calling vbe_return_controller_info.\n");
+    return 1;
+  }
+  if (vg_display_vbe_contr_info(&info_p)) {
+    printf("Error when calling vg_display_vbe_contr_info.\n");
+    return 1;
+  }
+  return 0;
 }
