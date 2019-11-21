@@ -132,6 +132,8 @@ int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color, void **buffer) {
     return 1;
   }
 
+  color &= BITMASK(0, info.BitsPerPixel);
+
   uint8_t *addr = (uint8_t *)(*buffer) + bytes_per_pixel * (x + y * info.XResolution);
   memcpy(addr, &color, bytes_per_pixel);
 
@@ -346,10 +348,7 @@ int vbe_return_controller_info(vg_vbe_contr_info_t *info_p) {
 
   /* Set VBE Signature to VBE2 */
   vg_vbe_contr_info_t *info_ptr = (vg_vbe_contr_info_t *) (map.virt);
-  (*info_ptr).VBESignature[0] = 'V';
-  (*info_ptr).VBESignature[1] = 'B';
-  (*info_ptr).VBESignature[2] = 'E';
-  (*info_ptr).VBESignature[3] = '2';
+  strcpy((*info_ptr).VBESignature, "VBE2");
 
   /* BIOS call */
   if (sys_int86(&reg) != OK) {
