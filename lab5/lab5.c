@@ -76,6 +76,7 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
 
   if (vg_draw_rectangle(x, y, width, height, color)) {
     kbd_unsubscribe_int();
+    vg_exit();
     printf("Error when calling vg_draw_rectangle.\n");
     return 1;
   }
@@ -128,11 +129,14 @@ int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, ui
   frame_buffer = vg_init(mode);
 
   if (frame_buffer == MAP_FAILED) {
+    kbd_unsubscribe_int();
     printf("Error occurred: couldn't map video memory.\n");
     return 1;
   }
 
   if (vg_draw_pattern(no_rectangles, first, step)) {
+    kbd_unsubscribe_int();
+    vg_exit();
     printf("Error when calling vg_draw_pattern.\n");
     return 1;
   }
@@ -159,6 +163,7 @@ int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, ui
   }
 
   if (vg_exit()) {
+    kbd_unsubscribe_int();
     printf("Error when calling vg_exit.\n");
     return 1;
   }
@@ -380,13 +385,16 @@ int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint1
 int(video_test_controller)() {
   vg_vbe_contr_info_t info_p;
   memset(&info_p, 0, sizeof(info_p));
+
   if (vbe_return_controller_info(&info_p)) {
     printf("Error when calling vbe_return_controller_info.\n");
     return 1;
   }
+
   if (vg_display_vbe_contr_info(&info_p)) {
     printf("Error when calling vg_display_vbe_contr_info.\n");
     return 1;
   }
+
   return 0;
 }

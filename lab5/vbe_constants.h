@@ -28,14 +28,11 @@
 #define VBE_FUNC_AX(func)                   ((VBE_FUNCTION_AH << 8) | func)     /* AX register for a VBE function */
 #define VBE_MODE_BX_LINEAR(mode)            (LINEAR_FRAME_BUFFER_MODEL | mode)  /* BX register for a VBE mode with linear frame buffer set */
 
-#define RETURN_TO_TEXT_MODE_AH              0x00
-#define RETURN_TO_TEXT_MODE_AL              0x03
-
 /* Memory model */
 #define VBE_PACKED_PIXEL      0x04    /* Indexed color */
 #define VBE_DIRECT_COLOR      0x06    /* Direct color */
 
-#define MIBIBYTE                            BIT(20) 
+#define MIBIBYTE                            BIT(20)
 #define BITS_PER_BYTE                       8         /* Number of bits in a byte */
 
 #define VBE_INFO_BLOCK_SIZE     64      /* Bytes needed to allocate the buffer for VbeInfoBlock */
