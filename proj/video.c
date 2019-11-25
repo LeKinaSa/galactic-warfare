@@ -7,6 +7,8 @@
 #include "video.h"
 #include "vbe_constants.h"
 
+#include "res/Ship.xpm"
+
 extern void *frame_buffer;
 static vbe_mode_info_t info;
 static uint8_t bytes_per_pixel;
@@ -125,7 +127,7 @@ int video_set_mode(uint16_t mode) {
 }
 
 
-int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color, void **buffer) {
+int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color, void** buffer) {
   if (buffer == NULL) {
     printf("Error occurred: buffer not set.\n");
     return 1;
@@ -140,46 +142,35 @@ int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color, void **buffer) {
 }
 
 
-int vg_draw_xpm(uint8_t *pixmap, xpm_image_t img, uint16_t x, uint16_t y, bool double_buffered) {
-  if (pixmap == NULL) {
+int vg_draw_xpm(xpm_image_t img, uint16_t x, uint16_t y, void** buffer) {
+  if (img.bytes == NULL) {
     printf("Error occurred: null pixmap.\n");
     return 1;
   }
 
-  if (frame_buffer == NULL) {
+  if (*buffer == NULL) {
     printf("Error occurred: frame buffer not set.\n");
     return 1;
   }
 
-  uint32_t transparency_color = xpm_transparency_color(XPM_INDEXED);
+  uint32_t transparency_color = xpm_transparency_color(img.type);
   uint32_t current_color;
-
-  /* Auxiliary buffer used for double buffering */
-  void *aux_buffer;
-  if (double_buffered) {
-    /* Allocate required memory */
-    aux_buffer = malloc(info.XResolution * info.YResolution * bytes_per_pixel);
-  }
 
   /* Draw pixelmap */
   for (uint16_t row = 0; row < img.height; row++) {
     for (uint16_t col = 0; col < img.width; col++) {
-      current_color = pixmap[col + row * img.width];
+      switch (img.type) {
+        case XPM_INDEXED:
+          current_color = img.bytes[col + row * img.width];
+          break;
+        default:
+          break;
+      }
       
       if (current_color != transparency_color) {
-        if (double_buffered) {
-          vg_draw_pixel(x + col, y + row, pixmap[col + row * img.width], &(aux_buffer));
-        }
-        else {
-          vg_draw_pixel(x + col, y + row, pixmap[col + row * img.width], &frame_buffer);
-        }
+        vg_draw_pixel(x + col, y + row, img.bytes[col + row * img.width], buffer);
       }
     }
-  }
-
-  if (double_buffered) {
-    /* Copy resulting image to frame buffer */
-    memcpy(frame_buffer, aux_buffer, info.XResolution * info.YResolution * bytes_per_pixel);
   }
 
   return 0;

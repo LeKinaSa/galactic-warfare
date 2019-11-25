@@ -9,6 +9,8 @@
 
 // Any header files included below this line should have been created by you
 #include "game_logic.h"
+#include "vbe_constants.h"
+#include "video.h"
 
 void* frame_buffer; // Needed for video related functions
 int scancode;
@@ -40,5 +42,18 @@ int main(int argc, char *argv[]) {
 }
 
 int(proj_main_loop)(int argc, char *argv[]) {
+  frame_buffer = vg_init(MODE_DIRECT_32_BITS);
+
+  if (frame_buffer == MAP_FAILED) {
+    return 1;
+  }
+
+  sleep(2);
+
+  if (vg_exit()) {
+    printf("Error when calling vg_exit.\n");
+    return 1;
+  }
+
   return 0;
 }

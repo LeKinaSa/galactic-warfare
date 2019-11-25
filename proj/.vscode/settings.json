@@ -8,6 +8,7 @@
   "editor.wordWrapColumn": 100,
   "files.associations": {
     "game_logic.h": "c",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "*.xpm": "c"
   },
 }
