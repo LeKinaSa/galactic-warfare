@@ -50,3 +50,13 @@ double Vector2_dot_prod(const Vector2* lhs, const Vector2* rhs) {
 Vector2* Vector2_scalar_mult(double scalar, const Vector2* this) {
   return Vector2_new(scalar * this->x, scalar * this->y);
 }
+
+double Vector2_distance_to(const Vector2* lhs, const Vector2* rhs) {
+  return Vector2_norm(Vector2_subtract(lhs, rhs));
+}
+
+double Vector2_angle_to(const Vector2* lhs, const Vector2* rhs) {
+  double delta_x = rhs->x - lhs->x;
+  double delta_y = lhs->y - rhs->y;
+  return atan2(delta_y, delta_x);
+}

@@ -30,4 +30,10 @@ double Vector2_dot_prod(const Vector2* lhs, const Vector2* rhs);
 /* Performs a scalar multiplication on the given vector */
 Vector2* Vector2_scalar_mult(double scalar, const Vector2* this);
 
-#endif /* GAME_LOGIC_H
+/* Returns the distance between the two vector */
+double Vector2_distance_to(const Vector2* lhs, const Vector2* rhs);
+
+/* Returns the angle between the two vectors */
+double Vector2_angle_to(const Vector2* lhs, const Vector2* rhs);
+
+#endif /* GAME_LOGIC_H */
