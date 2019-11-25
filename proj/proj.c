@@ -11,6 +11,9 @@
 #include "game_logic.h"
 
 void* frame_buffer; // Needed for video related functions
+int scancode;
+uint8_t packet_byte;
+int counter;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)

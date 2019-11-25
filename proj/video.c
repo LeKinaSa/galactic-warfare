@@ -6,7 +6,6 @@
 
 #include "video.h"
 #include "vbe_constants.h"
-#include "i8254.h"
 
 extern void *frame_buffer;
 static vbe_mode_info_t info;
@@ -185,4 +184,3 @@ int vg_draw_xpm(uint8_t *pixmap, xpm_image_t img, uint16_t x, uint16_t y, bool d
 
   return 0;
 }
-
