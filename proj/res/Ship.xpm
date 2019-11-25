@@ -1,5 +1,5 @@
 /* XPM */
-static char * Nave_xpm[] = {
+static char * Ship_xpm[] = {
 "64 64 2 1",
 " 	c None",
 ".	c #FFFFFF",
