@@ -1,3 +1,5 @@
+#ifndef GAME_LOGIC_H
+#define GAME_LOGIC_H
 
 /* Basic two-dimensional vector. */
 typedef struct {
@@ -27,3 +29,5 @@ double Vector2_dot_prod(const Vector2* lhs, const Vector2* rhs);
 
 /* Performs a scalar multiplication on the given vector */
 Vector2* Vector2_scalar_mult(double scalar, const Vector2* this);
+
+#endif /* GAME_LOGIC_H
