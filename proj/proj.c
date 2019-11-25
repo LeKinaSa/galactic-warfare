@@ -8,6 +8,8 @@
 
 // Any header files included below this line should have been created by you
 
+void* frame_buffer; // Needed for video related functions
+
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
   lcf_set_language("EN-US");

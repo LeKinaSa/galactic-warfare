@@ -1,6 +1,6 @@
 PROG=proj
 
-SRCS = proj.c
+SRCS = proj.c video.c
 
 # __LCOM_OPTIMIZED__ disables most of the LCF's overhead (and functionality!)
 CPPFLAGS += -pedantic -D __LCOM_OPTIMIZED__
