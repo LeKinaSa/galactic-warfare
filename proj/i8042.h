@@ -79,6 +79,15 @@
 #define KBD_TWO_BYTE_CODE       0xE0      /* Most significant byte for a two byte scancode */
 #define KBD_ESC_BREAKCODE       0x81      /* ESC breakcode */
 
+#define KBD_W_MAKECODE          0x11
+#define KBD_W_BREAKCODE         0x91
+#define KBD_A_MAKECODE          0x1E
+#define KBD_A_BREAKCODE         0x9E
+#define KBD_S_MAKECODE          0x1F
+#define KBD_S_BREAKCODE         0x9F
+#define KBD_D_MAKECODE          0x20
+#define KBD_D_BREAKCODE         0xA0
+
 /* MOUSE PACKET ASSEMBLY */
 
 #define MOUSE_PCK_NUM_BYTES                 3

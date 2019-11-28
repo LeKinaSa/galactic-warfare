@@ -10,6 +10,7 @@
 // Any header files included below this line should have been created by you
 #include "game_logic.h"
 #include "vbe_constants.h"
+#include "i8042.h"
 #include "video.h"
 #include "keyboard.h"
 #include "res/Ship.xpm"
@@ -45,9 +46,9 @@ int main(int argc, char *argv[]) {
 }
 
 int (proj_main_loop)(int argc, char *argv[]) {
-  uint8_t kbd_hook_id = 0;
+  uint8_t kbd_bit_no = 0;
 
-  if (kbd_subscribe_int(&kbd_hook_id)) {
+  if (kbd_subscribe_int(&kbd_bit_no)) {
     printf("Error when calling kbd_subscribe_int.\n");
     return 1;
   }
@@ -62,7 +63,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
   xpm_image_t ship_img;
   ship_img.type = XPM_5_6_5;
 
-  xpm_load(ship_xpm, ship_img.type, &ship_img);
+  if (xpm_load(ship_xpm, ship_img.type, &ship_img) == NULL) {
+    kbd_unsubscribe_int();
+    vg_exit();
+    printf("Error when loading xpm.\n");
+    return 1;
+  }
 
   if (vg_draw_xpm(ship_img, 20, 20, &frame_buffer)) {
     kbd_unsubscribe_int();
@@ -71,16 +77,36 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
 
-  sleep(2);
+  int ipc_status;
+  message msg;
 
-  if (vg_exit()) {
-    kbd_unsubscribe_int();
-    printf("Error when calling vg_exit.\n");
-    return 1;
+  while (scancode != KBD_ESC_BREAKCODE) {
+    if (driver_receive(ANY, &msg, &ipc_status)) {
+      printf("Error when calling driver_receive.\n");
+      continue;
+    }
+    
+    if (is_ipc_notify(ipc_status)) {
+      switch (_ENDPOINT_P(msg.m_source)) {
+      case HARDWARE:
+        if (msg.m_notify.interrupts & BIT(kbd_bit_no)) {
+          kbc_ih();
+        }
+        break;
+      default:
+        break;
+      }
+    }
   }
 
   if (kbd_unsubscribe_int()) {
+    vg_exit();
     printf("Error when calling kbd_unsubscribe_int.\n");
+    return 1;
+  }
+
+  if (vg_exit()) {
+    printf("Error when calling vg_exit.\n");
     return 1;
   }
 
