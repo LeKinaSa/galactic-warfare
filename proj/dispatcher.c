@@ -1,7 +1,7 @@
 #include "dispatcher.h"
 #include "i8042.h"
 
-void process_keyboard_event(uint8_t* bytes, keyboard_status* status) {
+void process_kbd_scancode(uint8_t* bytes, keyboard_status* status) {
   switch (bytes[0]) {
     case KBD_W_MAKECODE:
       status->w_pressed = true;
