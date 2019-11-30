@@ -6,6 +6,7 @@
 
 #include "video.h"
 #include "vbe_constants.h"
+#include "game_logic.h"
 
 #include "res/Ship.xpm"
 
@@ -179,6 +180,24 @@ int vg_draw_xpm(xpm_image_t img, uint16_t x, uint16_t y, void** buffer) {
       if (current_color != transparency_color) {
         vg_draw_pixel(x + col, y + row, current_color, buffer);
       }
+    }
+  }
+
+  return 0;
+}
+
+
+int vg_render_entities(Entity* entities[], uint8_t num_entities, void **buffer) {
+  /* Sort entity array of entity pointers by their z layers */
+  qsort((void*) entities, num_entities, sizeof(Entity*), compare_entity_ptr);
+
+  Entity* current_entity;
+
+  for (uint8_t i = 0; i < num_entities; i++) {
+    current_entity = entities[i];
+
+    if (vg_draw_xpm(current_entity->sprite.img, current_entity->position.x, current_entity->position.y, buffer)) {
+      return 1;
     }
   }
 

@@ -64,18 +64,17 @@ double Vector2_angle_to(const Vector2* lhs, const Vector2* rhs) {
 }
 
 
-Player* Player_new(Vector2 position, Vector2 velocity) {
-  Player* this = (Player*) malloc(sizeof(Player));
+int compare_entity_ptr(const void* lhs, const void* rhs) {
+  Entity* ptr1 = *((Entity**) lhs);
+  Entity* ptr2 = *((Entity**) rhs);
 
-  this->current_health = PLAYER_MAX_HEALTH;
-  this->position = position;
-  this->velocity = velocity;
-
-  return this;
-}
-
-void Player_delete(Player* this) {
-  if (this != NULL) {
-    free(this);
+  if (ptr1->sprite.layer == ptr2->sprite.layer) {
+    return 0;
+  }
+  else if (ptr1->sprite.layer < ptr2->sprite.layer) {
+    return -1;
+  }
+  else {
+    return 1;
   }
 }

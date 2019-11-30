@@ -1,6 +1,8 @@
 #ifndef GAME_LOGIC_H
 #define GAME_LOGIC_H
 
+#include <lcom/lcf.h>
+
 /* Basic two-dimensional vector. */
 typedef struct {
   double x, y;
@@ -36,19 +38,31 @@ double Vector2_distance_to(const Vector2* lhs, const Vector2* rhs);
 /* Returns the angle between the two vectors */
 double Vector2_angle_to(const Vector2* lhs, const Vector2* rhs);
 
+/* Value that controls the rendering order of the sprites. Sprites with a higher z_layer value will be drawn on top. */
+enum z_layer {
+  BACKGROUND,
+  POWERUP,
+  PLAYER,
+  BULLET
+};
 
 typedef struct {
-  uint8_t current_health;
+  xpm_image_t img;
+  enum z_layer layer;
+} Sprite;
+
+typedef struct {
+  Sprite sprite;
   Vector2 position;
   Vector2 velocity;
+} Entity;
+
+/* Comparison function for sorting an array of entity pointers with qsort. Used in the rendering pipeline to sort entities by their z layer. */
+int compare_entity_ptr(const void* lhs, const void* rhs);
+
+typedef struct {
+  Entity entity;
+  uint8_t current_health;
 } Player;
-
-/* Constructs a new Player structure */
-Player* Player_new(Vector2 position, Vector2 velocity);
-
-/* Frees memory allocated for a Player structure */
-void Player_delete(Player* this);
-
-
 
 #endif /* GAME_LOGIC_H */
