@@ -6,7 +6,6 @@
 
 #include "video.h"
 #include "vbe_constants.h"
-#include "game_logic.h"
 
 #include "res/Ship.xpm"
 
@@ -188,7 +187,7 @@ int vg_draw_xpm(xpm_image_t img, uint16_t x, uint16_t y, void** buffer) {
 
 
 int vg_render_entities(Entity* entities[], uint8_t num_entities, void **buffer) {
-  /* Sort entity array of entity pointers by their z layers */
+  /* Sort entity array of entity pointers by their z-layers */
   qsort((void*) entities, num_entities, sizeof(Entity*), compare_entity_ptr);
 
   Entity* current_entity;
