@@ -9,6 +9,7 @@
 
 // Any header files included below this line should have been created by you
 #include "game_logic.h"
+#include "game_constants.h"
 #include "vbe_constants.h"
 #include "i8042.h"
 #include "video.h"
@@ -125,7 +126,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
           timer_int_handler();
 
-          if (counter == 2) { /* TODO: Add interrupts per frame constant */
+          if (counter == INTERRUPTS_PER_FRAME) {
             /* 
             Update values according to internal game logic.
             Render a new frame.

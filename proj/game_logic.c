@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <math.h>
+
 #include "game_logic.h"
+#include "game_constants.h"
 
 Vector2* Vector2_new(double x, double y) {
   Vector2* this = (Vector2*) malloc(sizeof(Vector2));
@@ -65,7 +67,7 @@ double Vector2_angle_to(const Vector2* lhs, const Vector2* rhs) {
 Player* Player_new(Vector2 position, Vector2 velocity) {
   Player* this = (Player*) malloc(sizeof(Player));
 
-  this->current_health = 100;
+  this->current_health = PLAYER_MAX_HEALTH;
   this->position = position;
   this->velocity = velocity;
 
