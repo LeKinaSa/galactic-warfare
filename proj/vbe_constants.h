@@ -14,6 +14,12 @@
 #define MODE_DIRECT_32_BITS             0x14C
 #define LINEAR_FRAME_BUFFER_MODEL       BIT(14)
 
+/* Our Graphic Mode Resolution */
+#define MODE                    0x117
+#define MAX_X                   1024
+#define MAX_Y                   768
+#define BYTES_PER_PIXEL         2
+
 /* Functions from VBE standard */
 
 #define VBE_FUNCTION_AH                     0x4F
