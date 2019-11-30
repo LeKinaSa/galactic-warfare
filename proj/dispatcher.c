@@ -1,7 +1,7 @@
 #include "dispatcher.h"
 #include "i8042.h"
 
-void process_kbd_scancode(uint8_t* bytes, keyboard_status* status) {
+void process_kbd_scancode(const uint8_t* bytes, keyboard_status* status) {
   switch (bytes[0]) {
     case KBD_W_MAKECODE:
       status->w_pressed = true;
@@ -30,4 +30,8 @@ void process_kbd_scancode(uint8_t* bytes, keyboard_status* status) {
     default:
       break; 
   }
+}
+
+void process_kbd_status(const keyboard_status* status, Player* player) {
+  
 }

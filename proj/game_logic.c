@@ -60,3 +60,20 @@ double Vector2_angle_to(const Vector2* lhs, const Vector2* rhs) {
   double delta_y = lhs->y - rhs->y;
   return atan2(delta_y, delta_x);
 }
+
+
+Player* Player_new(Vector2 position, Vector2 velocity) {
+  Player* this = (Player*) malloc(sizeof(Player));
+
+  this->current_health = 100;
+  this->position = position;
+  this->velocity = velocity;
+
+  return this;
+}
+
+void Player_delete(Player* this) {
+  if (this != NULL) {
+    free(this);
+  }
+}

@@ -36,4 +36,19 @@ double Vector2_distance_to(const Vector2* lhs, const Vector2* rhs);
 /* Returns the angle between the two vectors */
 double Vector2_angle_to(const Vector2* lhs, const Vector2* rhs);
 
+
+typedef struct {
+  uint8_t current_health;
+  Vector2 position;
+  Vector2 velocity;
+} Player;
+
+/* Constructs a new Player structure */
+Player* Player_new(Vector2 position, Vector2 velocity);
+
+/* Frees memory allocated for a Player structure */
+void Player_delete(Player* this);
+
+
+
 #endif /* GAME_LOGIC_H */
