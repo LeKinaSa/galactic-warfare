@@ -32,7 +32,7 @@ void* frame_buffer;
 /* Timer Related Variables */
 int counter = 0;
 /* Keyboard Related Variables */
-int scancode;
+uint8_t scancode = 0;
 /* Mouse Related Variables */
 uint8_t packet_byte;
 
@@ -42,13 +42,11 @@ int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
   lcf_set_language("EN-US");
 
-  // enables to log function invocations that are being "wrapped" by LCF
-  // [comment this out if you don't want/need it]
-  lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
+  // Log function invocations that are being "wrapped" by LCF
+  // lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
 
-  // enables to save the output of printf function calls on a file
-  // [comment this out if you don't want/need it]
-  lcf_log_output("/home/lcom/labs/proj/output.txt");
+  // Save the output of printf function calls on a file
+  // lcf_log_output("/home/lcom/labs/proj/output.txt");
 
   // handles control over to LCF
   // [LCF handles command line arguments and invokes the right function]
@@ -89,7 +87,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
   program_status->mouse_int_subscribed = true;
 
-
   if (mouse_disable_int()) {
     exit_program(program_status);
     printf("Error when calling mouse_disable_int.\n");
@@ -121,31 +118,20 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
   xpm_image_t bg_img, ship_img;
 
-  if (xpm_load(bg_xpm, XPM_5_6_5, &bg_img) == NULL) {
+  if (xpm_load(bg_xpm, XPM_5_6_5, &bg_img) == NULL || 
+  xpm_load(ship_xpm, XPM_5_6_5, &ship_img) == NULL) {
     exit_program(program_status);
     printf("Error when loading xpm.\n");
     return 1;
   }
 
-  if (xpm_load(ship_xpm, XPM_5_6_5, &ship_img) == NULL) {
-    exit_program(program_status);
-    printf("Error when loading background xpm.\n");
-    return 1;
-  }
+  Sprite ship_sprite = { ship_img, PLAYER };
+  Entity ship_entity = { ship_sprite, {500.0, 500.0}, {0.0, 0.0} };
 
-  if (vg_draw_xpm(bg_img, 0, 0, &frame_buffer)) {
-    exit_program(program_status);
-    printf("Error when drawing xpm.\n");
-    return 1;
-  }
+  uint8_t num_entities = 1;
+  Entity* entities[1] = { &ship_entity };
 
-  //Sprite ship_sprite = { ship_img, PLAYER };
-  //Entity ship_entity = { ship_sprite, {500.0, 500.0}, {0.0, 0.0} };
-
-  //uint8_t num_entities = 2;
-  //Entity* entities[2] = { &ship_entity };
-
-  //Player player = { ship_entity, PLAYER_MAX_HEALTH };
+  Player player = { &ship_entity, PLAYER_MAX_HEALTH };
 
   int ipc_status;
   message msg;
@@ -153,13 +139,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
   /* Keyboard-related variables */
   keyboard_status kbd_status = { false, false, false, false };
   uint8_t bytes[2];
-  bool two_byte_scancode;
+  bool two_byte_scancode = false;
+
   /* Mouse-related variables */
   int packet_byte_counter = 0;
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
   mouse_status m_status = { false, false, false, MAX_X / 2, MAX_Y / 2 };
 
-  //void* aux_buffer;
+  void* aux_buffer = malloc(vg_get_frame_buffer_size());
 
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
@@ -200,23 +187,24 @@ int (proj_main_loop)(int argc, char *argv[]) {
             else {
               bytes[0] = scancode;
             }
+            
             process_kbd_scancode(bytes, &kbd_status);
+            two_byte_scancode = false;
           }
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
           timer_int_handler();
 
-          /* FIXME: Something wrong here
           if (counter == INTERRUPTS_PER_FRAME) {
+            counter = 0;
             // Update values according to internal game logic.
             // Render a new frame.
-            aux_buffer = malloc(vg_get_frame_buffer_size());
-            memset(aux_buffer, 0, vg_get_frame_buffer_size());
+            process_kbd_status(&kbd_status, &player);
+            update_entity_positions(entities, num_entities);
+            vg_draw_xpm(bg_img, 0, 0, &aux_buffer);
             vg_render_entities(entities, num_entities, &aux_buffer);
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
-            free(aux_buffer);
-            counter = 0;
-          } */
+          }
         }
         break;
       default:
@@ -224,6 +212,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
       }
     }
   }
+
+  free(aux_buffer);
 
   if (mouse_disable_int()) {
     exit_program(program_status);

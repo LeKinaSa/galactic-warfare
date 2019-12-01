@@ -1,6 +1,8 @@
 #include <lcom/lcf.h>
+#include <math.h>
 
 #include "utils.h"
+
 
 #ifdef LAB3
 extern uint32_t sys_inb_cnt;
@@ -45,4 +47,8 @@ int(util_get_MSB)(uint16_t val, uint8_t *msb) {
 
   *msb = (uint8_t)(val >> 8);
   return 0;
+}
+
+double clamp(double x, double lower, double upper) {
+  return fmin(upper, fmax(x, lower));
 }

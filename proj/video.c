@@ -22,6 +22,20 @@ uint32_t vg_get_frame_buffer_size() {
   return info.XResolution * info.YResolution * bytes_per_pixel;
 }
 
+uint16_t vg_get_x_resolution() {
+  if (frame_buffer == NULL) {
+    return 0;
+  }
+  return info.XResolution;
+}
+
+uint16_t vg_get_y_resolution() {
+  if (frame_buffer == NULL) {
+    return 0;
+  }
+  return info.YResolution;
+}
+
 
 void *(vg_init)(uint16_t mode) {
   static void *video_mem;

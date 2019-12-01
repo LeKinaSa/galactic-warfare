@@ -7,6 +7,10 @@
 
 /* Returns size of frame buffer in bytes */
 uint32_t vg_get_frame_buffer_size();
+/* Returns the horizontal resolution in pixels */
+uint16_t vg_get_x_resolution();
+/* Returns the vertical resolution in pixels */
+uint16_t vg_get_y_resolution();
 
 /* Our implementation of vbe_get_mode_info */
 int vbe_return_mode_info(uint16_t mode, vbe_mode_info_t *info_ptr);

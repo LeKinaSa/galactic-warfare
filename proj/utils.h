@@ -9,4 +9,7 @@ int (util_get_LSB)(uint16_t val, uint8_t *lsb);
 
 int (util_get_MSB)(uint16_t val, uint8_t *msb);
 
+/* Returns the value of x clamped by a lower and upper bound */
+double clamp(double x, double lower, double upper);
+
 #endif /* __UTILS_H */

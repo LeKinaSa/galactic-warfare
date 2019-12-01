@@ -6,7 +6,7 @@
 #include "kbc.h"
 
 static int kbd_hook_id = KBD_IRQ;
-extern int scancode;
+extern uint8_t scancode;
 
 int kbd_subscribe_int(uint8_t *bit_no) {
   if (bit_no == NULL) {

@@ -3,6 +3,8 @@
 
 #include "game_logic.h"
 #include "game_constants.h"
+#include "video.h"
+#include "utils.h"
 
 Vector2* Vector2_new(double x, double y) {
   Vector2* this = (Vector2*) malloc(sizeof(Vector2));
@@ -76,5 +78,17 @@ int compare_entity_ptr(const void* lhs, const void* rhs) {
   }
   else {
     return 1;
+  }
+}
+
+void update_entity_positions(Entity* entities[], uint8_t num_entities) {
+  uint16_t x_res = vg_get_x_resolution(), y_res = vg_get_y_resolution();
+  Entity* current_entity;
+
+  for (uint8_t i = 0; i < num_entities; i++) {
+    current_entity = entities[i];
+
+    current_entity->position.x = clamp((current_entity->position.x + current_entity->velocity.x), 0.0, (double)(x_res - current_entity->sprite.img.width));
+    current_entity->position.y = clamp((current_entity->position.y + current_entity->velocity.y), 0.0, (double)(y_res - current_entity->sprite.img.height));
   }
 }

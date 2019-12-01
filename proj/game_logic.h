@@ -38,6 +38,13 @@ double Vector2_distance_to(const Vector2* lhs, const Vector2* rhs);
 /* Returns the angle between the two vectors */
 double Vector2_angle_to(const Vector2* lhs, const Vector2* rhs);
 
+static const Vector2 UP = {0.0, -1.0};
+static const Vector2 DOWN = {0.0, 1.0};
+static const Vector2 LEFT = {-1.0, 0.0};
+static const Vector2 RIGHT = {1.0, 0.0};
+
+
+
 /* Value that controls the rendering order of the sprites. Sprites with a higher z_layer value will be drawn on top. */
 enum z_layer {
   BACKGROUND,
@@ -60,8 +67,10 @@ typedef struct {
 /* Comparison function for sorting an array of entity pointers with qsort. Used in the rendering pipeline to sort entities by their z layer. */
 int compare_entity_ptr(const void* lhs, const void* rhs);
 
+void update_entity_positions(Entity* entities[], uint8_t num_entities);
+
 typedef struct {
-  Entity entity;
+  Entity* entity;
   uint8_t current_health;
 } Player;
 

@@ -9,6 +9,7 @@
   "files.associations": {
     "game_logic.h": "c",
     "stdio.h": "c",
-    "*.xpm": "c"
+    "*.xpm": "c",
+    "mouse.h": "c"
   },
 }
