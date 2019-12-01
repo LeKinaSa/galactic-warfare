@@ -67,14 +67,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
 
-  frame_buffer = vg_init(MODE_PROJECT);
-  
   if (mouse_subscribe_int(&mouse_bit_no)) {
     timer_unsubscribe_int();
     kbd_unsubscribe_int();
     printf("Error when calling mouse_subscribe_int.\n");
     return 1;
   }
+
+  frame_buffer = vg_init(MODE_PROJECT);
 
   if (mouse_disable_int()) {
     timer_unsubscribe_int();
@@ -149,11 +149,11 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
 
-  Sprite ship_sprite = { ship_img, PLAYER };
-  Entity ship_entity = { ship_sprite, {500.0, 500.0}, {0.0, 0.0} };
+  //Sprite ship_sprite = { ship_img, PLAYER };
+  //Entity ship_entity = { ship_sprite, {500.0, 500.0}, {0.0, 0.0} };
 
-  uint8_t num_entities = 2;
-  Entity* entities[2] = { &ship_entity };
+  //uint8_t num_entities = 2;
+  //Entity* entities[2] = { &ship_entity };
 
   //Player player = { ship_entity, PLAYER_MAX_HEALTH };
 
@@ -169,7 +169,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
   mouse_status m_status = { false, false, false, MAX_X / 2, MAX_Y / 2 };
 
-  void* aux_buffer;
+  //void* aux_buffer;
 
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
@@ -183,19 +183,17 @@ int (proj_main_loop)(int argc, char *argv[]) {
         if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
           mouse_ih();
 
-          if ((packet_byte_counter == MOUSE_INDEX_FIRST_BYTE) && ((packet_byte & MOUSE_FIRST_BYTE_CHECK) == 0)) {
-            continue;
-          }
-          
-          packet_bytes[packet_byte_counter] = packet_byte;
+          if ((packet_byte_counter != MOUSE_INDEX_FIRST_BYTE) || ((packet_byte & MOUSE_FIRST_BYTE_CHECK) != 0)) {
+            packet_bytes[packet_byte_counter] = packet_byte;
 
-          if (packet_byte_counter == MOUSE_INDEX_THIRD_BYTE) {
-            packet_byte_counter = 0;
+            if (packet_byte_counter == MOUSE_INDEX_THIRD_BYTE) {
+              packet_byte_counter = 0;
 
-            process_mouse_packet(packet_bytes, &m_status);
-          }
-          else {
-            ++packet_byte_counter;
+              process_mouse_packet(packet_bytes, &m_status);
+            }
+            else {
+              ++packet_byte_counter;
+            }
           }
         }
         if (msg.m_notify.interrupts & BIT(kbd_bit_no)) {
@@ -218,18 +216,17 @@ int (proj_main_loop)(int argc, char *argv[]) {
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
           timer_int_handler();
 
+          /* FIXME: Something wrong here
           if (counter == INTERRUPTS_PER_FRAME) {
-            /* 
-            Update values according to internal game logic.
-            Render a new frame.
-            */
+            // Update values according to internal game logic.
+            // Render a new frame.
             aux_buffer = malloc(vg_get_frame_buffer_size());
             memset(aux_buffer, 0, vg_get_frame_buffer_size());
             vg_render_entities(entities, num_entities, &aux_buffer);
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
             free(aux_buffer);
             counter = 0;
-          }
+          } */
         }
         break;
       default:
