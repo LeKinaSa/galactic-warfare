@@ -194,7 +194,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
           if (packet_byte_counter == MOUSE_INDEX_THIRD_BYTE) {
             packet_byte_counter = 0;
 
-            process_mouse_status(packet_bytes, &m_status);
+            process_mouse_packet(packet_bytes, &m_status);
           }
           else {
             ++packet_byte_counter;
