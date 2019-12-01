@@ -3,6 +3,7 @@
 #include <lcom/lcf.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <math.h>
 
 #include "video.h"
 #include "vbe_constants.h"
@@ -12,6 +13,15 @@
 extern void *frame_buffer;
 static vbe_mode_info_t info;
 static uint8_t bytes_per_pixel;
+
+
+uint32_t vg_get_frame_buffer_size() {
+  if (frame_buffer == NULL) {
+    return 0;
+  }
+  return info.XResolution * info.YResolution * bytes_per_pixel;
+}
+
 
 void *(vg_init)(uint16_t mode) {
   static void *video_mem;
@@ -153,6 +163,10 @@ int vg_draw_xpm(xpm_image_t img, uint16_t x, uint16_t y, void** buffer) {
     return 1;
   }
 
+  if (x > info.XResolution - img.width || y > info.YResolution - img.height) {
+    return 1;
+  }
+
   uint32_t transparency_color = xpm_transparency_color(img.type);
   uint32_t current_color;
 
@@ -191,11 +205,14 @@ int vg_render_entities(Entity* entities[], uint8_t num_entities, void **buffer) 
   qsort((void*) entities, num_entities, sizeof(Entity*), compare_entity_ptr);
 
   Entity* current_entity;
+  uint16_t x, y; /* Pixel coordinates of the entity (discretized) */
 
   for (uint8_t i = 0; i < num_entities; i++) {
     current_entity = entities[i];
+    x = (uint16_t) round(current_entity->position.x);
+    y = (uint16_t) round(current_entity->position.y);
 
-    if (vg_draw_xpm(current_entity->sprite.img, current_entity->position.x, current_entity->position.y, buffer)) {
+    if (vg_draw_xpm(current_entity->sprite.img, x, y, buffer)) {
       return 1;
     }
   }

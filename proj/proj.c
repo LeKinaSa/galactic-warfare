@@ -16,6 +16,7 @@
 #include "keyboard.h"
 #include "mouse.h"
 #include "dispatcher.h"
+
 #include "res/Ship.xpm"
 #include "res/Background.xpm"
 
@@ -66,6 +67,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
 
+  frame_buffer = vg_init(MODE_PROJECT);
+  
   if (mouse_subscribe_int(&mouse_bit_no)) {
     timer_unsubscribe_int();
     kbd_unsubscribe_int();
@@ -111,15 +114,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
 
-  xpm_map_t background_xpm = (xpm_map_t)(Background_xpm);
-  xpm_image_t background_img;
-  background_img.type = XPM_5_6_5;
+  xpm_map_t bg_xpm = (xpm_map_t) Background_xpm;
+  xpm_map_t ship_xpm = (xpm_map_t) Ship_xpm;
 
-  xpm_map_t ship_xpm = (xpm_map_t)(Ship_xpm);
-  xpm_image_t ship_img;
-  ship_img.type = XPM_5_6_5;  
+  xpm_image_t bg_img, ship_img;
 
-  if (xpm_load(background_xpm, background_img.type, &background_img) == NULL) {
+  if (xpm_load(bg_xpm, XPM_5_6_5, &bg_img) == NULL) {
     timer_unsubscribe_int();
     kbd_unsubscribe_int();
     mouse_unsubscribe_int();
@@ -129,19 +129,17 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
 
-  if (xpm_load(ship_xpm, ship_img.type, &ship_img) == NULL) {
+  if (xpm_load(ship_xpm, XPM_5_6_5, &ship_img) == NULL) {
     timer_unsubscribe_int();
     kbd_unsubscribe_int();
     mouse_unsubscribe_int();
     kbc_reset_cmd_byte();
     vg_exit();
-    printf("Error when loading xpm.\n");
+    printf("Error when loading background xpm.\n");
     return 1;
   }
 
-  Vector2* pos = Vector2_new(20, 20);
-  
-  if (vg_draw_xpm(background_img, 0, 0, &frame_buffer)) {
+  if (vg_draw_xpm(bg_img, 0, 0, &frame_buffer)) {
     timer_unsubscribe_int();
     kbd_unsubscribe_int();
     mouse_unsubscribe_int();
@@ -150,16 +148,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
     printf("Error when drawing xpm.\n");
     return 1;
   }
-  
-  if (vg_draw_xpm(ship_img, pos->x, pos->y, &frame_buffer)) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    mouse_unsubscribe_int();
-    kbc_reset_cmd_byte();
-    vg_exit();
-    printf("Error when drawing xpm.\n");
-    return 1;
-  }
+
+  Sprite ship_sprite = { ship_img, PLAYER };
+  Entity ship_entity = { ship_sprite, {500.0, 500.0}, {0.0, 0.0} };
+
+  uint8_t num_entities = 2;
+  Entity* entities[2] = { &ship_entity };
+
+  //Player player = { ship_entity, PLAYER_MAX_HEALTH };
 
   int ipc_status;
   message msg;
@@ -172,6 +168,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
   int packet_byte_counter = 0;
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
   mouse_status m_status = { false, false, false, MAX_X / 2, MAX_Y / 2 };
+
+  void* aux_buffer;
 
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
@@ -225,6 +223,11 @@ int (proj_main_loop)(int argc, char *argv[]) {
             Update values according to internal game logic.
             Render a new frame.
             */
+            aux_buffer = malloc(vg_get_frame_buffer_size());
+            memset(aux_buffer, 0, vg_get_frame_buffer_size());
+            vg_render_entities(entities, num_entities, &aux_buffer);
+            memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
+            free(aux_buffer);
             counter = 0;
           }
         }

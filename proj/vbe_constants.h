@@ -7,6 +7,8 @@
 
 /* Graphics Mode */
 
+#define MODE_PROJECT                    0x117   /* Mode used in the final project (1024 by 768 pixels, with 16-bit 5:6:5 direct color) */
+
 #define MODE_GRAPHIC_INDEXED            0x105
 #define MODE_DIRECT_SMALLER_RESOLUTION  0x110
 #define MODE_DIRECT_COLOR_MODE          0x115
