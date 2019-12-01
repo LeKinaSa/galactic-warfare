@@ -20,6 +20,13 @@
 #include "res/Ship.xpm"
 #include "res/Background.xpm"
 
+typedef struct {
+  bool timer_int_subscribed;
+  bool kbd_int_subscribed;
+  bool mouse_int_subscribed;
+  bool vg_initialized;
+} program_status_t;
+
 /* Video Related Variables */
 void* frame_buffer;
 /* Timer Related Variables */
@@ -28,6 +35,8 @@ int counter = 0;
 int scancode;
 /* Mouse Related Variables */
 uint8_t packet_byte;
+
+static void exit_program(program_status_t* status);
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -55,64 +64,57 @@ int main(int argc, char *argv[]) {
 
 int (proj_main_loop)(int argc, char *argv[]) {
   uint8_t timer_bit_no = 0, kbd_bit_no = 0, mouse_bit_no = 0;
+  
+  /* Creates a program_status_t structure with all boolean values set to false */
+  program_status_t* program_status = (program_status_t*) malloc(sizeof(program_status_t));
+  memset((void *) program_status, (int) false, sizeof(program_status_t));
 
   if (timer_subscribe_int(&timer_bit_no)) {
     printf("Error when calling timer_subscribe_int.\n");
     return 1;
   }
+  program_status->timer_int_subscribed = true;
 
   if (kbd_subscribe_int(&kbd_bit_no)) {
-    timer_unsubscribe_int();
+    exit_program(program_status);
     printf("Error when calling kbd_subscribe_int.\n");
     return 1;
   }
+  program_status->kbd_int_subscribed = true;
 
   if (mouse_subscribe_int(&mouse_bit_no)) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
+    exit_program(program_status);
     printf("Error when calling mouse_subscribe_int.\n");
     return 1;
   }
+  program_status->mouse_int_subscribed = true;
 
-  frame_buffer = vg_init(MODE_PROJECT);
 
   if (mouse_disable_int()) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    mouse_unsubscribe_int();
-    kbc_reset_cmd_byte();
+    exit_program(program_status);
     printf("Error when calling mouse_disable_int.\n");
     return 1;
   }
 
   if (mouse_enable_data_report()) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    mouse_unsubscribe_int();
-    kbc_reset_cmd_byte();
+    exit_program(program_status);
     printf("Error when calling mouse_enable_data_report.\n");
     return 1;
   }
 
   if (mouse_enable_int()) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    mouse_unsubscribe_int();
-    kbc_reset_cmd_byte();
+    exit_program(program_status);
     printf("Error when calling mouse_enable_int.\n");
     return 1;
   }
   
-
-  frame_buffer = vg_init(MODE);
+  frame_buffer = vg_init(MODE_PROJECT);
 
   if (frame_buffer == MAP_FAILED) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    mouse_unsubscribe_int();
-    kbc_reset_cmd_byte();
+    exit_program(program_status);
     return 1;
   }
+  program_status->vg_initialized = true;
 
   xpm_map_t bg_xpm = (xpm_map_t) Background_xpm;
   xpm_map_t ship_xpm = (xpm_map_t) Ship_xpm;
@@ -120,31 +122,19 @@ int (proj_main_loop)(int argc, char *argv[]) {
   xpm_image_t bg_img, ship_img;
 
   if (xpm_load(bg_xpm, XPM_5_6_5, &bg_img) == NULL) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    mouse_unsubscribe_int();
-    kbc_reset_cmd_byte();
-    vg_exit();
+    exit_program(program_status);
     printf("Error when loading xpm.\n");
     return 1;
   }
 
   if (xpm_load(ship_xpm, XPM_5_6_5, &ship_img) == NULL) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    mouse_unsubscribe_int();
-    kbc_reset_cmd_byte();
-    vg_exit();
+    exit_program(program_status);
     printf("Error when loading background xpm.\n");
     return 1;
   }
 
   if (vg_draw_xpm(bg_img, 0, 0, &frame_buffer)) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    mouse_unsubscribe_int();
-    kbc_reset_cmd_byte();
-    vg_exit();
+    exit_program(program_status);
     printf("Error when drawing xpm.\n");
     return 1;
   }
@@ -236,69 +226,72 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
 
   if (mouse_disable_int()) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    mouse_unsubscribe_int();
-    kbc_reset_cmd_byte();
-    vg_exit();
+    exit_program(program_status);
     printf("Error when calling mouse_disable_int.\n");
     return 1;
   }
 
   if (mouse_disable_data_report()) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    mouse_unsubscribe_int();
-    kbc_reset_cmd_byte();
-    vg_exit();
+    exit_program(program_status);
     printf("Error when calling mouse_disable_data_report.\n");
     return 1;
   }
 
   if (mouse_enable_int()) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    mouse_unsubscribe_int();
-    kbc_reset_cmd_byte();
-    vg_exit();
+    exit_program(program_status);
     printf("Error when calling mouse_enable_int.\n");
     return 1;
   }
 
   if (mouse_unsubscribe_int()) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    kbc_reset_cmd_byte();
-    vg_exit();
+    exit_program(program_status);
     printf("Error when calling mouse_unsubscribe_int.\n");
     return 1;
   }
+  program_status->mouse_int_subscribed = false;
 
   if (kbc_reset_cmd_byte()) {
-    timer_unsubscribe_int();
-    kbd_unsubscribe_int();
-    vg_exit();
+    exit_program(program_status);
     printf("Error when calling kbc_reset_cmd_byte.\n");
     return 1;
   }
 
   if (kbd_unsubscribe_int()) {
-    timer_unsubscribe_int();
-    vg_exit();
+    exit_program(program_status);
     printf("Error when calling kbd_unsubscribe_int.\n");
     return 1;
   }
+  program_status->kbd_int_subscribed = false;
 
   if (timer_unsubscribe_int()) {
-    vg_exit();
+    exit_program(program_status);
     printf("Error when calling timer_unsubscribe_int.\n");
     return 1;
   }
+  program_status->timer_int_subscribed = false;
 
   if (vg_exit()) {
     printf("Error when calling vg_exit.\n");
     return 1;
   }
+  program_status->vg_initialized = false;
 
   return 0;
+}
+
+
+void exit_program(program_status_t* status) {
+  if (status->timer_int_subscribed) {
+    timer_unsubscribe_int();
+  }
+  if (status->kbd_int_subscribed) {
+    kbd_unsubscribe_int();
+  }
+  if (status->mouse_int_subscribed) {
+    mouse_unsubscribe_int();
+    kbc_reset_cmd_byte();
+  }
+  if (status->vg_initialized) {
+    vg_exit();
+  }
 }
