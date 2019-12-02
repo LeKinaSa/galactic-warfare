@@ -39,23 +39,23 @@ void process_kbd_scancode(uint8_t bytes[], keyboard_status* status) {
 }
 
 void process_kbd_status(const keyboard_status* status, Player* player) {
-  player->entity->velocity = (Vector2) {0.0, 0.0};
+  Vector2 velocity = (Vector2) {0.0, 0.0};
 
   if (status->w_pressed) {
-    player->entity->velocity = Vector2_add(player->entity->velocity, UP);
+    velocity = Vector2_add(velocity, UP);
   }
   if (status->a_pressed) {
-    player->entity->velocity = Vector2_add(player->entity->velocity, LEFT);
+    velocity = Vector2_add(velocity, LEFT);
   }
   if (status->s_pressed) {
-    player->entity->velocity = Vector2_add(player->entity->velocity, DOWN);
+    velocity = Vector2_add(velocity, DOWN);
   }
   if (status->d_pressed) {
-    player->entity->velocity = Vector2_add(player->entity->velocity, RIGHT);
+    velocity = Vector2_add(velocity, RIGHT);
   }
 
-  player->entity->velocity = Vector2_normalized(player->entity->velocity);
-  player->entity->velocity = Vector2_scalar_mult(PLAYER_BASE_SPEED * FRAME_DELTA, player->entity->velocity);
+  velocity = Vector2_scalar_mult(PLAYER_BASE_SPEED * FRAME_DELTA, Vector2_normalized(velocity));
+  player->entity->velocity = velocity;
 }
 
 

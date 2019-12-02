@@ -13,4 +13,4 @@
 #define PLAYER_BASE_SPEED       50
 #define PLAYER_BASE_DAMAGE      20
 
-#endif
+#endif /* GAME_CONSTANTS_H */
