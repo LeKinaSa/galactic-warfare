@@ -6,6 +6,7 @@
 #include "game_constants.h"
 #include "mouse.h"
 #include "video.h"
+#include "utils.h"
 
 void process_kbd_scancode(uint8_t bytes[], keyboard_status* status) {
   switch (bytes[0]) {
@@ -66,20 +67,10 @@ void process_mouse_packet(uint8_t packet_bytes[], mouse_status* status) {
   status->mb_pressed = p.mb;
   status->rb_pressed = p.rb;
   if (!p.x_ov) {
-    if ((status->x + p.delta_x) > vg_get_x_resolution()) {
-      status->x = vg_get_x_resolution();
-    }
-    else {
-      status->x = status->x + p.delta_x;
-    }
+    status->x = min(max(status->x + p.delta_x, 0), vg_get_x_resolution());
   }
   if (!p.y_ov) {
-    if ((status->y - p.delta_y) > vg_get_y_resolution()) {
-      status->y = vg_get_y_resolution();
-    }
-    else {
-      status->y = status->y - p.delta_y;
-    }
+    status->y = min(max(status->y - p.delta_y, 0), vg_get_y_resolution());
   }
 }
 

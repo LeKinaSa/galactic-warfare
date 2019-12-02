@@ -83,4 +83,8 @@ void update_entity_positions(Entity* entities[], uint8_t num_entities) {
 
 void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos) {
   cursor->position = Vector2_add(mouse_pos, cursor->offset);
+  const double MAX_X = vg_get_x_resolution() - cursor->sprite.img.width;
+  const double MAX_Y = vg_get_y_resolution() - cursor->sprite.img.height;
+  cursor->position.x = clamp((double) cursor->position.x, 0.0, MAX_X);
+  cursor->position.y = clamp((double) cursor->position.y, 0.0, MAX_Y);
 }

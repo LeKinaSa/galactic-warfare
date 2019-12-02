@@ -12,4 +12,7 @@ int (util_get_MSB)(uint16_t val, uint8_t *msb);
 /* Returns the value of x clamped by a lower and upper bound */
 double clamp(double x, double lower, double upper);
 
+int min(int a, int b);
+int max(int a, int b);
+
 #endif /* __UTILS_H */
