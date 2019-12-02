@@ -43,10 +43,10 @@ int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
 
   // Log function invocations that are being "wrapped" by LCF
-  // lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
+  //lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
 
   // Save the output of printf function calls on a file
-  // lcf_log_output("/home/lcom/labs/proj/output.txt");
+  //lcf_log_output("/home/lcom/labs/proj/output.txt");
 
   // handles control over to LCF
   // [LCF handles command line arguments and invokes the right function]
@@ -144,7 +144,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   /* Mouse-related variables */
   int packet_byte_counter = 0;
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
-  mouse_status m_status = { false, false, false, MAX_X / 2, MAX_Y / 2 };
+  mouse_status m_status = { false, false, false, vg_get_x_resolution() / 2, vg_get_y_resolution() / 2 };
 
   void* aux_buffer = malloc(vg_get_frame_buffer_size());
 
@@ -159,13 +159,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
       case HARDWARE:
         if (msg.m_notify.interrupts & BIT(mouse_bit_no)) {
           mouse_ih();
-
+          
           if ((packet_byte_counter != MOUSE_INDEX_FIRST_BYTE) || ((packet_byte & MOUSE_FIRST_BYTE_CHECK) != 0)) {
             packet_bytes[packet_byte_counter] = packet_byte;
 
             if (packet_byte_counter == MOUSE_INDEX_THIRD_BYTE) {
               packet_byte_counter = 0;
-
               process_mouse_packet(packet_bytes, &m_status);
             }
             else {
