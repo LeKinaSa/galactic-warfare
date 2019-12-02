@@ -13,4 +13,5 @@
     "mouse.h": "c",
     "game_constants.h": "c"
   },
+  "C_Cpp.errorSquiggles": "Enabled",
 }

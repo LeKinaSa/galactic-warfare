@@ -18,9 +18,16 @@
 #include "mouse.h"
 #include "dispatcher.h"
 
-#include "res/Ship.xpm"
 #include "res/Background.xpm"
 #include "res/Cursor.xpm"
+#include "res/ShipN.xpm"
+#include "res/ShipS.xpm"
+#include "res/ShipE.xpm"
+#include "res/ShipW.xpm"
+#include "res/ShipNE.xpm"
+#include "res/ShipNW.xpm"
+#include "res/ShipSE.xpm"
+#include "res/ShipSW.xpm"
 
 typedef struct {
   bool timer_int_subscribed;
@@ -116,20 +123,39 @@ int (proj_main_loop)(int argc, char *argv[]) {
   program_status->vg_initialized = true;
 
   xpm_map_t bg_xpm = (xpm_map_t) Background_xpm;
-  xpm_map_t ship_xpm = (xpm_map_t) Ship_xpm;
   xpm_map_t cursor_xpm = (xpm_map_t) Cursor_xpm;
 
-  xpm_image_t bg_img, ship_img, cursor_img;
+  xpm_map_t ship_N_xpm = (xpm_map_t) ShipN_xpm;
+  xpm_map_t ship_S_xpm = (xpm_map_t) ShipS_xpm;
+  xpm_map_t ship_E_xpm = (xpm_map_t) ShipE_xpm;
+  xpm_map_t ship_W_xpm = (xpm_map_t) ShipW_xpm;
+  xpm_map_t ship_NE_xpm = (xpm_map_t) ShipNE_xpm;
+  xpm_map_t ship_NW_xpm = (xpm_map_t) ShipNW_xpm;
+  xpm_map_t ship_SE_xpm = (xpm_map_t) ShipSE_xpm;
+  xpm_map_t ship_SW_xpm = (xpm_map_t) ShipSW_xpm;
 
-  if (xpm_load(bg_xpm, XPM_5_6_5, &bg_img) == NULL || 
-  xpm_load(ship_xpm, XPM_5_6_5, &ship_img) == NULL ||
-  xpm_load(cursor_xpm, XPM_5_6_5, &cursor_img) == NULL) {
+  xpm_image_t bg_img, cursor_img;
+  xpm_image_t ship_n_img, ship_s_img, ship_e_img, ship_w_img;
+  xpm_image_t ship_ne_img, ship_nw_img, ship_se_img, ship_sw_img;
+
+  if (
+  xpm_load(bg_xpm     , XPM_5_6_5, &bg_img     ) == NULL ||
+  xpm_load(cursor_xpm , XPM_5_6_5, &cursor_img ) == NULL ||
+  xpm_load(ship_N_xpm , XPM_5_6_5, &ship_n_img ) == NULL ||
+  xpm_load(ship_S_xpm , XPM_5_6_5, &ship_s_img ) == NULL ||
+  xpm_load(ship_E_xpm , XPM_5_6_5, &ship_e_img ) == NULL ||
+  xpm_load(ship_W_xpm , XPM_5_6_5, &ship_w_img ) == NULL ||
+  xpm_load(ship_NE_xpm, XPM_5_6_5, &ship_ne_img) == NULL ||
+  xpm_load(ship_NW_xpm, XPM_5_6_5, &ship_nw_img) == NULL ||
+  xpm_load(ship_SE_xpm, XPM_5_6_5, &ship_se_img) == NULL ||
+  xpm_load(ship_SW_xpm, XPM_5_6_5, &ship_sw_img) == NULL
+  ) {
     exit_program(program_status);
     printf("Error when loading xpm.\n");
     return 1;
   }
 
-  Sprite ship_sprite = { ship_img, PLAYER };
+  Sprite ship_sprite = { ship_n_img, PLAYER };
   Entity ship_entity = { ship_sprite, {500.0, 500.0}, {0.0, 0.0} };
 
   uint8_t num_entities = 1;
