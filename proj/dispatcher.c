@@ -38,25 +38,23 @@ void process_kbd_scancode(uint8_t bytes[], keyboard_status* status) {
 }
 
 void process_kbd_status(const keyboard_status* status, Player* player) {
-  // TODO: REDO THIS FUNCTION. Maybe ditch pointers in vector operations and just make copies
-  player->entity->velocity.x = 0.0;
-  player->entity->velocity.y = 0.0;
+  player->entity->velocity = (Vector2) {0.0, 0.0};
 
   if (status->w_pressed) {
-    player->entity->velocity = *(Vector2_add(&player->entity->velocity, &UP));
+    player->entity->velocity = Vector2_add(player->entity->velocity, UP);
   }
   if (status->a_pressed) {
-    player->entity->velocity = *(Vector2_add(&player->entity->velocity, &LEFT));
+    player->entity->velocity = Vector2_add(player->entity->velocity, LEFT);
   }
   if (status->s_pressed) {
-    player->entity->velocity = *(Vector2_add(&player->entity->velocity, &DOWN));
+    player->entity->velocity = Vector2_add(player->entity->velocity, DOWN);
   }
   if (status->d_pressed) {
-    player->entity->velocity = *(Vector2_add(&player->entity->velocity, &RIGHT));
+    player->entity->velocity = Vector2_add(player->entity->velocity, RIGHT);
   }
 
-  player->entity->velocity = *(Vector2_normalized(&player->entity->velocity));
-  player->entity->velocity = *(Vector2_scalar_mult(PLAYER_BASE_SPEED * FRAME_DELTA, &player->entity->velocity));
+  player->entity->velocity = Vector2_normalized(player->entity->velocity);
+  player->entity->velocity = Vector2_scalar_mult(PLAYER_BASE_SPEED * FRAME_DELTA, player->entity->velocity);
 }
 
 
@@ -86,9 +84,8 @@ void process_mouse_packet(uint8_t packet_bytes[], mouse_status* status) {
 
 void process_mouse_status(mouse_status* status, Player* player) {
   /* Find the angle between mouse and player */
-  Vector2* mouse_pos = Vector2_new(status->x, status->y);
-  double angle = Vector2_angle_to(&(player->entity->position), mouse_pos);
-  Vector2_delete(mouse_pos);
+  Vector2 mouse_pos = (Vector2) {status->x, status->y};
+  double angle = Vector2_angle_to(player->entity->position, mouse_pos);
   
   /* Aim */
   // TODO: finish aiming (change xpm to be drawn)
