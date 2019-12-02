@@ -278,6 +278,9 @@ void exit_program(program_status_t* status) {
     kbd_unsubscribe_int();
   }
   if (status->mouse_int_subscribed) {
+    mouse_disable_int();
+    mouse_disable_data_report();
+    mouse_enable_int();
     mouse_unsubscribe_int();
     kbc_reset_cmd_byte();
   }
