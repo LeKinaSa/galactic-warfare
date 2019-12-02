@@ -52,3 +52,11 @@ int(util_get_MSB)(uint16_t val, uint8_t *msb) {
 double clamp(double x, double lower, double upper) {
   return fmin(upper, fmax(x, lower));
 }
+
+int min(int a, int b) {
+  return a <= b ? a : b;
+}
+
+int max(int a, int b) {
+  return a >= b ? a : b;
+}
