@@ -74,23 +74,26 @@ void process_mouse_packet(uint8_t packet_bytes[], mouse_status* status) {
     }
   }
   if (!p.y_ov) {
-    if ((status->y + p.delta_y) > vg_get_y_resolution()) {
+    if ((status->y - p.delta_y) > vg_get_y_resolution()) {
       status->y = vg_get_y_resolution();
     }
     else {
-      status->y = status->y + p.delta_y;
+      status->y = status->y - p.delta_y;
     }
   }
 }
 
-void process_mouse_status(mouse_status* status, Player* player) {
+void process_mouse_status(mouse_status* status, MouseCursor* cursor, Player* player) {
   /* Find the angle between mouse and player */
   Vector2 mouse_pos = (Vector2) {status->x, status->y};
   double angle = Vector2_angle_to(player->entity->position, mouse_pos);
+
+  update_cursor_position(cursor, mouse_pos);
   
   /* Aim */
   // TODO: finish aiming (change xpm to be drawn)
   if ((angle > -0.875 * M_PI) && (angle <= -0.625 * M_PI)) {
+    //player->entity->sprite = ?;
     /* SW */
   }
   else if ((angle > -0.625 * M_PI) && (angle <= -0.375 * M_PI)) {

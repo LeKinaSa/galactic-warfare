@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <math.h>
 
 // Any header files included below this line should have been created by you
 #include "game_logic.h"
@@ -19,6 +20,7 @@
 
 #include "res/Ship.xpm"
 #include "res/Background.xpm"
+#include "res/Cursor.xpm"
 
 typedef struct {
   bool timer_int_subscribed;
@@ -115,11 +117,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
   xpm_map_t bg_xpm = (xpm_map_t) Background_xpm;
   xpm_map_t ship_xpm = (xpm_map_t) Ship_xpm;
+  xpm_map_t cursor_xpm = (xpm_map_t) Cursor_xpm;
 
-  xpm_image_t bg_img, ship_img;
+  xpm_image_t bg_img, ship_img, cursor_img;
 
   if (xpm_load(bg_xpm, XPM_5_6_5, &bg_img) == NULL || 
-  xpm_load(ship_xpm, XPM_5_6_5, &ship_img) == NULL) {
+  xpm_load(ship_xpm, XPM_5_6_5, &ship_img) == NULL ||
+  xpm_load(cursor_xpm, XPM_5_6_5, &cursor_img) == NULL) {
     exit_program(program_status);
     printf("Error when loading xpm.\n");
     return 1;
@@ -145,6 +149,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
   int packet_byte_counter = 0;
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
   mouse_status m_status = { false, false, false, vg_get_x_resolution() / 2, vg_get_y_resolution() / 2 };
+
+  Sprite cursor_sprite = { cursor_img, MOUSE_CURSOR };
+  MouseCursor mouse_cursor = { cursor_sprite, {0.0, 0.0}, {-cursor_img.width / 2, -cursor_img.height / 2}};
 
   void* aux_buffer = malloc(vg_get_frame_buffer_size());
 
@@ -199,9 +206,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
             // Update values according to internal game logic.
             // Render a new frame.
             process_kbd_status(&kbd_status, &player);
+            process_mouse_status(&m_status, &mouse_cursor, &player);
             update_entity_positions(entities, num_entities);
             vg_draw_xpm(bg_img, 0, 0, &aux_buffer);
             vg_render_entities(entities, num_entities, &aux_buffer);
+            vg_draw_xpm(cursor_img, round(mouse_cursor.position
+            .x), round(mouse_cursor.position.y), &aux_buffer);
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
           }
         }

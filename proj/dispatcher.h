@@ -20,7 +20,7 @@ typedef struct {
 
 
 void process_kbd_scancode(uint8_t bytes[], keyboard_status* status);
-void process_kbd_status(const keyboard_status* status, Player* player); // TODO
+void process_kbd_status(const keyboard_status* status, Player* player);
 
 void process_mouse_packet(uint8_t packet_bytes[], mouse_status* status);
-void process_mouse_status(mouse_status* status, Player* player);
+void process_mouse_status(mouse_status* status, MouseCursor* cursor, Player* player);

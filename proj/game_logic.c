@@ -80,3 +80,7 @@ void update_entity_positions(Entity* entities[], uint8_t num_entities) {
     current_entity->position.y = clamp((current_entity->position.y + current_entity->velocity.y), 0.0, (double)(y_res - current_entity->sprite.img.height));
   }
 }
+
+void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos) {
+  cursor->position = Vector2_add(mouse_pos, cursor->offset);
+}
