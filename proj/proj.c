@@ -248,12 +248,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
             // Render a new frame.
             process_kbd_status(&kbd_status, &player);
             process_mouse_status(&m_status, &mouse_cursor, &player);
-            update_entity_positions(entities, num_entities);
-            vg_draw_xpm(bg_img, 0, 0, &aux_buffer);
-            vg_render_entities(entities, num_entities, &aux_buffer);
-            vg_draw_xpm(cursor_img, round(mouse_cursor.position
-            .x), round(mouse_cursor.position.y), &aux_buffer);
-            memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
             if (frames == FRAMES_PER_SHOT) {
               frames = 0;
               // Shoot if the player wants to
@@ -261,6 +255,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
                 printf("Shoot\n");
               }
             }
+            update_entity_positions(entities, num_entities);
+            vg_draw_xpm(bg_img, 0, 0, &aux_buffer);
+            vg_render_entities(entities, num_entities, &aux_buffer);
+            vg_draw_xpm(cursor_img, round(mouse_cursor.position
+            .x), round(mouse_cursor.position.y), &aux_buffer);
+            memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
           }
         }
         break;

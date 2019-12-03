@@ -2,7 +2,7 @@
 static char * Cursor_xpm[] = {
 "32 32 2 1",
 " 	c None",
-".	c #FFFFFF",
+".	c #C0C0C0",
 "                                ",
 "               ..               ",
 "               ..               ",
