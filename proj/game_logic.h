@@ -38,6 +38,27 @@ static const Vector2 LEFT = {-1.0, 0.0};
 static const Vector2 RIGHT = {1.0, 0.0};
 
 
+typedef struct {
+  Vector2 vertex1;
+  Vector2 vertex2;
+  Vector2 vertex3;
+} Triangle;
+
+/**
+ * @brief Creates a new triangle structure.
+ * @param vertex1  first vertex of the triangle
+ * @param vertex2  second vertex of the triangle
+ * @param vertex3  third vertex of the triangle
+ * @returns pointer to created triangle. NULL if params were invalid.
+ */
+Triangle* Triangle_new(Vector2 vertex1, Vector2 vertex2, Vector2 vertex3);
+
+void Triangle_delete(Triangle* this);
+
+double Triangle_area(const Triangle* this);
+
+
+
 
 /* Value that controls the rendering order of the sprites. Sprites with a higher z_layer value will be drawn on top. */
 enum z_layer {

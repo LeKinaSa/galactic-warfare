@@ -54,6 +54,39 @@ double Vector2_angle_to(Vector2 lhs, Vector2 rhs) {
 }
 
 
+Triangle* Triangle_new(Vector2 vertex1, Vector2 vertex2, Vector2 vertex3) {
+  double det = vertex1.x * (vertex2.y - vertex3.y) + vertex2.x * (vertex3.y - vertex1.y) + vertex3.x * (vertex1.y - vertex2.y);
+
+  if (det == 0.0) {
+    return NULL;
+  }
+  
+  Triangle* this = (Triangle*) malloc(sizeof(Triangle));
+  this->vertex1 = vertex1;
+  this->vertex2 = vertex2;
+  this->vertex3 = vertex3;
+  return this;
+}
+
+void Triangle_delete(Triangle* this) {
+  if (this != NULL) {
+    free(this);
+  }
+}
+
+double Triangle_area(const Triangle* this) {
+  if (this == NULL) {
+    return 0.0;
+  }
+
+  return 0.5 * (this->vertex1.x * (this->vertex2.y - this->vertex3.y) + 
+  this->vertex2.x * (this->vertex3.y - this->vertex1.y) + 
+  this->vertex3.x * (this->vertex1.y - this->vertex2.y));
+}
+
+
+
+
 int compare_entity_ptr(const void* lhs, const void* rhs) {
   Entity* ptr1 = *((Entity**) lhs);
   Entity* ptr2 = *((Entity**) rhs);
