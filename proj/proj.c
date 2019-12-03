@@ -165,10 +165,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
   ship.nw = ship_nw_img;
   ship.se = ship_se_img;
   ship.sw = ship_sw_img;
-  
 
-  Sprite ship_sprite = { ship_n_img, PLAYER };
-  Entity ship_entity = { ship_sprite, {500.0, 500.0}, {0.0, 0.0} };
+  Sprite ship_sprite = { ship.n, PLAYER };
+  Entity ship_entity = { ship_sprite, {500.0, 500.0}, {0.0, 0.0},
+                         { - ship.n.width / 2, - ship.n.height / 2} };
 
   uint8_t num_entities = 1;
   Entity* entities[1] = { &ship_entity };
