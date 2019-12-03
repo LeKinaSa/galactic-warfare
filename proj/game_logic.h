@@ -75,6 +75,8 @@ void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos);
 typedef struct {
   Entity* entity;
   uint8_t current_health;
+  double angle;
+  bool fire;
 } Player;
 
 #endif /* GAME_LOGIC_H */

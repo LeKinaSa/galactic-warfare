@@ -173,7 +173,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   uint8_t num_entities = 1;
   Entity* entities[1] = { &ship_entity };
 
-  Player player = { &ship_entity, PLAYER_MAX_HEALTH };
+  Player player = { &ship_entity, PLAYER_MAX_HEALTH, 0, false };
 
   int ipc_status;
   message msg;
@@ -192,6 +192,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
   MouseCursor mouse_cursor = { cursor_sprite, {0.0, 0.0}, {-cursor_img.width / 2, -cursor_img.height / 2}};
 
   void* aux_buffer = malloc(vg_get_frame_buffer_size());
+  
+  int frames = 0;
 
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
@@ -241,6 +243,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
           if (counter == INTERRUPTS_PER_FRAME) {
             counter = 0;
+            frames ++;
             // Update values according to internal game logic.
             // Render a new frame.
             process_kbd_status(&kbd_status, &player);
@@ -251,6 +254,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
             vg_draw_xpm(cursor_img, round(mouse_cursor.position
             .x), round(mouse_cursor.position.y), &aux_buffer);
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
+            if (frames == FRAMES_PER_SHOT) {
+              frames = 0;
+              // Shoot if the player wants to
+              if (player.fire) {
+                printf("Shoot\n");
+              }
+            }
           }
         }
         break;

@@ -118,9 +118,7 @@ void process_mouse_status(mouse_status* status, MouseCursor* cursor, Player* pla
     player->entity->sprite.img = ship.w;
   }
 
-  if (status->lb_pressed) {
-    /* Shoot */
-    // TODO : use the angle and set the intention to fire
-    // TODO : shoot
-  }
+  /* Shoot */
+  player->angle = angle;
+  player->fire = status->lb_pressed;
 }
