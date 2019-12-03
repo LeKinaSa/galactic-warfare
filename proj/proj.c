@@ -44,6 +44,8 @@ int counter = 0;
 uint8_t scancode = 0;
 /* Mouse Related Variables */
 uint8_t packet_byte;
+/* XPM Related Variables (for animation) */
+xpm_animated ship;
 
 static void exit_program(program_status_t* status);
 
@@ -154,6 +156,16 @@ int (proj_main_loop)(int argc, char *argv[]) {
     printf("Error when loading xpm.\n");
     return 1;
   }
+  
+  ship.n = ship_n_img;
+  ship.s = ship_s_img;
+  ship.e = ship_e_img;
+  ship.w = ship_w_img;
+  ship.ne = ship_ne_img;
+  ship.nw = ship_nw_img;
+  ship.se = ship_se_img;
+  ship.sw = ship_sw_img;
+  
 
   Sprite ship_sprite = { ship_n_img, PLAYER };
   Entity ship_entity = { ship_sprite, {500.0, 500.0}, {0.0, 0.0} };

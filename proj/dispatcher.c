@@ -8,6 +8,8 @@
 #include "video.h"
 #include "utils.h"
 
+extern xpm_animated ship;
+
 void process_kbd_scancode(uint8_t bytes[], keyboard_status* status) {
   switch (bytes[0]) {
     case KBD_W_MAKECODE:
@@ -82,31 +84,37 @@ void process_mouse_status(mouse_status* status, MouseCursor* cursor, Player* pla
   update_cursor_position(cursor, mouse_pos);
   
   /* Aim */
-  // TODO: finish aiming (change xpm to be drawn)
   if ((angle > -0.875 * M_PI) && (angle <= -0.625 * M_PI)) {
-    //player->entity->sprite = ?;
     /* SW */
+    player->entity->sprite.img = ship.sw;
   }
   else if ((angle > -0.625 * M_PI) && (angle <= -0.375 * M_PI)) {
     /* S */
+    player->entity->sprite.img = ship.s;
   }
   else if ((angle > -0.375 * M_PI) && (angle <= -0.125 * M_PI)) {
     /* SE */
+    player->entity->sprite.img = ship.se;
   }
   else if ((angle > -0.125 * M_PI) && (angle <= 0.125 * M_PI)) {
     /* E */
+    player->entity->sprite.img = ship.e;
   }
   else if ((angle > 0.125 * M_PI) && (angle <= 0.375 * M_PI)) {
     /* NE */
+    player->entity->sprite.img = ship.ne;
   }
   else if ((angle > 0.375 * M_PI) && (angle <= 0.625 * M_PI)) {
     /* N */
+    player->entity->sprite.img = ship.n;
   }
   else if ((angle > 0.625 * M_PI) && (angle <= 0.875 * M_PI)) {
     /* NW */
+    player->entity->sprite.img = ship.nw;
   }
   else {
     /* W */
+    player->entity->sprite.img = ship.w;
   }
 
   if (status->lb_pressed) {
