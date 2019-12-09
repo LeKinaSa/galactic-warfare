@@ -8,8 +8,6 @@
 #include "video.h"
 #include "vbe_constants.h"
 
-#include "res/Ship.xpm"
-
 extern void *frame_buffer;
 static vbe_mode_info_t info;
 static uint8_t bytes_per_pixel;

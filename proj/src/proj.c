@@ -18,16 +18,16 @@
 #include "mouse.h"
 #include "dispatcher.h"
 
-#include "res/Background.xpm"
-#include "res/Cursor.xpm"
-#include "res/ShipN.xpm"
-#include "res/ShipS.xpm"
-#include "res/ShipE.xpm"
-#include "res/ShipW.xpm"
-#include "res/ShipNE.xpm"
-#include "res/ShipNW.xpm"
-#include "res/ShipSE.xpm"
-#include "res/ShipSW.xpm"
+#include "../res/Background.xpm"
+#include "../res/Cursor.xpm"
+#include "../res/ShipN.xpm"
+#include "../res/ShipS.xpm"
+#include "../res/ShipE.xpm"
+#include "../res/ShipW.xpm"
+#include "../res/ShipNE.xpm"
+#include "../res/ShipNW.xpm"
+#include "../res/ShipSE.xpm"
+#include "../res/ShipSW.xpm"
 
 typedef struct {
   bool timer_int_subscribed;
