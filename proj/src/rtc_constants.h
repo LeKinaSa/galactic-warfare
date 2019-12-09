@@ -32,4 +32,20 @@
 #define REG_C_ALARM_INT     BIT(5)  /* Bit set to 1 if an alarm interrupt is pending */
 #define REG_C_UPDATE_INT    BIT(4)  /* Bit set to 1 if an update interrupt is pending */
 
+/* RTC REGISTER D */
+#define REG_D_ERROR         BIT(7)  /* Bit set to 0 if battery runs out of energy */
+
+/* RTC Addresses */
+#define RTC_SECONDS         0   /* Seconds register address */
+#define RTC_ALARM_SECONDS   1   /* Alarm Seconds register address */
+#define RTC_MINUTES         2   /* Minutes register address */
+#define RTC_ALARM_MINUTES   3   /* Alarm Minutes register address */
+#define RTC_HOURS           4   /* Hours register address */
+#define RTC_ALARM_HOURS     5   /* Alarm Hours register address */
+#define RTC_WEEK_DAY        6   /* Week Day register address */
+#define RTC_MONTH_DAY       7   /* Month Day register address */
+#define RTC_MONTH           8   /* Month register address */
+#define RTC_YEAR            9   /* Year register address */
+
+
 #endif /* RTC_CONSTANTS_H */

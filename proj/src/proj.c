@@ -17,6 +17,7 @@
 #include "keyboard.h"
 #include "mouse.h"
 #include "dispatcher.h"
+#include "rtc.h"
 
 #include "../res/Background.xpm"
 #include "../res/Cursor.xpm"
@@ -31,6 +32,7 @@
 
 typedef struct {
   bool timer_int_subscribed;
+  bool rtc_int_subscribed;
   bool kbd_int_subscribed;
   bool mouse_int_subscribed;
   bool vg_initialized;
@@ -72,7 +74,7 @@ int main(int argc, char *argv[]) {
 }
 
 int (proj_main_loop)(int argc, char *argv[]) {
-  uint8_t timer_bit_no = 0, kbd_bit_no = 0, mouse_bit_no = 0;
+  uint8_t timer_bit_no = 0, rtc_bit_no = 0, kbd_bit_no = 0, mouse_bit_no = 0;
   
   /* Creates a program_status_t structure with all boolean values set to false */
   program_status_t* program_status = (program_status_t*) malloc(sizeof(program_status_t));
@@ -83,6 +85,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
   program_status->timer_int_subscribed = true;
+
+  if (rtc_subscribe_int(&rtc_bit_no)) {
+    exit_program(program_status);
+    printf("Error when calling rtc_subscribe_int.\n");
+    return 1;
+  }
+  program_status->rtc_int_subscribed = true;
 
   if (kbd_subscribe_int(&kbd_bit_no)) {
     exit_program(program_status);
@@ -195,6 +204,11 @@ int (proj_main_loop)(int argc, char *argv[]) {
   
   int frames = 0;
 
+  if (rtc_init()) {
+    exit_program(program_status);
+    printf("Error when calling rtc_init.\n");
+    return 1;
+  }
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
       printf("Error when calling driver_receive.\n");
@@ -237,6 +251,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
             process_kbd_scancode(bytes, &kbd_status);
             two_byte_scancode = false;
           }
+        }
+        if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
+          rtc_ih();
+          printf("RTC INT.\n");
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
           timer_int_handler();
@@ -310,6 +328,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
   program_status->kbd_int_subscribed = false;
 
+  if (rtc_unsubscribe_int()) {
+    exit_program(program_status);
+    printf("Error when calling rtc_unsubscribe_int.\n");
+    return 1;
+  }
+  program_status->rtc_int_subscribed = false;
+
   if (timer_unsubscribe_int()) {
     exit_program(program_status);
     printf("Error when calling timer_unsubscribe_int.\n");
@@ -330,6 +355,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
 void exit_program(program_status_t* status) {
   if (status->timer_int_subscribed) {
     timer_unsubscribe_int();
+  }
+  if (status->rtc_int_subscribed) {
+    rtc_unsubscribe_int();
   }
   if (status->kbd_int_subscribed) {
     kbd_unsubscribe_int();
