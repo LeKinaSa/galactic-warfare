@@ -202,7 +202,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
   void* aux_buffer = malloc(vg_get_frame_buffer_size());
   
-  int frames = 0;
+  bool can_fire = true;
+  uint8_t frames = 0;
 
   if (rtc_init()) {
     exit_program(program_status);
@@ -254,24 +255,30 @@ int (proj_main_loop)(int argc, char *argv[]) {
         }
         if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
           rtc_ih();
-          printf("RTC INT.\n");
+          // Generate random position on screen.
+          // Create new powerup entity at position.
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
           timer_int_handler();
 
           if (counter == INTERRUPTS_PER_FRAME) {
             counter = 0;
-            frames ++;
+
             // Update values according to internal game logic.
             // Render a new frame.
             process_kbd_status(&kbd_status, &player);
             process_mouse_status(&m_status, &mouse_cursor, &player);
-            if (frames == FRAMES_PER_SHOT) {
-              frames = 0;
-              // Shoot if the player wants to
-              if (player.fire) {
-                printf("Shoot\n");
+
+            if (!can_fire) {
+              frames++;
+              if (frames == FRAMES_PER_SHOT) {
+                frames = 0;
+                can_fire = true;
               }
+            }
+            else if (player.fire) {
+              can_fire = false;
+              // Shoot bullet
             }
             update_entity_positions(entities, num_entities);
             vg_draw_xpm(bg_img, 0, 0, &aux_buffer);
