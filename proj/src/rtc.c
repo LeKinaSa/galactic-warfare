@@ -82,8 +82,9 @@ int rtc_init() {
     printf("Error when writing register B to RTC.\n");
     return 1;
   }
+
     /* Alarm Seconds */
-  seconds = (seconds + 59) % 60;
+  seconds = (seconds + 59) % 60;  // Subtract a second to avoid instant interrupt
   if (rtc_write_register(RTC_ALARM_SECONDS, seconds)) {
     printf("Error when writing alarm seconds to RTC.\n");
     return 1;
