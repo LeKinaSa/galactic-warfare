@@ -8,8 +8,8 @@ int rtc_unsubscribe_int();                /* Unsubscribes RTC interrupts */
 
 int rtc_setup_alarms();   /* Set up alarm interrupts. Interval specified in rtc_constants.h */
 
-int rtc_read_register(uint8_t reg, uint8_t *data);
-int rtc_write_register(uint8_t reg, uint8_t data);
+int rtc_read_register(uint8_t reg, uint8_t* data);  /* Reads data from the specified RTC register */
+int rtc_write_register(uint8_t reg, uint8_t data);  /* Writes data to the specified RTC register */
 
 int rtc_init();
 

@@ -4,6 +4,7 @@
 
 static int rtc_hook_id = RTC_IRQ;
 
+
 int rtc_subscribe_int(uint8_t *bit_no) {
   if (bit_no == NULL) {
     printf("Error occurred: null pointer.\n");
@@ -29,29 +30,35 @@ int rtc_unsubscribe_int() {
   return 0;
 }
 
-int rtc_read_register(uint8_t reg, uint8_t *data) {
+
+int rtc_read_register(uint8_t reg, uint8_t* data) {
   if (sys_outb(RTC_ADDR_REG, reg) != OK) {
     printf("Error when writing address to RTC.\n");
     return 1;
   }
+
   if (util_sys_inb(RTC_DATA_REG, data)) {
     printf("Error when reading data from RTC.\n");
     return 1;
   }
+
   return 0;
 }
 
 int rtc_write_register(uint8_t reg, uint8_t data) {
-  if (sys_outb(RTC_ADDR_REG, reg)) {
+  if (sys_outb(RTC_ADDR_REG, reg) != OK) {
     printf("Error when writing address to RTC.\n");
     return 1;
   }
-  if (sys_outb(RTC_DATA_REG, data)) {
-    printf("Error when reading data from RTC.\n");
+
+  if (sys_outb(RTC_DATA_REG, data) != OK) {
+    printf("Error when writing data to RTC.\n");
     return 1;
   }
+
   return 0;
 }
+
 
 int rtc_init() {
   /* Clear old interrupts */
@@ -83,18 +90,18 @@ int rtc_init() {
     return 1;
   }
 
-    /* Alarm Seconds */
+  /* Alarm Seconds */
   seconds = (seconds + 59) % 60;  // Subtract a second to avoid instant interrupt
   if (rtc_write_register(RTC_ALARM_SECONDS, seconds)) {
     printf("Error when writing alarm seconds to RTC.\n");
     return 1;
   }
-    /* Alarm Minutes */
+  /* Alarm Minutes */
   if (rtc_write_register(RTC_ALARM_MINUTES, RTC_ALARM_DC)) {
     printf("Error when writing alarm minutes to RTC.\n");
     return 1;
   }
-    /* Alarm Hour */
+  /* Alarm Hour */
   if (rtc_write_register(RTC_ALARM_HOURS, RTC_ALARM_DC)) {
     printf("Error when writing alarm hours to RTC.\n");
     return 1;
@@ -102,6 +109,7 @@ int rtc_init() {
 
   return 0;
 }
+
 
 void rtc_ih(void) {
   uint8_t reg_c;
