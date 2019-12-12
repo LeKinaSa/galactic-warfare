@@ -62,9 +62,9 @@ Triangle* Triangle_new(Vector2 vertex1, Vector2 vertex2, Vector2 vertex3) {
   }
   
   Triangle* this = (Triangle*) malloc(sizeof(Triangle));
-  this->vertex1 = vertex1;
-  this->vertex2 = vertex2;
-  this->vertex3 = vertex3;
+  this->vertices[0] = vertex1;
+  this->vertices[1] = vertex2;
+  this->vertices[2] = vertex3;
   return this;
 }
 
@@ -79,11 +79,67 @@ double Triangle_area(const Triangle* this) {
     return 0.0;
   }
 
-  return 0.5 * (this->vertex1.x * (this->vertex2.y - this->vertex3.y) + 
-  this->vertex2.x * (this->vertex3.y - this->vertex1.y) + 
-  this->vertex3.x * (this->vertex1.y - this->vertex2.y));
+  return 0.5 * (this->vertices[0].x * (this->vertices[1].y - this->vertices[2].y) + 
+  this->vertices[1].x * (this->vertices[2].y - this->vertices[0].y) + 
+  this->vertices[2].x * (this->vertices[0].y - this->vertices[1].y));
 }
 
+
+Circle* Circle_new(double radius) {
+  if (radius <= 0.0) {
+    return NULL;
+  }
+
+  Circle* this = (Circle*) malloc(sizeof(Circle));
+  this->radius = radius;
+  return this;
+}
+
+void Circle_delete(Circle* this) {
+  if (this != NULL) {
+    free(this);
+  }
+}
+
+double Circle_area(const Circle* this) {
+  return M_PI * pow(this->radius, 2.0);
+}
+
+bool triangleCircleCollision(const Triangle* triangle, Vector2 triangle_pos, const Circle* circle, Vector2 circle_pos) {
+  /* Check if any of the triangle's vertices are inside the circle */
+  for (size_t i = 0; i < 3; ++i) {
+    if (Vector2_distance_to(circle_pos, triangle->vertices[i]) <= circle->radius) {
+      return true;
+    }
+  }
+
+  /* Check if the circle's centre is inside the triangle */
+  Vector2 sides[3][2] = { 
+  { triangle->vertices[0], triangle->vertices[1] },
+  { triangle->vertices[1], triangle->vertices[2] },
+  { triangle->vertices[0], triangle->vertices[2] } };
+
+  bool is_inside = true;
+  Vector2 normal;
+
+  for (size_t i = 0; i < 3; ++i) {
+    normal.x = sides[i][1].y - sides[i][0].y;
+    normal.y = sides[i][0].x - sides[i][1].x;
+
+    if (Vector2_dot_prod(circle_pos, normal) < 0) {
+      is_inside = false;
+      break;
+    }
+  }
+
+  if (is_inside) {
+    return true;
+  }
+
+  /* */
+
+  return false;
+}
 
 
 

@@ -39,9 +39,7 @@ static const Vector2 RIGHT = {1.0, 0.0};
 
 
 typedef struct {
-  Vector2 vertex1;
-  Vector2 vertex2;
-  Vector2 vertex3;
+  Vector2 vertices[3];
 } Triangle;
 
 /**
@@ -58,6 +56,19 @@ void Triangle_delete(Triangle* this);
 double Triangle_area(const Triangle* this);
 
 
+typedef struct {
+  double radius;
+} Circle;
+
+Circle* Circle_new(double radius);
+
+void Circle_delete(Circle* this);
+
+double Circle_area(const Circle* this);
+
+
+
+bool triangleCircleCollision(const Triangle* triangle, Vector2 triangle_pos, const Circle* circle, Vector2 circle_pos);
 
 
 /* Value that controls the rendering order of the sprites. Sprites with a higher z_layer value will be drawn on top. */
