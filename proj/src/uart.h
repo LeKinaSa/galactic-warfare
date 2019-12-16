@@ -50,7 +50,7 @@
 #define SP_LSR_PARITY_ERROR     BIT(2)  /* Parity Error on received character */
 #define SP_LSR_FRAMING_ERROR    BIT(3)  /* Absence of Stop Bit on received character */
 #define SP_LSR_BREAK_INT        BIT(4)  /* Serial Data Input Line hold low for too much time */
-#define SP_THR_EMPTY            BIT(5)  /* Ready to transmit a new char */
-#define SP_TR_EMPTY             BIT(6)  /* THR and Transmitter Shift Register are Empty */
-#define SP_FIFO_ERROR           BIT(7)  /* One Error (parity, framing, break) on FIFO buffer */
+#define SP_LSR_THR_EMPTY        BIT(5)  /* Ready to transmit a new char */
+#define SP_LSR_TR_EMPTY         BIT(6)  /* THR and Transmitter Shift Register are Empty */
+#define SP_LSR_FIFO_ERRO        BIT(7)  /* One Error (parity, framing, break) on FIFO buffer */
 /* Bits 0-4 and 7 are reset to 0 when LSR is read */
