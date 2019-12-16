@@ -9,7 +9,7 @@ int sp_subscribe_int(uint8_t *bit_no);
 
 int sp_unsubscribe_int();
 
-int sp_config(uint32_t bit_rate); // TODO
+int sp_config(uint32_t bit_rate);
 
 void sp_int_handler(); // TODO
 

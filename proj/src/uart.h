@@ -27,7 +27,7 @@
 
 #define SP_IER_ENABLE_RDA     BIT(0)
 #define SP_IER_ENABLE_THR     BIT(1)
-#define SP_IER_ENABLE_RLS     BIT(2)
+#define SP_IER_ENABLE_RLS     BIT(2)      /* Signals Error in bits 1-4 LSR */
 #define SP_IER_CONFIG        (SP_IER_ENABLE_RDA | SP_IER_ENABLE_THR | SP_IER_ENABLE_RLS)
 
 #define SP_LCR_LENGHT_8     (BIT(1) | BIT(0))
@@ -44,3 +44,13 @@
 #define SP_FCR_TRIGGER_8            BIT(7)
 #define SP_FCR_TRIGGER_14           BIT(6) | BIT(7)
 #define SP_FCR_CONFIG              (SP_FCR_ENABLE_FIFO | SP_FCR_CLEAR_RCVR | SP_FCR_CLEAR_XMIT | SP_FCR_TRIGGER_8)
+
+#define SP_LSR_RD               BIT(0)  /* Data for receiving */
+#define SP_LSR_OVERRUN_ERROR    BIT(1)  /* Overwritten character */
+#define SP_LSR_PARITY_ERROR     BIT(2)  /* Parity Error on received character */
+#define SP_LSR_FRAMING_ERROR    BIT(3)  /* Absence of Stop Bit on received character */
+#define SP_LSR_BREAK_INT        BIT(4)  /* Serial Data Input Line hold low for too much time */
+#define SP_THR_EMPTY            BIT(5)  /* Ready to transmit a new char */
+#define SP_TR_EMPTY             BIT(6)  /* THR and Transmitter Shift Register are Empty */
+#define SP_FIFO_ERROR           BIT(7)  /* One Error (parity, framing, break) on FIFO buffer */
+/* Bits 0-4 and 7 are reset to 0 when LSR is read */

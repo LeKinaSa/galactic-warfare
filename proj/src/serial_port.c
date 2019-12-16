@@ -71,8 +71,10 @@ int sp_config(uint32_t bit_rate) {
 }
 
 void sp_int_handler() {
-  uint8_t iir = 0;
+  uint8_t iir = 0, error = 0;
+  
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
+
   switch( iir & SP_IIR_INT ) {
       case SP_IIR_RDR:
         /* Read next char */
@@ -84,7 +86,9 @@ void sp_int_handler() {
         /* Character Timeout */
         break;
       case SP_IIR_RLS:
-        /* Receiver Line Status */
+        /* Receiver Line Status - Signals Error in LSR */
+        util_sys_inb(SP1_BASE_ADDR + SP_LSR, &error);
+        // WHAT DO I DO WITH THE ERROR ?????
         break;
       default:
         break;
