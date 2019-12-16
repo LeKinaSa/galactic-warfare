@@ -3,7 +3,7 @@
 #include "utils.h"
 
 static int rtc_hook_id = RTC_IRQ;
-
+extern uint8_t minute_counter;
 
 int rtc_subscribe_int(uint8_t *bit_no) {
   if (bit_no == NULL) {
@@ -76,7 +76,7 @@ int rtc_init() {
   }
 
   /* Set up the Alarm */
-    /* Enable Alarm Interrupts */
+  /* Enable alarm interrupts */
   uint8_t reg_b;
   if (rtc_read_register(RTC_REG_B, &reg_b)) {
     printf("Error when reading register B from RTC.\n");
@@ -90,18 +90,18 @@ int rtc_init() {
     return 1;
   }
 
-  /* Alarm Seconds */
+  /* Alarm seconds */
   seconds = (seconds + 59) % 60;  // Subtract a second to avoid instant interrupt
   if (rtc_write_register(RTC_ALARM_SECONDS, seconds)) {
     printf("Error when writing alarm seconds to RTC.\n");
     return 1;
   }
-  /* Alarm Minutes */
+  /* Alarm minutes */
   if (rtc_write_register(RTC_ALARM_MINUTES, RTC_ALARM_DC)) {
     printf("Error when writing alarm minutes to RTC.\n");
     return 1;
   }
-  /* Alarm Hour */
+  /* Alarm hour */
   if (rtc_write_register(RTC_ALARM_HOURS, RTC_ALARM_DC)) {
     printf("Error when writing alarm hours to RTC.\n");
     return 1;
@@ -118,6 +118,6 @@ void rtc_ih(void) {
   util_sys_inb(RTC_DATA_REG, &reg_c);
 
   if (reg_c & REG_C_ALARM_INT) {
-    /* Handle alarm interrupt */
+    ++minute_counter;
   }
 }

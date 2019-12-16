@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <math.h>
+#include <time.h>
 
 // Any header files included below this line should have been created by you
 #include "game_logic.h"
@@ -46,6 +47,8 @@ int counter = 0;
 uint8_t scancode = 0;
 /* Mouse Related Variables */
 uint8_t packet_byte;
+/* RTC Related Variables */
+uint8_t minute_counter = 0;
 /* XPM Related Variables (for animation) */
 xpm_animated ship;
 
@@ -79,6 +82,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
   /* Creates a program_status_t structure with all boolean values set to false */
   program_status_t* program_status = (program_status_t*) malloc(sizeof(program_status_t));
   memset((void *) program_status, (int) false, sizeof(program_status_t));
+
+  srand(time(NULL));
 
   if (timer_subscribe_int(&timer_bit_no)) {
     printf("Error when calling timer_subscribe_int.\n");
@@ -180,7 +185,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
                          { - ship.n.width / 2, - ship.n.height / 2} };
 
   uint8_t num_entities = 1;
-  Entity* entities[1] = { &ship_entity };
+  Entity** entities = malloc(sizeof(Entity*) * num_entities);
+  entities[0] = &ship_entity;
 
   Player player = { &ship_entity, PLAYER_MAX_HEALTH, 0, false };
 
@@ -255,8 +261,17 @@ int (proj_main_loop)(int argc, char *argv[]) {
         }
         if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
           rtc_ih();
-          // Generate random position on screen.
-          // Create new powerup entity at position.
+
+          if (minute_counter == POWERUP_INTERVAL) {
+            minute_counter = 0;
+            // Generate random position on screen.
+            // Create new powerup entity at position.
+            //Vector2 pos = generate_random_pos(vg_get_x_resolution(), vg_get_y_resolution());
+            //Powerup* powerup = Powerup_new(pos);
+            //++num_entities;
+            //entities = realloc((void*) entities, sizeof(Entity*) * num_entities);
+            //entities[num_entities - 1] = &powerup;
+          }
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
           timer_int_handler();
