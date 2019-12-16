@@ -72,3 +72,9 @@ int min(int a, int b) {
 int max(int a, int b) {
   return a >= b ? a : b;
 }
+
+void arr_add_elem(void* arr, size_t* size, void* elem, size_t elem_size) {
+  ++(*size);
+  arr = realloc(arr, elem_size * (*size));
+
+}

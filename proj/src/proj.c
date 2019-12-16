@@ -198,6 +198,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
   entities[0] = &ship_entity;
 
   Player player = { &ship_entity, PLAYER_MAX_HEALTH, 0, false };
+  bool can_fire = true;
+  uint8_t frames = 0;
 
   int ipc_status;
   message msg;
@@ -216,9 +218,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
   MouseCursor mouse_cursor = { cursor_sprite, {0.0, 0.0}, {-cursor_img.width / 2, -cursor_img.height / 2}};
 
   void* aux_buffer = malloc(vg_get_frame_buffer_size());
-  
-  bool can_fire = true;
-  uint8_t frames = 0;
 
   const Sprite speed_powerup_sprite = (Sprite) { speed_powerup_img, POWERUP };
   //const Sprite damage_powerup_sprite = (Sprite) { damage_powerup_img, POWERUP };
@@ -235,6 +234,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
     printf("Error when calling rtc_init.\n");
     return 1;
   }
+
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
       printf("Error when calling driver_receive.\n");

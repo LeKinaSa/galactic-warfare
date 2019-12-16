@@ -18,4 +18,6 @@ double clamp(double x, double lower, double upper);
 int min(int a, int b);
 int max(int a, int b);
 
+void arr_add_elem(void* arr, size_t* size, void* elem, size_t elem_size);
+
 #endif /* __UTILS_H */
