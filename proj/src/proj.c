@@ -18,6 +18,7 @@
 #include "keyboard.h"
 #include "mouse.h"
 #include "dispatcher.h"
+#include "utils.h"
 #include "rtc.h"
 
 #include "../res/Background.xpm"
@@ -30,6 +31,8 @@
 #include "../res/ShipNW.xpm"
 #include "../res/ShipSE.xpm"
 #include "../res/ShipSW.xpm"
+#include "../res/SpeedPowerup.xpm"
+#include "../res/DamagePowerup.xpm"
 
 typedef struct {
   bool timer_int_subscribed;
@@ -51,6 +54,21 @@ uint8_t packet_byte;
 uint8_t minute_counter = 0;
 /* XPM Related Variables (for animation) */
 xpm_animated ship;
+
+static const xpm_map_t bg_xpm = (xpm_map_t) Background_xpm;
+static const xpm_map_t cursor_xpm = (xpm_map_t) Cursor_xpm;
+
+static const xpm_map_t ship_N_xpm = (xpm_map_t) ShipN_xpm;
+static const xpm_map_t ship_S_xpm = (xpm_map_t) ShipS_xpm;
+static const xpm_map_t ship_E_xpm = (xpm_map_t) ShipE_xpm;
+static const xpm_map_t ship_W_xpm = (xpm_map_t) ShipW_xpm;
+static const xpm_map_t ship_NE_xpm = (xpm_map_t) ShipNE_xpm;
+static const xpm_map_t ship_NW_xpm = (xpm_map_t) ShipNW_xpm;
+static const xpm_map_t ship_SE_xpm = (xpm_map_t) ShipSE_xpm;
+static const xpm_map_t ship_SW_xpm = (xpm_map_t) ShipSW_xpm;
+
+static const xpm_map_t speed_powerup_xpm = (xpm_map_t) SpeedPowerup_xpm;
+static const xpm_map_t damage_powerup_xpm = (xpm_map_t) DamagePowerup_xpm;
 
 static void exit_program(program_status_t* status);
 
@@ -81,7 +99,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   
   /* Creates a program_status_t structure with all boolean values set to false */
   program_status_t* program_status = (program_status_t*) malloc(sizeof(program_status_t));
-  memset((void *) program_status, (int) false, sizeof(program_status_t));
+  memset((void *) program_status, false, sizeof(program_status_t));
 
   srand(time(NULL));
 
@@ -138,21 +156,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
   program_status->vg_initialized = true;
 
-  xpm_map_t bg_xpm = (xpm_map_t) Background_xpm;
-  xpm_map_t cursor_xpm = (xpm_map_t) Cursor_xpm;
-
-  xpm_map_t ship_N_xpm = (xpm_map_t) ShipN_xpm;
-  xpm_map_t ship_S_xpm = (xpm_map_t) ShipS_xpm;
-  xpm_map_t ship_E_xpm = (xpm_map_t) ShipE_xpm;
-  xpm_map_t ship_W_xpm = (xpm_map_t) ShipW_xpm;
-  xpm_map_t ship_NE_xpm = (xpm_map_t) ShipNE_xpm;
-  xpm_map_t ship_NW_xpm = (xpm_map_t) ShipNW_xpm;
-  xpm_map_t ship_SE_xpm = (xpm_map_t) ShipSE_xpm;
-  xpm_map_t ship_SW_xpm = (xpm_map_t) ShipSW_xpm;
-
   xpm_image_t bg_img, cursor_img;
   xpm_image_t ship_n_img, ship_s_img, ship_e_img, ship_w_img;
   xpm_image_t ship_ne_img, ship_nw_img, ship_se_img, ship_sw_img;
+  xpm_image_t speed_powerup_img, damage_powerup_img;
 
   if (
   xpm_load(bg_xpm     , XPM_5_6_5, &bg_img     ) == NULL ||
@@ -164,7 +171,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
   xpm_load(ship_NE_xpm, XPM_5_6_5, &ship_ne_img) == NULL ||
   xpm_load(ship_NW_xpm, XPM_5_6_5, &ship_nw_img) == NULL ||
   xpm_load(ship_SE_xpm, XPM_5_6_5, &ship_se_img) == NULL ||
-  xpm_load(ship_SW_xpm, XPM_5_6_5, &ship_sw_img) == NULL
+  xpm_load(ship_SW_xpm, XPM_5_6_5, &ship_sw_img) == NULL ||
+  xpm_load(speed_powerup_xpm, XPM_5_6_5, &speed_powerup_img) == NULL ||
+  xpm_load(damage_powerup_xpm, XPM_5_6_5, &damage_powerup_img) == NULL
   ) {
     exit_program(program_status);
     printf("Error when loading xpm.\n");
@@ -210,6 +219,16 @@ int (proj_main_loop)(int argc, char *argv[]) {
   
   bool can_fire = true;
   uint8_t frames = 0;
+
+  const Sprite speed_powerup_sprite = (Sprite) { speed_powerup_img, POWERUP };
+  //const Sprite damage_powerup_sprite = (Sprite) { damage_powerup_img, POWERUP };
+
+  Powerup* current_powerup = NULL;
+  Entity powerup_entity;
+  //size_t current_powerup_idx;
+
+  powerup_entity.velocity = (Vector2) { 0.0, 0.0 };
+  powerup_entity.sprite = speed_powerup_sprite;
 
   if (rtc_init()) {
     exit_program(program_status);
@@ -266,11 +285,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
             minute_counter = 0;
             // Generate random position on screen.
             // Create new powerup entity at position.
-            //Vector2 pos = generate_random_pos(vg_get_x_resolution(), vg_get_y_resolution());
-            //Powerup* powerup = Powerup_new(pos);
-            //++num_entities;
-            //entities = realloc((void*) entities, sizeof(Entity*) * num_entities);
-            //entities[num_entities - 1] = &powerup;
+            Powerup_delete(current_powerup);
+            powerup_entity.position = generate_random_pos(vg_get_x_resolution() - 32, vg_get_y_resolution() - 32);
+            current_powerup = Powerup_new(&powerup_entity, SPEED);
+            ++num_entities;
+            entities = realloc((void*) entities, sizeof(Entity*) * num_entities);
+            entities[num_entities - 1] = current_powerup->entity;
           }
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
@@ -295,6 +315,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
               can_fire = false;
               // Shoot bullet
             }
+            
             update_entity_positions(entities, num_entities);
             vg_draw_xpm(bg_img, 0, 0, &aux_buffer);
             vg_render_entities(entities, num_entities, &aux_buffer);

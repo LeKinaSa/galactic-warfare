@@ -119,11 +119,13 @@ typedef struct {
   Vector2 offset;
 } MouseCursor;
 
+
 /* Comparison function for sorting an array of entity pointers with qsort. Used in the rendering pipeline to sort entities by their z layer. */
 int compare_entity_ptr(const void* lhs, const void* rhs);
 
 void update_entity_positions(Entity* entities[], uint8_t num_entities);
 void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos);
+
 
 typedef struct {
   Entity* entity;
@@ -131,5 +133,18 @@ typedef struct {
   double angle;
   bool fire;
 } Player;
+
+enum powerup_type {
+  SPEED,
+  DAMAGE
+};
+
+typedef struct {
+  Entity* entity;
+  enum powerup_type type;
+} Powerup;
+
+Powerup* Powerup_new(Entity* entity, enum powerup_type type);
+void Powerup_delete(Powerup* this);
 
 #endif /* GAME_LOGIC_H */

@@ -149,7 +149,6 @@ bool triangle_circle_collision(const Triangle* triangle, Vector2 triangle_pos, c
 }
 
 
-
 int compare_entity_ptr(const void* lhs, const void* rhs) {
   Entity* ptr1 = *((Entity**) lhs);
   Entity* ptr2 = *((Entity**) rhs);
@@ -183,4 +182,22 @@ void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos) {
   const double MAX_Y = vg_get_y_resolution() - cursor->sprite.img.height;
   cursor->position.x = clamp((double) cursor->position.x, 0.0, MAX_X);
   cursor->position.y = clamp((double) cursor->position.y, 0.0, MAX_Y);
+}
+
+
+Powerup* Powerup_new(Entity* entity, enum powerup_type type) {
+  if (entity == NULL) {
+    return NULL;
+  }
+
+  Powerup* this = (Powerup*) malloc(sizeof(Powerup));
+  this->entity = entity;
+  this->type = type;
+  return this;
+}
+
+void Powerup_delete(Powerup* this) {
+  if (this != NULL) {
+    free(this);
+  }
 }
