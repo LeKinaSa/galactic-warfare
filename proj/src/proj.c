@@ -20,6 +20,7 @@
 #include "dispatcher.h"
 #include "utils.h"
 #include "rtc.h"
+#include "serial_port.h"
 
 #include "../res/Background.xpm"
 #include "../res/Cursor.xpm"
@@ -39,6 +40,7 @@ typedef struct {
   bool rtc_int_subscribed;
   bool kbd_int_subscribed;
   bool mouse_int_subscribed;
+  bool sp_int_subscribed;
   bool vg_initialized;
 } program_status_t;
 
@@ -95,7 +97,7 @@ int main(int argc, char *argv[]) {
 }
 
 int (proj_main_loop)(int argc, char *argv[]) {
-  uint8_t timer_bit_no = 0, rtc_bit_no = 0, kbd_bit_no = 0, mouse_bit_no = 0;
+  uint8_t timer_bit_no = 0, rtc_bit_no = 0, kbd_bit_no = 0, mouse_bit_no = 0, sp_bit_no = 0;
   
   /* Creates a program_status_t structure with all boolean values set to false */
   program_status_t* program_status = (program_status_t*) malloc(sizeof(program_status_t));
@@ -147,7 +149,20 @@ int (proj_main_loop)(int argc, char *argv[]) {
     printf("Error when calling mouse_enable_int.\n");
     return 1;
   }
-  
+
+  if (sp_subscribe_int(&sp_bit_no)) {
+    exit_program(program_status);
+    printf("Error when calling sp_subscribe_int.\n");
+    return 1;
+  }
+  program_status->sp_int_subscribed = true;
+
+  if (sp_config(9600)) {
+    exit_program(program_status);
+    printf("Error when calling sp_config.\n");
+    return 1;
+  }
+
   frame_buffer = vg_init(MODE_PROJECT);
 
   if (frame_buffer == MAP_FAILED) {
@@ -332,6 +347,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
   free(aux_buffer);
 
+  if (sp_unsubscribe_int()) {
+    exit_program(program_status);
+    printf("Error when calling sp_unsubscribe_int.\n");
+    return 1;
+  }
+  program_status->sp_int_subscribed = false;
+
   if (mouse_disable_int()) {
     exit_program(program_status);
     printf("Error when calling mouse_disable_int.\n");
@@ -410,6 +432,9 @@ void exit_program(program_status_t* status) {
     mouse_enable_int();
     mouse_unsubscribe_int();
     kbc_reset_cmd_byte();
+  }
+  if (status->sp_int_subscribed) {
+    sp_unsubscribe_int();
   }
   if (status->vg_initialized) {
     vg_exit();

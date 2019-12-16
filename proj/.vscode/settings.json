@@ -11,7 +11,9 @@
     "stdio.h": "c",
     "*.xpm": "c",
     "mouse.h": "c",
-    "game_constants.h": "c"
+    "game_constants.h": "c",
+    "serialport.h": "c",
+    "uart.h": "c"
   },
   "C_Cpp.errorSquiggles": "Enabled",
 }
