@@ -43,7 +43,8 @@ typedef struct {
 } Triangle;
 
 /**
- * @brief Creates a new triangle structure.
+ * @brief Creates a new triangle structure. The given points must be valid and defined in clockwise order to
+ * facilitate collision detection.
  * @param vertex1  first vertex of the triangle
  * @param vertex2  second vertex of the triangle
  * @param vertex3  third vertex of the triangle
@@ -51,6 +52,10 @@ typedef struct {
  */
 Triangle* Triangle_new(Vector2 vertex1, Vector2 vertex2, Vector2 vertex3);
 
+/**
+ * @brief Frees memory allocated for a triangle structure.
+ * @param this  pointer to the triangle structure to delete
+ */
 void Triangle_delete(Triangle* this);
 
 double Triangle_area(const Triangle* this);
@@ -60,15 +65,31 @@ typedef struct {
   double radius;
 } Circle;
 
+/**
+ * @brief Creates a new circle structure.
+ * @param radius  radius of the circle, must be positive
+ * @returns pointer to created circle. NULL if params were invalid.
+ */
 Circle* Circle_new(double radius);
 
+/**
+ * @brief Frees memory allocated for a circle structure.
+ * @param this  pointer to the circle structure to delete
+ */
 void Circle_delete(Circle* this);
 
 double Circle_area(const Circle* this);
 
 
-
-bool triangleCircleCollision(const Triangle* triangle, Vector2 triangle_pos, const Circle* circle, Vector2 circle_pos);
+/**
+ * @brief Detects a collision between a triangle and a circle, based on at least one of three criteria.
+ * @param triangle      Pointer to triangle structure to use for collision detection
+ * @param triangle_pos  Position of the centre of the triangle (around which the vertices are defined by their relative position)
+ * @param circle        Pointer to circle structure to use for collision detection
+ * @param circle_pos    Position of the centre of the circle
+ * @returns true if the given shapes collide
+ */
+bool triangle_circle_collision(const Triangle* triangle, Vector2 triangle_pos, const Circle* circle, Vector2 circle_pos);
 
 
 /* Value that controls the rendering order of the sprites. Sprites with a higher z_layer value will be drawn on top. */

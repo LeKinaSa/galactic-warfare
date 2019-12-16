@@ -105,19 +105,26 @@ double Circle_area(const Circle* this) {
   return M_PI * pow(this->radius, 2.0);
 }
 
-bool triangleCircleCollision(const Triangle* triangle, Vector2 triangle_pos, const Circle* circle, Vector2 circle_pos) {
+bool triangle_circle_collision(const Triangle* triangle, Vector2 triangle_pos, const Circle* circle, Vector2 circle_pos) {
+  /* Convert relative vertex positions to absolute */
+  Vector2 real_vertices[3] = { 
+    Vector2_add(triangle_pos, triangle->vertices[0]), 
+    Vector2_add(triangle_pos, triangle->vertices[1]),
+    Vector2_add(triangle_pos, triangle->vertices[2])
+  };
+
   /* Check if any of the triangle's vertices are inside the circle */
   for (size_t i = 0; i < 3; ++i) {
-    if (Vector2_distance_to(circle_pos, triangle->vertices[i]) <= circle->radius) {
+    if (Vector2_distance_to(circle_pos, real_vertices[i]) <= circle->radius) {
       return true;
     }
   }
 
   /* Check if the circle's centre is inside the triangle */
   Vector2 sides[3][2] = { 
-  { triangle->vertices[0], triangle->vertices[1] },
-  { triangle->vertices[1], triangle->vertices[2] },
-  { triangle->vertices[0], triangle->vertices[2] } };
+  { real_vertices[0], real_vertices[1] },
+  { real_vertices[1], real_vertices[2] },
+  { real_vertices[0], real_vertices[2] } };
 
   bool is_inside = true;
   Vector2 normal;
@@ -136,7 +143,7 @@ bool triangleCircleCollision(const Triangle* triangle, Vector2 triangle_pos, con
     return true;
   }
 
-  /* */
+  /* TODO: Check if circle intersects an edge of the triangle */
 
   return false;
 }
