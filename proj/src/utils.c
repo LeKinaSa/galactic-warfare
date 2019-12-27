@@ -5,9 +5,84 @@
 #include "utils.h"
 
 
-#ifdef LAB3
-extern uint32_t sys_inb_cnt;
-#endif
+LinkedList* LinkedList_new(size_t elem_size) {
+  LinkedList* this = (LinkedList*) malloc(sizeof(LinkedList));
+  this->first = NULL;
+  this->last = NULL;
+  this->size = 0;
+  this->elem_size = elem_size;
+  return this;
+}
+
+void LinkedList_delete(LinkedList* this) {
+  static Node* it;
+
+  if (this != NULL) {
+    if (this->size > 0) {
+      it = this->first->next;
+      while(it != NULL) {
+        free(it->previous->data);
+        free(it->previous);
+        it = it->next;
+      }
+    }
+
+    free(this);
+  }
+}
+
+void LinkedList_add(LinkedList* this, void* elem) {
+  if (this != NULL && elem != NULL) {
+    if (this->size > 0) {
+      this->last->next = (Node*) malloc(sizeof(Node));
+      this->last->next->data = malloc(this->elem_size);
+      memcpy(this->last->next->data, elem, this->elem_size);
+      this->last->next->previous = this->last;
+      this->last = this->last->next;
+    }
+    else {
+      this->first = (Node*) malloc(sizeof(Node));
+      this->first->data = elem;
+      this->last = this->first;
+    }
+    ++this->size;
+  }
+}
+
+void LinkedList_erase(LinkedList* this, void* elem) {
+  static Node* it;
+
+  if (this != NULL && elem != NULL) {
+    if (this->size > 0) {
+      if (this->first->data == elem) {
+        it = this->first;
+        this->first = this->first->next;
+        free(it->data);
+        free(it);
+        --this->size;
+      }
+      else {
+        it = this->first->next;
+        while (it->data != elem && it != NULL) {
+          it = it->next;
+        }
+        if (it != NULL) {
+          if (it->next == NULL) {
+            this->last = it->previous;
+          }
+          else {
+            it->previous->next = it->next;
+            it->next->previous = it->previous;
+          }
+          free(it->data);
+          free(it);
+          --this->size;
+        }
+      }
+    }
+  }
+}
+
 
 int (util_sys_inb)(int port, uint8_t *value) {
   if (value == NULL) {
@@ -21,10 +96,6 @@ int (util_sys_inb)(int port, uint8_t *value) {
     printf("Error when calling sys_inb.\n");
     return 1;
   }
-
-  #ifdef LAB3
-  sys_inb_cnt++;
-  #endif
 
   *value = (uint8_t)word;
   return 0;
@@ -52,14 +123,6 @@ int(util_get_MSB)(uint16_t val, uint8_t *msb) {
 }
 
 
-Vector2 generate_random_pos(uint16_t max_x, uint16_t max_y) {
-  double x = (double) (rand() % max_x);
-  double y = (double) (rand() % max_y);
-
-  return (Vector2) { x, y };
-}
-
-
 double clamp(double x, double lower, double upper) {
   return fmin(upper, fmax(x, lower));
 }
@@ -71,10 +134,4 @@ int min(int a, int b) {
 
 int max(int a, int b) {
   return a >= b ? a : b;
-}
-
-void arr_add_elem(void* arr, size_t* size, void* elem, size_t elem_size) {
-  ++(*size);
-  arr = realloc(arr, elem_size * (*size));
-
 }

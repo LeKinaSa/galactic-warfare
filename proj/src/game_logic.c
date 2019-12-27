@@ -54,6 +54,18 @@ double Vector2_angle_to(Vector2 lhs, Vector2 rhs) {
 }
 
 
+Vector2 generate_random_pos(uint16_t max_x, uint16_t max_y) {
+  double x = (double) (rand() % max_x);
+  double y = (double) (rand() % max_y);
+
+  return (Vector2) { x, y };
+}
+
+Vector2 rotate_point(Vector2 point, double angle) {
+  return (Vector2) { cos(angle) * point.x + sin(angle) * point.y, - sin(angle) * point.x + cos(angle) * point.y };
+}
+
+
 Triangle* Triangle_new(Vector2 vertex1, Vector2 vertex2, Vector2 vertex3) {
   double det = vertex1.x * (vertex2.y - vertex3.y) + vertex2.x * (vertex3.y - vertex1.y) + vertex3.x * (vertex1.y - vertex2.y);
 
@@ -164,15 +176,24 @@ int compare_entity_ptr(const void* lhs, const void* rhs) {
   }
 }
 
-void update_entity_positions(Entity* entities[], uint8_t num_entities) {
+void update_entity_positions(LinkedList* entities[]) {
   uint16_t x_res = vg_get_x_resolution(), y_res = vg_get_y_resolution();
+  Node* current_node;
   Entity* current_entity;
 
-  for (uint8_t i = 0; i < num_entities; i++) {
-    current_entity = entities[i];
+  for (size_t layer = 0; layer < NUM_Z_LAYERS; ++layer) {
+    if (entities[layer]->size > 0) {
+      current_node = entities[layer]->first;
 
-    current_entity->position.x = clamp((current_entity->position.x + current_entity->velocity.x), 0.0, (double)(x_res - current_entity->sprite.img.width));
-    current_entity->position.y = clamp((current_entity->position.y + current_entity->velocity.y), 0.0, (double)(y_res - current_entity->sprite.img.height));
+      while (current_node != NULL) {
+        current_entity = *(Entity**)(current_node->data);
+
+        current_entity->position.x = clamp((current_entity->position.x + current_entity->velocity.x), 0.0, (double)(x_res - current_entity->sprite.img.width));
+        current_entity->position.y = clamp((current_entity->position.y + current_entity->velocity.y), 0.0, (double)(y_res - current_entity->sprite.img.height));
+
+        current_node = current_node->next;
+      }
+    }
   }
 }
 

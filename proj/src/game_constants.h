@@ -10,10 +10,12 @@
 #define INTERRUPTS_PER_FRAME    TIMER0_INTERRUPTS_PER_SECOND / FRAMERATE    /** @brief Numer of Timer0 interrupts after which to draw the next frame */
 #define FRAMES_PER_SHOT         5       /** @brief Number of frames between shots */
 
-#define PLAYER_MAX_HEALTH       200     /** @brief Player Health */
-#define PLAYER_BASE_SPEED       50      /** @brief Player  Speed */
-#define PLAYER_BASE_DAMAGE      20      /** @brief Player Damage */
+#define PLAYER_MAX_HEALTH       200     /** @brief Player health */
+#define PLAYER_BASE_SPEED       75      /** @brief Player base speed */
+#define PLAYER_BASE_DAMAGE      20      /** @brief Player damage */
 
 #define POWERUP_INTERVAL        1       /** @brief Interval, in minutes, between the generation of powerups */
+
+#define BULLET_SPEED            250
 
 #endif /* GAME_CONSTANTS_H */

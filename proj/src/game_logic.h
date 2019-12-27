@@ -2,6 +2,7 @@
 #define GAME_LOGIC_H
 
 #include <lcom/lcf.h>
+#include "utils.h"
 
 /* Basic two-dimensional vector. */
 typedef struct {
@@ -36,6 +37,11 @@ static const Vector2 UP = {0.0, -1.0};
 static const Vector2 DOWN = {0.0, 1.0};
 static const Vector2 LEFT = {-1.0, 0.0};
 static const Vector2 RIGHT = {1.0, 0.0};
+
+
+Vector2 generate_random_pos(uint16_t max_x, uint16_t max_y);
+
+Vector2 rotate_point(Vector2 point, double angle);
 
 
 typedef struct {
@@ -81,6 +87,12 @@ void Circle_delete(Circle* this);
 double Circle_area(const Circle* this);
 
 
+enum shape_type {
+  NO_SHAPE,
+  TRIANGLE,
+  CIRCLE
+};
+
 /**
  * @brief Detects a collision between a triangle and a circle, based on at least one of three criteria.
  * @param triangle      Pointer to triangle structure to use for collision detection
@@ -101,9 +113,14 @@ enum z_layer {
   MOUSE_CURSOR
 };
 
+#define NUM_Z_LAYERS  5
+
+
 typedef struct {
   xpm_image_t img;
   enum z_layer layer;
+  enum shape_type collision_shape_type;
+  void* collision_shape;
 } Sprite;
 
 typedef struct {
@@ -123,7 +140,7 @@ typedef struct {
 /* Comparison function for sorting an array of entity pointers with qsort. Used in the rendering pipeline to sort entities by their z layer. */
 int compare_entity_ptr(const void* lhs, const void* rhs);
 
-void update_entity_positions(Entity* entities[], uint8_t num_entities);
+void update_entity_positions(LinkedList* entities[]);
 void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos);
 
 
@@ -133,6 +150,12 @@ typedef struct {
   double angle;
   bool fire;
 } Player;
+
+typedef struct {
+  Entity* entity;
+  bool friendly;
+} Bullet;
+
 
 enum powerup_type {
   SPEED,

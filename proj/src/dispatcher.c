@@ -83,40 +83,6 @@ void process_mouse_status(mouse_status* status, MouseCursor* cursor, Player* pla
   double angle = Vector2_angle_to(player_center, mouse_pos);
 
   update_cursor_position(cursor, mouse_pos);
-  
-  /* Aim */
-  if ((angle > -0.875 * M_PI) && (angle <= -0.625 * M_PI)) {
-    /* SW */
-    player->entity->sprite.img = ship.sw;
-  }
-  else if ((angle > -0.625 * M_PI) && (angle <= -0.375 * M_PI)) {
-    /* S */
-    player->entity->sprite.img = ship.s;
-  }
-  else if ((angle > -0.375 * M_PI) && (angle <= -0.125 * M_PI)) {
-    /* SE */
-    player->entity->sprite.img = ship.se;
-  }
-  else if ((angle > -0.125 * M_PI) && (angle <= 0.125 * M_PI)) {
-    /* E */
-    player->entity->sprite.img = ship.e;
-  }
-  else if ((angle > 0.125 * M_PI) && (angle <= 0.375 * M_PI)) {
-    /* NE */
-    player->entity->sprite.img = ship.ne;
-  }
-  else if ((angle > 0.375 * M_PI) && (angle <= 0.625 * M_PI)) {
-    /* N */
-    player->entity->sprite.img = ship.n;
-  }
-  else if ((angle > 0.625 * M_PI) && (angle <= 0.875 * M_PI)) {
-    /* NW */
-    player->entity->sprite.img = ship.nw;
-  }
-  else {
-    /* W */
-    player->entity->sprite.img = ship.w;
-  }
 
   /* Shoot */
   player->angle = angle;

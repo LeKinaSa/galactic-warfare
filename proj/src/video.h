@@ -4,6 +4,7 @@
 #include <lcom/lcf.h>
 
 #include "game_logic.h"
+#include "utils.h"
 
 /* Returns size of frame buffer in bytes */
 uint32_t vg_get_frame_buffer_size();
@@ -24,7 +25,9 @@ int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color, void** buffer);
 /* Draws a xpm image in the specified position to a buffer. */
 int vg_draw_xpm(xpm_image_t img, uint16_t x, uint16_t y, void** buffer);
 
+int vg_draw_rotated_xpm(xpm_image_t img, uint16_t x, uint16_t y, double angle, void** buffer);
+
 /* Draws an array of entities to a buffer according to their z-layer. Entities with a higher z-layer are drawn last (on top of the other entities). Returns 0 on success, non-zero otherwise. */
-int vg_render_entities(Entity* entities[], uint8_t num_entities, void** buffer);
+int vg_render_entities(LinkedList* entities[], void** buffer);
 
 #endif /* __VIDEO_H */

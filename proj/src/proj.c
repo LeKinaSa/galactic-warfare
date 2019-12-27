@@ -204,13 +204,18 @@ int (proj_main_loop)(int argc, char *argv[]) {
   ship.se = ship_se_img;
   ship.sw = ship_sw_img;
 
-  Sprite ship_sprite = { ship.n, PLAYER };
+  Triangle* ship_collision_shape = Triangle_new((Vector2) {-10.0, -5.0}, (Vector2) {0.0, 20.0}, (Vector2) {10.0, -5.0});
+  Sprite ship_sprite = { ship.s, PLAYER, TRIANGLE, (void*) ship_collision_shape };
   Entity ship_entity = { ship_sprite, {500.0, 500.0}, {0.0, 0.0},
-                         { - ship.n.width / 2, - ship.n.height / 2} };
+                        { - ship.n.width / 2, - ship.n.height / 2} };
+  Entity* ship_entity_ptr = &ship_entity;
 
-  uint8_t num_entities = 1;
-  Entity** entities = malloc(sizeof(Entity*) * num_entities);
-  entities[0] = &ship_entity;
+  LinkedList* entities[NUM_Z_LAYERS];
+  for (size_t i = 0; i < NUM_Z_LAYERS; ++i) {
+    entities[i] = LinkedList_new(sizeof(Entity*));
+  }
+
+  LinkedList_add(entities[PLAYER], &ship_entity_ptr);
 
   Player player = { &ship_entity, PLAYER_MAX_HEALTH, 0, false };
   bool can_fire = true;
@@ -229,17 +234,18 @@ int (proj_main_loop)(int argc, char *argv[]) {
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
   mouse_status m_status = { false, false, false, vg_get_x_resolution() / 2, vg_get_y_resolution() / 2 };
 
-  Sprite cursor_sprite = { cursor_img, MOUSE_CURSOR };
+  Sprite cursor_sprite = { cursor_img, MOUSE_CURSOR, NO_SHAPE, NULL };
   MouseCursor mouse_cursor = { cursor_sprite, {0.0, 0.0}, {-cursor_img.width / 2, -cursor_img.height / 2}};
 
   void* aux_buffer = malloc(vg_get_frame_buffer_size());
 
-  const Sprite speed_powerup_sprite = (Sprite) { speed_powerup_img, POWERUP };
-  //const Sprite damage_powerup_sprite = (Sprite) { damage_powerup_img, POWERUP };
+  Circle* powerup_collision_shape = Circle_new(16.0);
+  const Sprite speed_powerup_sprite = (Sprite) { speed_powerup_img, POWERUP, CIRCLE, (void*) powerup_collision_shape };
+  //const Sprite damage_powerup_sprite = (Sprite) { damage_powerup_img, POWERUP, CIRCLE, powerup_collision_shape };
+  const uint16_t powerup_sprite_width = speed_powerup_img.width, powerup_sprite_height = speed_powerup_img.height;
 
   Powerup* current_powerup = NULL;
   Entity powerup_entity;
-  //size_t current_powerup_idx;
 
   powerup_entity.velocity = (Vector2) { 0.0, 0.0 };
   powerup_entity.sprite = speed_powerup_sprite;
@@ -301,11 +307,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
             // Generate random position on screen.
             // Create new powerup entity at position.
             Powerup_delete(current_powerup);
-            powerup_entity.position = generate_random_pos(vg_get_x_resolution() - 32, vg_get_y_resolution() - 32);
-            current_powerup = Powerup_new(&powerup_entity, SPEED);
-            ++num_entities;
-            entities = realloc((void*) entities, sizeof(Entity*) * num_entities);
-            entities[num_entities - 1] = current_powerup->entity;
+            powerup_entity.position = generate_random_pos(vg_get_x_resolution() - powerup_sprite_width, 
+            vg_get_y_resolution() - powerup_sprite_height);
+            current_powerup = Powerup_new(&powerup_entity, (enum powerup_type) (rand() % 2));
+            LinkedList_add(entities[POWERUP], &powerup_entity);
           }
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
@@ -329,11 +334,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
             else if (player.fire) {
               can_fire = false;
               // Shoot bullet
+              //LinkedList_add(entities[BULLET], );
             }
-            
-            update_entity_positions(entities, num_entities);
+
+            update_entity_positions(entities);
             vg_draw_xpm(bg_img, 0, 0, &aux_buffer);
-            vg_render_entities(entities, num_entities, &aux_buffer);
+            vg_render_entities(entities, &aux_buffer);
+            //vg_draw_rotated_xpm(player.entity->sprite.img, (uint16_t)round(player.entity->position.x), (uint16_t)round(player.entity->position.y), player.angle, &aux_buffer);
             vg_draw_xpm(cursor_img, round(mouse_cursor.position.x), round(mouse_cursor.position.y), &aux_buffer);
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
           }
@@ -346,6 +353,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
 
   free(aux_buffer);
+
+  for (size_t i = 0; i < NUM_Z_LAYERS; ++i) {
+    LinkedList_delete(entities[i]);
+  }
+
+  free(ship_collision_shape);
+  free(powerup_collision_shape);
 
   if (sp_unsubscribe_int()) {
     exit_program(program_status);
