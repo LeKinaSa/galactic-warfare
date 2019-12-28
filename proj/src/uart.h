@@ -30,7 +30,7 @@
 #define SP_IER_ENABLE_RLS     BIT(2)      /* Signals Error in bits 1-4 LSR */
 #define SP_IER_CONFIG        (SP_IER_ENABLE_RDA | SP_IER_ENABLE_THR | SP_IER_ENABLE_RLS)
 
-#define SP_LCR_LENGHT_8     (BIT(1) | BIT(0))
+#define SP_LCR_LENGHT_8            (BIT(1) | BIT(0))
 #define SP_LCR_1_STOP_BIT           BIT(2)
 #define SP_LCR_ODD_PARITY           BIT(3)
 #define SP_LCR_BREAK_CONTROL        BIT(6)
@@ -44,6 +44,8 @@
 #define SP_FCR_TRIGGER_8            BIT(7)
 #define SP_FCR_TRIGGER_14           BIT(6) | BIT(7)
 #define SP_FCR_CONFIG              (SP_FCR_ENABLE_FIFO | SP_FCR_CLEAR_RCVR | SP_FCR_CLEAR_XMIT | SP_FCR_TRIGGER_8)
+/* Adjust the Trigger Level with the Bit Rate */
+/* Bit Rate Standart Values : 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 */
 
 #define SP_LSR_RD               BIT(0)  /* Data for receiving */
 #define SP_LSR_OVERRUN_ERROR    BIT(1)  /* Overwritten character */

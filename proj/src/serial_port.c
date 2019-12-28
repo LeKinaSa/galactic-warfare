@@ -78,15 +78,18 @@ void sp_int_handler() {
   switch( iir & SP_IIR_INT ) {
       case SP_IIR_RDR:
         /* Read next char */
+        
         break;
       case SP_IIR_THR:
         /* Transmit next char */
+
         break;
       case SP_IIR_CTO:
         /* Character Timeout */
+
         break;
       case SP_IIR_RLS:
-        /* Receiver Line Status - Signals Error in LSR */
+        /* Receiver Line Status - Signals Error in LSR */ // Line Status Register
         util_sys_inb(SP1_BASE_ADDR + SP_LSR, &error);
         // WHAT DO I DO WITH THE ERROR ?????
         break;
@@ -94,4 +97,3 @@ void sp_int_handler() {
         break;
   }
 }
-

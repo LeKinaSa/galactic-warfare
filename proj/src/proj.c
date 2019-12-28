@@ -157,7 +157,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
   program_status->sp_int_subscribed = true;
 
-  if (sp_config(9600)) {
+  if (sp_config(19200)) {
     exit_program(program_status);
     printf("Error when calling sp_config.\n");
     return 1;
