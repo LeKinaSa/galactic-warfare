@@ -37,4 +37,6 @@ double clamp(double x, double lower, double upper);
 int min(int a, int b);
 int max(int a, int b);
 
+void util_erase(uint8_t queue[], int *queue_size, int erase_size);
+
 #endif /* __UTILS_H */

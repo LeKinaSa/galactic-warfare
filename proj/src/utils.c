@@ -135,3 +135,10 @@ int min(int a, int b) {
 int max(int a, int b) {
   return a >= b ? a : b;
 }
+
+void util_erase(uint8_t queue[], int *queue_size, int erase_size) {
+  for (int index = erase_size; index < *queue_size; ++ index) {
+    queue[index - erase_size] = queue[index];
+  }
+  *queue_size -= erase_size;
+}
