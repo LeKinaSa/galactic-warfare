@@ -272,6 +272,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   Powerup* current_powerup = NULL;
   Entity powerup_entity;
   bool generate_powerup = false, generate_enemy_powerup = false;
+  bool rtc_interrupted;
 
   powerup_entity.velocity = (Vector2) { 0.0, 0.0 };
   powerup_entity.sprite = speed_powerup_sprite;
@@ -288,6 +289,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
       continue;
     }
 
+    rtc_interrupted = false;
     if (is_ipc_notify(ipc_status)) {
       switch (_ENDPOINT_P(msg.m_source)) {
       case HARDWARE:
@@ -338,7 +340,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
               vg_get_y_resolution() - powerup_sprite_height);
               current_powerup = Powerup_new(&powerup_entity, (enum powerup_type) (rand() % 2));
               LinkedList_add(entities[POWERUP], &powerup_entity);
-              generate_powerup = true;
+              rtc_interrupted = true;
             }
           }
         }
@@ -348,8 +350,11 @@ int (proj_main_loop)(int argc, char *argv[]) {
             sp_retransmit_sequence(&player, current_powerup, generate_powerup, spawn_player_bullet);
           }
         }
-        // TODO: generate_powerup is not ok (sometimes it will be false when it is supposed to be truth)
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
+          generate_powerup = false;
+          if (rtc_interrupted) {
+            generate_powerup = true;
+          }
           timer_int_handler();
 
           if (counter == INTERRUPTS_PER_FRAME) {
@@ -357,7 +362,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             // Update values according to internal game logic.
             // Render a new frame.
-            generate_enemy_powerup = false;
             sp_treat_information_received(&enemy, current_powerup, &generate_enemy_powerup, &spawn_enemy_bullet);
 
             if (generate_enemy_powerup) {

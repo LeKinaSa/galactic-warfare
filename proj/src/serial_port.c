@@ -136,6 +136,8 @@ int sp_send_again() {
 }
 
 void sp_treat_information_received(Player *player, Powerup *powerup, bool *generate_powerup, bool *spawn_bullet) {
+  *generate_powerup = false;
+  *spawn_bullet = false;
   if (received_size == 0) {
     return;
   }
