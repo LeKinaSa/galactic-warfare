@@ -75,8 +75,9 @@
 #define SP_ENEMY_PLAYER         'P'     /* Coordinates and Angle for Enemy Player */
 #define SP_NEW_SEQUENCE         'N'     /* Generate a new sequence (because of errors) */
 #define SP_SEND_SEQUENCE        'S'     /* Ask to Send Sequence Again (because of errors) */
+#define SP_END_SEQUENCE         'E'     /* Mark the End of a Sequence */
 
 #define SP_PLAYER_SIZE           9
 #define SP_RTC_SIZE              6
 #define SP_BULLET_SIZE           1
-#define SP_SEQUENCE_SIZE         SP_PLAYER_SIZE + SP_RTC_SIZE + SP_BULLET_SIZE + 1
+#define SP_SEQUENCE_SIZE         SP_PLAYER_SIZE + SP_RTC_SIZE + SP_BULLET_SIZE + 2

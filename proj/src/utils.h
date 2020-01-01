@@ -31,6 +31,12 @@ int (util_get_LSB)(uint16_t val, uint8_t *lsb);
 
 int (util_get_MSB)(uint16_t val, uint8_t *msb);
 
+int util_get_parts(uint32_t val, uint8_t* part1, uint8_t* part2, uint8_t* part3, uint8_t* part4);
+
+int util_get_val(uint16_t* val, uint8_t msb, uint8_t lsb);
+
+int util_join_parts(uint32_t* val, uint8_t part1, uint8_t part2, uint8_t part3, uint8_t part4);
+
 /* Returns the value of x clamped by a lower and upper bound */
 double clamp(double x, double lower, double upper);
 

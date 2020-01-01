@@ -8,6 +8,10 @@ static int to_transmit_size = 0;
 static uint8_t received[SP_FIFO_SIZE * SP_INT_PER_TIMER_INT];
 static int received_size = 0;
 
+union angle_to_transmit {
+  double angle;
+  uint32_t transmit;
+};
 
 int sp_subscribe_int(uint8_t *bit_no) {
   if (bit_no == NULL) {
@@ -17,7 +21,7 @@ int sp_subscribe_int(uint8_t *bit_no) {
 
   *bit_no = serial_port_hook_id;
 
-  if (sys_irqsetpolicy(SP1_IRQ, IRQ_REENABLE, &serial_port_hook_id) != OK) {
+  if (sys_irqsetpolicy(SP1_IRQ, IRQ_REENABLE | IRQ_EXCLUSIVE, &serial_port_hook_id) != OK) {
     printf("Error when calling sys_irqsetpolicy.\n");
     return 1;
   }
@@ -126,11 +130,100 @@ void sp_int_handler() {
 
 int sp_send_again() {
   if (received[received_size] == SP_SEND_SEQUENCE) {
-    to_transmit[to_transmit_size] = SP_NEW_SEQUENCE;
-    ++ to_transmit_size;
     return 1;
   }
   return 0;
+}
+
+void sp_treat_information_received(Player *player, Powerup *powerup, bool *generate_powerup, bool *spawn_bullet) {
+  if (received_size == 0) {
+    return;
+  }
+  uint8_t rtc_queue[SP_RTC_SIZE - 1], player_queue[SP_PLAYER_SIZE - 1];
+  int rtc_size, player_size;
+
+  uint8_t msb_x, lsb_x, msb_y, lsb_y;
+  uint8_t angle1 = 0, angle2 = 0, angle3 = 0, angle4 = 0;
+  uint8_t type;
+  uint16_t x = 0, y = 0;
+  union angle_to_transmit angle;
+
+  /* Get the Bullet and the Arrays for Player and RTC Info */
+  sp_treat_received_queue(rtc_queue, &rtc_size, player_queue, &player_size, spawn_bullet);
+  
+  /* Get PowerUp */
+  if (rtc_size == 0) {
+    *generate_powerup = false;
+  }
+  else {
+    *generate_powerup = true;
+    /* Coordinates and Type */
+    msb_x = rtc_queue[0];
+    lsb_x = rtc_queue[1];
+    msb_y = rtc_queue[2];
+    lsb_y = rtc_queue[3];
+    type  = rtc_queue[4];
+    util_get_val(&x, msb_x, lsb_x);
+    util_get_val(&y, msb_y, lsb_y);
+    /* Put the Coordinates and the Type on the PowerUp */
+    powerup->entity->position.x = x;
+    powerup->entity->position.y = y;
+    powerup->type = (enum powerup_type) type;
+  }
+
+  /* Get Player */
+    /* Coordinates */
+  msb_x  = player_queue[0];
+  lsb_x  = player_queue[1];
+  msb_y  = player_queue[2];
+  lsb_y  = player_queue[3];
+  util_get_val(&x, msb_x, lsb_x);
+  util_get_val(&y, msb_y, lsb_y);
+    /* Angle */
+  angle1 = player_queue[4];
+  angle2 = player_queue[5];
+  angle3 = player_queue[6];
+  angle4 = player_queue[7];
+  util_join_parts(&(angle.transmit), angle1, angle2, angle3, angle4);
+    /* Put the Coordinates and the Angle on the Player */
+  player->entity->position.x = x;
+  player->entity->position.y = y;
+  player->angle = angle.angle;
+}
+
+void sp_new_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet) {
+  to_transmit_size = 0;
+  sp_add_sequence_to_transmission(player, powerup, generate_powerup, spawn_bullet);
+}
+
+void sp_retransmit_sequence(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet) {
+  sp_add_to_transmission_queue(SP_NEW_SEQUENCE);
+  sp_add_sequence_to_transmission(player, powerup, generate_powerup, spawn_bullet);
+}
+
+int sp_sys_inb(int port, uint8_t *value) {
+  if (value == NULL) {
+    printf("Error occurred: null pointer.\n");
+    return 1;
+  }
+
+  uint32_t word;
+
+  if (sys_inb(port, &word) == EINVAL) {
+    printf("Error when calling sys_inb.\n");
+    return 1;
+  }
+
+  /* Place the char in the less significant byte (shift the number of stop bits + the parity bit) */
+  word = word >> (SP_STOP_BITS + 1);
+
+  *value = (uint8_t)word;
+  return 0;
+}
+
+void sp_add_to_transmission_queue(uint8_t byte) {
+  to_transmit[to_transmit_size] = byte;
+  ++ to_transmit_size;
 }
 
 void sp_treat_received_queue(uint8_t rtc_queue[], int *rtc_size,
@@ -148,6 +241,7 @@ void sp_treat_received_queue(uint8_t rtc_queue[], int *rtc_size,
             *rtc_size = 0;
             *spawn_bullet = false;
             last = COMPLETE;
+            break;
           case SP_ENEMY_PLAYER:
             last = PLAYER_SIZE_0;
             break;
@@ -236,58 +330,51 @@ void sp_treat_received_queue(uint8_t rtc_queue[], int *rtc_size,
   received_size = 0;
 }
 
-void sp_treat_rtc_packets(uint8_t rtc_queue[], int *rtc_size) {
-  int rtc_packet_size = SP_RTC_SIZE - 1;
-  uint8_t msb_x, lsb_x, msb_y, lsb_y, type;
+void sp_add_sequence_to_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet) {
+  uint8_t msb_x, lsb_x, msb_y, lsb_y;
+  uint8_t angle1 = 0, angle2 = 0, angle3 = 0, angle4 = 0;
+  uint8_t type;
+  union angle_to_transmit angle;
 
-  for (int index = 0; index < (*rtc_size / rtc_packet_size); index += rtc_packet_size) {
-    msb_x = rtc_queue[index + 0];
-    lsb_x = rtc_queue[index + 1];
-    msb_y = rtc_queue[index + 2];
-    lsb_y = rtc_queue[index + 3];
-    type  = rtc_queue[index + 4];
+  /* Player */
+  sp_add_to_transmission_queue(SP_ENEMY_PLAYER);
+    /* Coordinates */
+  util_get_MSB(player->entity->position.x, &msb_x);
+  util_get_LSB(player->entity->position.x, &lsb_x);
+  util_get_MSB(player->entity->position.y, &msb_y);
+  util_get_LSB(player->entity->position.y, &lsb_y);
+  sp_add_to_transmission_queue(msb_x);
+  sp_add_to_transmission_queue(lsb_x);
+  sp_add_to_transmission_queue(msb_y);
+  sp_add_to_transmission_queue(lsb_y);
+    /* Angle */
+  angle.angle = player->angle;
+  util_get_parts(angle.transmit, &angle1, &angle2, &angle3, &angle4);
+  sp_add_to_transmission_queue(angle1);
+  sp_add_to_transmission_queue(angle2);
+  sp_add_to_transmission_queue(angle3);
+  sp_add_to_transmission_queue(angle4);
+
+  /* RTC */
+  if (generate_powerup) {
+    sp_add_to_transmission_queue(SP_RTC_INTERRUPT);
+    util_get_MSB(powerup->entity->position.x, &msb_x);
+    util_get_LSB(powerup->entity->position.x, &lsb_x);
+    util_get_MSB(powerup->entity->position.y, &msb_y);
+    util_get_LSB(powerup->entity->position.y, &lsb_y);
+    type = powerup->type;
+    sp_add_to_transmission_queue(msb_x);
+    sp_add_to_transmission_queue(lsb_x);
+    sp_add_to_transmission_queue(msb_y);
+    sp_add_to_transmission_queue(lsb_y);
+    sp_add_to_transmission_queue(type);
   }
 
-  *rtc_size = 0;
+  /* Bullet */
+  if (spawn_bullet) {
+    sp_add_to_transmission_queue(SP_GENERATE_BULLET);
+  }
+
+  /* End of Sequence */
+  sp_add_to_transmission_queue(SP_END_SEQUENCE);
 }
-
-void sp_treat_player_packets(uint8_t player_queue[], int *player_size) {
-  int player_packet_size = SP_PLAYER_SIZE - 1;
-  uint8_t msb_x , lsb_x , msb_y , lsb_y ;
-  uint8_t angle1, angle2, angle3, angle4;
-
-  for (int index = 0; index < (*player_size / player_packet_size); index+= player_packet_size) {
-    msb_x  = player_queue[index + 0];
-    lsb_x  = player_queue[index + 1];
-    msb_y  = player_queue[index + 2];
-    lsb_y  = player_queue[index + 3];
-    angle1 = player_queue[index + 4];
-    angle2 = player_queue[index + 5];
-    angle3 = player_queue[index + 6];
-    angle4 = player_queue[index + 7];
-  }
-  
-  *player_size = 0;
-}
-
-int sp_sys_inb(int port, uint8_t *value) {
-  if (value == NULL) {
-    printf("Error occurred: null pointer.\n");
-    return 1;
-  }
-
-  uint32_t word;
-
-  if (sys_inb(port, &word) == EINVAL) {
-    printf("Error when calling sys_inb.\n");
-    return 1;
-  }
-
-  /* Place the char in the less significant byte (shift the number of stop bits + the parity bit) */
-  word = word >> (SP_STOP_BITS + 1);
-
-  *value = (uint8_t)word;
-  return 0;
-}
-
-void add_sequence_to_transmission(Player* player, Powerup* powerup, bool spawn_bullet);

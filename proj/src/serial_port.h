@@ -35,17 +35,21 @@ int sp_config(uint32_t bit_rate);
 
 void sp_int_handler();
 
-void sp_treat_received_queue(uint8_t rtc_queue[], int *rtc_size,
-                             uint8_t player_queue[], int *player_size, bool *spawn_bullet);
-
 int sp_send_again();
 
-void sp_treat_rtc_packet(uint8_t rtc_queue[], int *rtc_size);
+void sp_treat_information_received(Player* player, Powerup* powerup, bool* generate_powerup, bool* spawn_bullet);
 
-void sp_treat_player_packet(uint8_t player_queue[], int *player_size);
+void sp_new_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet);
+
+void sp_retransmit_sequence(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet);
 
 int sp_sys_inb(int port, uint8_t *value);
 
-void add_sequence_to_transmission(Player* player, Powerup* powerup, bool spawn_bullet);
+void sp_add_to_transmission_queue(uint8_t byte);
+
+void sp_treat_received_queue(uint8_t rtc_queue[], int *rtc_size,
+                             uint8_t player_queue[], int *player_size, bool *spawn_bullet);
+
+void sp_add_sequence_to_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet);
 
 #endif /* __SERIAL_PORT_H */

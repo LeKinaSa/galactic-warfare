@@ -54,6 +54,8 @@ uint8_t scancode = 0;
 uint8_t packet_byte;
 /* RTC Related Variables */
 uint8_t minute_counter = 0;
+/* Serial Port Related Variables */
+bool host = true;
 /* XPM Related Variables (for animation) */
 xpm_animated ship;
 
@@ -79,10 +81,10 @@ int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
 
   // Log function invocations that are being "wrapped" by LCF
-  //lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
+  lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
 
   // Save the output of printf function calls on a file
-  //lcf_log_output("/home/lcom/labs/proj/output.txt");
+  lcf_log_output("/home/lcom/labs/proj/output.txt");
 
   // handles control over to LCF
   // [LCF handles command line arguments and invokes the right function]
@@ -206,20 +208,43 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
   Triangle* ship_collision_shape = Triangle_new((Vector2) {-10.0, -5.0}, (Vector2) {0.0, 20.0}, (Vector2) {10.0, -5.0});
   Sprite ship_sprite = { ship.s, PLAYER, TRIANGLE, (void*) ship_collision_shape };
-  Entity ship_entity = { ship_sprite, {500.0, 500.0}, {0.0, 0.0},
-                        { - ship.n.width / 2, - ship.n.height / 2} };
-  Entity* ship_entity_ptr = &ship_entity;
+
+  double x, y, enemy_x, enemy_y;
+
+  if (host) {
+    x = 500.0;
+    y = 500.0;
+    enemy_x = 200.0;
+    enemy_y = 200.0;
+  }
+  else {
+    x = 200.0;
+    y = 200.0;
+    enemy_x = 500.0;
+    enemy_y = 500.0;
+  }
+
+  Entity ship_1_entity = { ship_sprite, {x, y}, {0.0, 0.0},
+                         { - ship.n.width / 2, - ship.n.height / 2} };
+  Entity ship_2_entity = { ship_sprite, {enemy_x, enemy_y}, {0.0, 0.0},
+                         { - ship.n.width / 2, - ship.n.height / 2} };
+  
+  Entity* ship_1_entity_ptr = &ship_1_entity;
+  Entity* ship_2_entity_ptr = &ship_2_entity;
 
   LinkedList* entities[NUM_Z_LAYERS];
   for (size_t i = 0; i < NUM_Z_LAYERS; ++i) {
     entities[i] = LinkedList_new(sizeof(Entity*));
   }
 
-  LinkedList_add(entities[PLAYER], &ship_entity_ptr);
+  LinkedList_add(entities[PLAYER], &ship_1_entity_ptr);
+  LinkedList_add(entities[PLAYER], &ship_2_entity_ptr);
 
-  Player player = { &ship_entity, PLAYER_MAX_HEALTH, 0, false };
+  Player player = { ship_1_entity_ptr, PLAYER_MAX_HEALTH, 0, false };
+  Player enemy  = { ship_2_entity_ptr, PLAYER_MAX_HEALTH, 0, false };
   bool can_fire = true;
   uint8_t frames = 0;
+  bool spawn_player_bullet = false, spawn_enemy_bullet = false;
 
   int ipc_status;
   message msg;
@@ -246,6 +271,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
   Powerup* current_powerup = NULL;
   Entity powerup_entity;
+  bool generate_powerup = false, generate_enemy_powerup = false;
 
   powerup_entity.velocity = (Vector2) { 0.0, 0.0 };
   powerup_entity.sprite = speed_powerup_sprite;
@@ -299,20 +325,30 @@ int (proj_main_loop)(int argc, char *argv[]) {
             two_byte_scancode = false;
           }
         }
-        if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
-          rtc_ih();
+        if (host) {
+          if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
+            rtc_ih();
 
-          if (minute_counter == POWERUP_INTERVAL) {
-            minute_counter = 0;
-            // Generate random position on screen.
-            // Create new powerup entity at position.
-            Powerup_delete(current_powerup);
-            powerup_entity.position = generate_random_pos(vg_get_x_resolution() - powerup_sprite_width, 
-            vg_get_y_resolution() - powerup_sprite_height);
-            current_powerup = Powerup_new(&powerup_entity, (enum powerup_type) (rand() % 2));
-            LinkedList_add(entities[POWERUP], &powerup_entity);
+            if (minute_counter == POWERUP_INTERVAL) {
+              minute_counter = 0;
+              // Generate random position on screen.
+              // Create new powerup entity at position.
+              Powerup_delete(current_powerup);
+              powerup_entity.position = generate_random_pos(vg_get_x_resolution() - powerup_sprite_width, 
+              vg_get_y_resolution() - powerup_sprite_height);
+              current_powerup = Powerup_new(&powerup_entity, (enum powerup_type) (rand() % 2));
+              LinkedList_add(entities[POWERUP], &powerup_entity);
+              generate_powerup = true;
+            }
           }
         }
+        if (msg.m_notify.interrupts & BIT(sp_bit_no)) {
+          sp_int_handler();
+          if (sp_send_again()) {
+            sp_retransmit_sequence(&player, current_powerup, generate_powerup, spawn_player_bullet);
+          }
+        }
+        // TODO: generate_powerup is not ok (sometimes it will be false when it is supposed to be truth)
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
           timer_int_handler();
 
@@ -321,9 +357,17 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             // Update values according to internal game logic.
             // Render a new frame.
+            generate_enemy_powerup = false;
+            sp_treat_information_received(&enemy, current_powerup, &generate_enemy_powerup, &spawn_enemy_bullet);
+
+            if (generate_enemy_powerup) {
+              /* Generate the PowerUp Coming from the Serial Port */
+            }
+
             process_kbd_status(&kbd_status, &player);
             process_mouse_status(&m_status, &mouse_cursor, &player);
 
+            spawn_player_bullet = false;
             if (!can_fire) {
               frames++;
               if (frames == FRAMES_PER_SHOT) {
@@ -335,6 +379,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
               can_fire = false;
               // Shoot bullet
               //LinkedList_add(entities[BULLET], );
+              spawn_player_bullet = true;
             }
 
             update_entity_positions(entities);
@@ -343,6 +388,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
             //vg_draw_rotated_xpm(player.entity->sprite.img, (uint16_t)round(player.entity->position.x), (uint16_t)round(player.entity->position.y), player.angle, &aux_buffer);
             vg_draw_xpm(cursor_img, round(mouse_cursor.position.x), round(mouse_cursor.position.y), &aux_buffer);
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
+            /* Next Sequence to Be Transmitted By the Serial Port */
+            sp_new_transmission(&player, current_powerup, generate_powerup, spawn_player_bullet);
           }
         }
         break;

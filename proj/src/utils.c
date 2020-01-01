@@ -122,6 +122,38 @@ int(util_get_MSB)(uint16_t val, uint8_t *msb) {
   return 0;
 }
 
+int util_get_parts(uint32_t val, uint8_t* part1, uint8_t* part2, uint8_t* part3, uint8_t* part4) {
+  if ((part1 == NULL) || (part2 == NULL) || (part3 == NULL) || (part4 == NULL)) {
+    printf("Error when calling util_get_MSB.\n");
+    return 1;
+  }
+
+  *part1 = (uint8_t)(val >> 24);
+  *part2 = (uint8_t)(val >> 16);
+  *part3 = (uint8_t)(val >>  8);
+  *part4 = (uint8_t)(val);
+  return 0;
+}
+
+int util_get_val(uint16_t *val, uint8_t msb, uint8_t lsb) {
+  if (val == NULL) {
+    printf("Error when calling util_get_MSB.\n");
+    return 1;
+  }
+
+  *val = ((uint16_t)(msb << 8)) | ((uint16_t)(lsb));
+  return 0;
+}
+
+int util_join_parts(uint32_t *val, uint8_t part1, uint8_t part2, uint8_t part3, uint8_t part4) {
+  if (val == NULL) {
+    printf("Error when calling util_get_MSB.\n");
+    return 1;
+  }
+
+  *val = ((uint32_t)(part1 << 24)) | ((uint32_t)(part2 << 16)) | ((uint32_t)(part3 << 8)) | ((uint32_t)(part1));
+  return 0;
+}
 
 double clamp(double x, double lower, double upper) {
   return fmin(upper, fmax(x, lower));
