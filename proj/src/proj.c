@@ -209,6 +209,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   Triangle* ship_collision_shape = Triangle_new((Vector2) {-10.0, -5.0}, (Vector2) {0.0, 20.0}, (Vector2) {10.0, -5.0});
   Sprite ship_sprite = { ship.s, PLAYER, TRIANGLE, (void*) ship_collision_shape };
 
+  LinkedList* bullets = LinkedList_new(sizeof(Bullet*));
   double x, y, enemy_x, enemy_y;
 
   if (host) {
@@ -224,24 +225,19 @@ int (proj_main_loop)(int argc, char *argv[]) {
     enemy_y = 500.0;
   }
 
-  Entity ship_1_entity = { ship_sprite, {x, y}, {0.0, 0.0},
-                         { - ship.n.width / 2, - ship.n.height / 2} };
-  Entity ship_2_entity = { ship_sprite, {enemy_x, enemy_y}, {0.0, 0.0},
-                         { - ship.n.width / 2, - ship.n.height / 2} };
+  Entity ship1_entity = { ship_sprite, {x, y}, {0.0, 0.0}, { - ship.n.width / 2, - ship.n.height / 2} };
+  Entity ship2_entity = { ship_sprite, {enemy_x, enemy_y}, {0.0, 0.0}, { - ship.n.width / 2, - ship.n.height / 2} };
   
-  Entity* ship_1_entity_ptr = &ship_1_entity;
-  Entity* ship_2_entity_ptr = &ship_2_entity;
+  Entity* ship1_entity_ptr = &ship1_entity;
+  Entity* ship2_entity_ptr = &ship2_entity;
 
   LinkedList* entities[NUM_Z_LAYERS];
   for (size_t i = 0; i < NUM_Z_LAYERS; ++i) {
     entities[i] = LinkedList_new(sizeof(Entity*));
   }
 
-  LinkedList_add(entities[PLAYER], &ship_1_entity_ptr);
-  LinkedList_add(entities[PLAYER], &ship_2_entity_ptr);
-
-  Player player = { ship_1_entity_ptr, PLAYER_MAX_HEALTH, 0, false };
-  Player enemy  = { ship_2_entity_ptr, PLAYER_MAX_HEALTH, 0, false };
+  Player player = { ship1_entity_ptr, PLAYER_MAX_HEALTH, PLAYER_BASE_SPEED, 0.0, false };
+  Player enemy  = { ship2_entity_ptr, PLAYER_MAX_HEALTH, PLAYER_BASE_SPEED, 0.0, false };
   bool can_fire = true;
   uint8_t frames = 0;
   bool spawn_player_bullet = false, spawn_enemy_bullet = false;
@@ -265,7 +261,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   void* aux_buffer = malloc(vg_get_frame_buffer_size());
 
   Circle* powerup_collision_shape = Circle_new(16.0);
-  const Sprite speed_powerup_sprite = (Sprite) { speed_powerup_img, POWERUP, CIRCLE, (void*) powerup_collision_shape };
+  const Sprite speed_powerup_sprite = (Sprite) { speed_powerup_img, POWERUP, CIRCLE, powerup_collision_shape };
   //const Sprite damage_powerup_sprite = (Sprite) { damage_powerup_img, POWERUP, CIRCLE, powerup_collision_shape };
   const uint16_t powerup_sprite_width = speed_powerup_img.width, powerup_sprite_height = speed_powerup_img.height;
 
@@ -330,16 +326,17 @@ int (proj_main_loop)(int argc, char *argv[]) {
         if (host) {
           if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
             rtc_ih();
-
             if (minute_counter == POWERUP_INTERVAL) {
               minute_counter = 0;
               // Generate random position on screen.
               // Create new powerup entity at position.
               Powerup_delete(current_powerup);
+              current_powerup = NULL;
+
               powerup_entity.position = generate_random_pos(vg_get_x_resolution() - powerup_sprite_width, 
               vg_get_y_resolution() - powerup_sprite_height);
               current_powerup = Powerup_new(&powerup_entity, (enum powerup_type) (rand() % 2));
-              LinkedList_add(entities[POWERUP], &powerup_entity);
+              
               rtc_interrupted = true;
             }
           }
@@ -382,14 +379,16 @@ int (proj_main_loop)(int argc, char *argv[]) {
             else if (player.fire) {
               can_fire = false;
               // Shoot bullet
-              //LinkedList_add(entities[BULLET], );
+              //Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {0.0, 1.0}, player.angle));
+              // Bullet bullet = { { bullet_img, player.entity.position, bullet_velocity, {0.0, 0.0} }, PLAYER_ONE, PLAYER_BASE_DAMAGE };
+              // LinkedList_add(bullets, bullet);
               spawn_player_bullet = true;
             }
 
-            update_entity_positions(entities);
+            update_entity_positions(bullets, &player);
+            detect_collisions(bullets, &current_powerup, &player);
             vg_draw_xpm(bg_img, 0, 0, &aux_buffer);
-            vg_render_entities(entities, &aux_buffer);
-            //vg_draw_rotated_xpm(player.entity->sprite.img, (uint16_t)round(player.entity->position.x), (uint16_t)round(player.entity->position.y), player.angle, &aux_buffer);
+            vg_render_entities(bullets, current_powerup, &player, &aux_buffer);
             vg_draw_xpm(cursor_img, round(mouse_cursor.position.x), round(mouse_cursor.position.y), &aux_buffer);
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
             /* Next Sequence to Be Transmitted By the Serial Port */
@@ -402,15 +401,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
       }
     }
   }
-
+  
+  // Free dynamically allocated memory
   free(aux_buffer);
-
-  for (size_t i = 0; i < NUM_Z_LAYERS; ++i) {
-    LinkedList_delete(entities[i]);
-  }
-
+  LinkedList_delete(bullets);
   free(ship_collision_shape);
   free(powerup_collision_shape);
+
 
   if (sp_unsubscribe_int()) {
     exit_program(program_status);

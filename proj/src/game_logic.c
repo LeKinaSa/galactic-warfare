@@ -161,39 +161,20 @@ bool triangle_circle_collision(const Triangle* triangle, Vector2 triangle_pos, c
 }
 
 
-int compare_entity_ptr(const void* lhs, const void* rhs) {
-  Entity* ptr1 = *((Entity**) lhs);
-  Entity* ptr2 = *((Entity**) rhs);
+void update_entity_position(Entity* entity) {
+  const uint16_t x_res = vg_get_x_resolution(), y_res = vg_get_y_resolution();
 
-  if (ptr1->sprite.layer == ptr2->sprite.layer) {
-    return 0;
-  }
-  else if (ptr1->sprite.layer < ptr2->sprite.layer) {
-    return -1;
-  }
-  else {
-    return 1;
+  if (entity != NULL) {
+    entity->position.x = clamp((entity->position.x + entity->velocity.x), 0.0, (double)(x_res - entity->sprite.img.width));
+    entity->position.y = clamp((entity->position.y + entity->velocity.y), 0.0, (double)(y_res - entity->sprite.img.height));
   }
 }
 
-void update_entity_positions(LinkedList* entities[]) {
-  uint16_t x_res = vg_get_x_resolution(), y_res = vg_get_y_resolution();
-  Node* current_node;
-  Entity* current_entity;
+void update_entity_positions(LinkedList* bullets, Player* player) {
+  update_entity_position(player->entity);
 
-  for (size_t layer = 0; layer < NUM_Z_LAYERS; ++layer) {
-    if (entities[layer]->size > 0) {
-      current_node = entities[layer]->first;
-
-      while (current_node != NULL) {
-        current_entity = *(Entity**)(current_node->data);
-
-        current_entity->position.x = clamp((current_entity->position.x + current_entity->velocity.x), 0.0, (double)(x_res - current_entity->sprite.img.width));
-        current_entity->position.y = clamp((current_entity->position.y + current_entity->velocity.y), 0.0, (double)(y_res - current_entity->sprite.img.height));
-
-        current_node = current_node->next;
-      }
-    }
+  if (bullets->size > 0) {
+    // TODO update bullets
   }
 }
 
@@ -203,6 +184,32 @@ void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos) {
   const double MAX_Y = vg_get_y_resolution() - cursor->sprite.img.height;
   cursor->position.x = clamp((double) cursor->position.x, 0.0, MAX_X);
   cursor->position.y = clamp((double) cursor->position.y, 0.0, MAX_Y);
+}
+
+
+void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* player) {
+  if (current_powerup == NULL || player == NULL) {
+    return;
+  }
+
+  Entity* player_entity = player->entity;
+  Triangle* player_collision_shape = (Triangle*)(player_entity->sprite.collision_shape);
+
+  if (*current_powerup != NULL) {
+    Entity* powerup_entity = (*current_powerup)->entity;
+    Circle* powerup_collision_shape = (Circle*)((*current_powerup)->entity->sprite.collision_shape);
+    
+    if (triangle_circle_collision(player_collision_shape, player_entity->position, powerup_collision_shape, powerup_entity->position)) {
+      if ((*current_powerup)->type == SPEED) {
+        player->speed = PLAYER_BASE_SPEED * 2;
+      }
+      else {
+        // TODO: Increase player damage
+      }
+      // TODO: Add timer for powerup duration
+      (*current_powerup) = NULL;  
+    }
+  }
 }
 
 

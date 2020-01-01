@@ -28,6 +28,6 @@ int vg_draw_xpm(xpm_image_t img, uint16_t x, uint16_t y, void** buffer);
 int vg_draw_rotated_xpm(xpm_image_t img, uint16_t x, uint16_t y, double angle, void** buffer);
 
 /* Draws an array of entities to a buffer according to their z-layer. Entities with a higher z-layer are drawn last (on top of the other entities). Returns 0 on success, non-zero otherwise. */
-int vg_render_entities(LinkedList* entities[], void** buffer);
+int vg_render_entities(const LinkedList* bullets, const Powerup* current_powerup, const Player* player, void** buffer);
 
 #endif /* __VIDEO_H */

@@ -136,26 +136,38 @@ typedef struct {
   Vector2 offset;
 } MouseCursor;
 
-
-/* Comparison function for sorting an array of entity pointers with qsort. Used in the rendering pipeline to sort entities by their z layer. */
-int compare_entity_ptr(const void* lhs, const void* rhs);
-
-void update_entity_positions(LinkedList* entities[]);
 void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos);
 
+
+/* --- PLAYER --- */
 
 typedef struct {
   Entity* entity;
   uint8_t current_health;
-  double angle;
+  uint8_t speed;
+  float angle;
   bool fire;
 } Player;
 
+enum player_id {
+  PLAYER_ONE,
+  PLAYER_TWO,
+  PLAYER_HOST = PLAYER_ONE,
+  PLAYER_REMOTE = PLAYER_TWO
+};
+
+void update_entity_positions(LinkedList* bullets, Player* player);
+
+/* --- BULLET --- */
+
 typedef struct {
-  Entity* entity;
-  bool friendly;
+  Entity entity;
+  enum player_id parent;
+  uint8_t damage;
 } Bullet;
 
+
+/* --- POWERUP --- */
 
 enum powerup_type {
   SPEED,
@@ -169,5 +181,14 @@ typedef struct {
 
 Powerup* Powerup_new(Entity* entity, enum powerup_type type);
 void Powerup_delete(Powerup* this);
+
+
+/**
+ * @brief Detects collisions between the player and powerups / bullets, updating entities accordingly.
+ * @param bullets           linked list containing information about all bullets
+ * @param current_powerup   pointer to current powerup pointer, allows for it to be set to NULL if a powerup collision occurs
+ * @param player            pointer to player
+ */
+void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* player);
 
 #endif /* GAME_LOGIC_H */

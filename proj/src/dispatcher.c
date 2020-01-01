@@ -57,7 +57,7 @@ void process_kbd_status(const keyboard_status* status, Player* player) {
     velocity = Vector2_add(velocity, RIGHT);
   }
 
-  velocity = Vector2_scalar_mult(PLAYER_BASE_SPEED * FRAME_DELTA, Vector2_normalized(velocity));
+  velocity = Vector2_scalar_mult(player->speed * FRAME_DELTA, Vector2_normalized(velocity));
   player->entity->velocity = velocity;
 }
 
@@ -84,7 +84,41 @@ void process_mouse_status(mouse_status* status, MouseCursor* cursor, Player* pla
 
   update_cursor_position(cursor, mouse_pos);
 
-  /* Shoot */
+  /* Aiming */
+  if ((angle > -0.875 * M_PI) && (angle <= -0.625 * M_PI)) {
+    /* SW */
+    player->entity->sprite.img = ship.sw;
+  }
+  else if ((angle > -0.625 * M_PI) && (angle <= -0.375 * M_PI)) {
+    /* S */
+    player->entity->sprite.img = ship.s;
+  }
+  else if ((angle > -0.375 * M_PI) && (angle <= -0.125 * M_PI)) {
+    /* SE */
+    player->entity->sprite.img = ship.se;
+  }
+  else if ((angle > -0.125 * M_PI) && (angle <= 0.125 * M_PI)) {
+    /* E */
+    player->entity->sprite.img = ship.e;
+  }
+  else if ((angle > 0.125 * M_PI) && (angle <= 0.375 * M_PI)) {
+    /* NE */
+    player->entity->sprite.img = ship.ne;
+  }
+  else if ((angle > 0.375 * M_PI) && (angle <= 0.625 * M_PI)) {
+    /* N */
+    player->entity->sprite.img = ship.n;
+  }
+  else if ((angle > 0.625 * M_PI) && (angle <= 0.875 * M_PI)) {
+    /* NW */
+    player->entity->sprite.img = ship.nw;
+  }
+  else {
+    /* W */
+    player->entity->sprite.img = ship.w;
+  }
+
+  /* Shooting */
   player->angle = angle;
   player->fire = status->lb_pressed;
 }

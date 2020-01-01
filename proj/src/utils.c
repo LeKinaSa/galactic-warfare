@@ -54,7 +54,7 @@ void LinkedList_erase(LinkedList* this, void* elem) {
 
   if (this != NULL && elem != NULL) {
     if (this->size > 0) {
-      if (this->first->data == elem) {
+      if (memcmp(this->first->data, elem, this->elem_size) == 0) {
         it = this->first;
         this->first = this->first->next;
         free(it->data);
@@ -63,7 +63,7 @@ void LinkedList_erase(LinkedList* this, void* elem) {
       }
       else {
         it = this->first->next;
-        while (it->data != elem && it != NULL) {
+        while (memcmp(it->data, elem, this->elem_size) != 0 && it != NULL) {
           it = it->next;
         }
         if (it != NULL) {
