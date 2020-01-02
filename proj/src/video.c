@@ -262,39 +262,36 @@ int vg_draw_rotated_xpm(xpm_image_t img, uint16_t x, uint16_t y, double angle, v
   return 0;
 }
 
+
+int vg_render_entity(const Entity* entity, void **buffer) {
+  uint16_t x = (uint16_t) round(entity->position.x), y = (uint16_t) round(entity->position.y);
+
+  if (vg_draw_xpm(entity->sprite.img, x, y, buffer)) {
+    return 1;
+  }
+  
+  return 0;
+}
+
 int vg_render_entities(const LinkedList* bullets, const Powerup* current_powerup, const Player* player, void **buffer) {
   if (bullets == NULL || player == NULL) {
     return 1;
   }
   
-  static Entity* current_entity;
-  static uint16_t x, y; /* Pixel coordinates of the entity (discretized) */
-  
   if (current_powerup != NULL) {
-    current_entity = current_powerup->entity;
-    x = (uint16_t) round(current_entity->position.x);
-    y = (uint16_t) round(current_entity->position.y);
-
-    if (vg_draw_xpm(current_entity->sprite.img, x, y, buffer)) {
-      return 1;
-    }
+    vg_render_entity(current_powerup->entity, buffer);
   }
 
-  current_entity = player->entity;
-  x = (uint16_t) round(current_entity->position.x);
-  y = (uint16_t) round(current_entity->position.y);
-
-  if (vg_draw_xpm(current_entity->sprite.img, x, y, buffer)) {
-    return 1;
-  }
+  vg_render_entity(player->entity, buffer);
 
   static Node* current_node;
-
+  
   if (bullets->size > 0) {
     current_node = bullets->first;
 
     while (current_node != NULL) {
-      // TODO
+      vg_render_entity(&((Bullet*)(current_node->data))->entity, buffer);
+      current_node = current_node->next;
     }
   }
 

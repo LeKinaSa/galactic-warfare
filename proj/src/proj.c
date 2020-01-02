@@ -34,6 +34,8 @@
 #include "../res/ShipSW.xpm"
 #include "../res/SpeedPowerup.xpm"
 #include "../res/DamagePowerup.xpm"
+#include "../res/Bullet.xpm"
+#include "../res/BulletEnemy.xpm"
 
 typedef struct {
   bool timer_int_subscribed;
@@ -74,6 +76,8 @@ static const xpm_map_t ship_SW_xpm = (xpm_map_t) ShipSW_xpm;
 static const xpm_map_t speed_powerup_xpm = (xpm_map_t) SpeedPowerup_xpm;
 static const xpm_map_t damage_powerup_xpm = (xpm_map_t) DamagePowerup_xpm;
 
+static const xpm_map_t bullet_xpm = (xpm_map_t) Bullet_xpm;
+
 static void exit_program(program_status_t* status);
 
 int main(int argc, char *argv[]) {
@@ -81,10 +85,10 @@ int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
 
   // Log function invocations that are being "wrapped" by LCF
-  lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
+  //lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
 
   // Save the output of printf function calls on a file
-  lcf_log_output("/home/lcom/labs/proj/output.txt");
+  //lcf_log_output("/home/lcom/labs/proj/output.txt");
 
   // handles control over to LCF
   // [LCF handles command line arguments and invokes the right function]
@@ -177,6 +181,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   xpm_image_t ship_n_img, ship_s_img, ship_e_img, ship_w_img;
   xpm_image_t ship_ne_img, ship_nw_img, ship_se_img, ship_sw_img;
   xpm_image_t speed_powerup_img, damage_powerup_img;
+  xpm_image_t bullet_img;
 
   if (
   xpm_load(bg_xpm     , XPM_5_6_5, &bg_img     ) == NULL ||
@@ -190,12 +195,16 @@ int (proj_main_loop)(int argc, char *argv[]) {
   xpm_load(ship_SE_xpm, XPM_5_6_5, &ship_se_img) == NULL ||
   xpm_load(ship_SW_xpm, XPM_5_6_5, &ship_sw_img) == NULL ||
   xpm_load(speed_powerup_xpm, XPM_5_6_5, &speed_powerup_img) == NULL ||
-  xpm_load(damage_powerup_xpm, XPM_5_6_5, &damage_powerup_img) == NULL
+  xpm_load(damage_powerup_xpm, XPM_5_6_5, &damage_powerup_img) == NULL ||
+  xpm_load(bullet_xpm, XPM_5_6_5, &bullet_img) == NULL
   ) {
     exit_program(program_status);
     printf("Error when loading xpm.\n");
     return 1;
   }
+
+  Circle* bullet_collision_shape = Circle_new(8.0);
+  Sprite bullet_sprite = { bullet_img, BULLET, CIRCLE, bullet_collision_shape };
   
   ship.n = ship_n_img;
   ship.s = ship_s_img;
@@ -207,9 +216,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
   ship.sw = ship_sw_img;
 
   Triangle* ship_collision_shape = Triangle_new((Vector2) {-10.0, -5.0}, (Vector2) {0.0, 20.0}, (Vector2) {10.0, -5.0});
-  Sprite ship_sprite = { ship.s, PLAYER, TRIANGLE, (void*) ship_collision_shape };
+  Sprite ship_sprite = { ship.s, PLAYER, TRIANGLE, ship_collision_shape };
 
-  LinkedList* bullets = LinkedList_new(sizeof(Bullet*));
+  LinkedList* bullets = LinkedList_new(sizeof(Bullet));
   double x, y, enemy_x, enemy_y;
 
   if (host) {
@@ -230,11 +239,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
   
   Entity* ship1_entity_ptr = &ship1_entity;
   Entity* ship2_entity_ptr = &ship2_entity;
-
-  LinkedList* entities[NUM_Z_LAYERS];
-  for (size_t i = 0; i < NUM_Z_LAYERS; ++i) {
-    entities[i] = LinkedList_new(sizeof(Entity*));
-  }
 
   Player player = { ship1_entity_ptr, PLAYER_MAX_HEALTH, PLAYER_BASE_SPEED, 0.0, false };
   Player enemy  = { ship2_entity_ptr, PLAYER_MAX_HEALTH, PLAYER_BASE_SPEED, 0.0, false };
@@ -267,11 +271,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
   Powerup* current_powerup = NULL;
   Entity powerup_entity;
-  bool generate_powerup = false, generate_enemy_powerup = false;
-  bool rtc_interrupted;
 
   powerup_entity.velocity = (Vector2) { 0.0, 0.0 };
   powerup_entity.sprite = speed_powerup_sprite;
+
+  bool generate_powerup = false, generate_enemy_powerup = false;
+  bool rtc_interrupted;
 
   if (rtc_init()) {
     exit_program(program_status);
@@ -379,9 +384,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
             else if (player.fire) {
               can_fire = false;
               // Shoot bullet
-              //Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {0.0, 1.0}, player.angle));
-              // Bullet bullet = { { bullet_img, player.entity.position, bullet_velocity, {0.0, 0.0} }, PLAYER_ONE, PLAYER_BASE_DAMAGE };
-              // LinkedList_add(bullets, bullet);
+              Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {1.0, 0.0}, player.angle));
+              Bullet bullet = { { bullet_sprite, player.entity->position, bullet_velocity, {0.0, 0.0} }, 
+              PLAYER_ONE, PLAYER_BASE_DAMAGE };
+              LinkedList_add(bullets, &bullet);
               spawn_player_bullet = true;
             }
 

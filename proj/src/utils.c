@@ -37,12 +37,16 @@ void LinkedList_add(LinkedList* this, void* elem) {
       this->last->next = (Node*) malloc(sizeof(Node));
       this->last->next->data = malloc(this->elem_size);
       memcpy(this->last->next->data, elem, this->elem_size);
+      this->last->next->next = NULL;
       this->last->next->previous = this->last;
       this->last = this->last->next;
     }
     else {
       this->first = (Node*) malloc(sizeof(Node));
-      this->first->data = elem;
+      this->first->data = malloc(this->elem_size);
+      memcpy(this->first->data, elem, this->elem_size);
+      this->first->next = NULL;
+      this->first->previous = NULL;
       this->last = this->first;
     }
     ++this->size;

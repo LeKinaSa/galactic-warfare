@@ -16,6 +16,6 @@
 
 #define POWERUP_INTERVAL        1       /** @brief Interval, in minutes, between the generation of powerups */
 
-#define BULLET_SPEED            250
+#define BULLET_SPEED            300 * FRAME_DELTA
 
 #endif /* GAME_CONSTANTS_H */

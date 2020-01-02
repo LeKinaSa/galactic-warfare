@@ -171,10 +171,39 @@ void update_entity_position(Entity* entity) {
 }
 
 void update_entity_positions(LinkedList* bullets, Player* player) {
+  const uint16_t x_res = vg_get_x_resolution(), y_res = vg_get_y_resolution();
+
   update_entity_position(player->entity);
 
+  static Node* current_node;
+  static Node* node_to_erase = NULL;
+  static Entity* current_entity;
+
+  static uint16_t bullet_x, bullet_y;
+
   if (bullets->size > 0) {
-    // TODO update bullets
+    current_node = bullets->first;
+
+    while (current_node != NULL) {
+      node_to_erase = NULL;
+
+      current_entity = &((Bullet*)(current_node->data))->entity;
+      update_entity_position(current_entity);
+
+      bullet_x = (uint16_t) round(current_entity->position.x);
+      bullet_y = (uint16_t) round(current_entity->position.y);
+
+      if (bullet_x == 0 || bullet_x == (x_res - current_entity->sprite.img.width) || 
+      bullet_y == 0 || bullet_y == (y_res - current_entity->sprite.img.height)) {
+        node_to_erase = current_node;
+      }
+
+      current_node = current_node->next;
+
+      if (node_to_erase != NULL) {
+        LinkedList_erase(bullets, node_to_erase->data);
+      }
+    }
   }
 }
 
