@@ -56,8 +56,6 @@ uint8_t scancode = 0;
 uint8_t packet_byte;
 /* RTC Related Variables */
 uint8_t minute_counter = 0;
-/* Serial Port Related Variables */
-bool host = true;
 /* XPM Related Variables (for animation) */
 xpm_animated ship;
 
@@ -104,6 +102,13 @@ int main(int argc, char *argv[]) {
 
 int (proj_main_loop)(int argc, char *argv[]) {
   uint8_t timer_bit_no = 0, rtc_bit_no = 0, kbd_bit_no = 0, mouse_bit_no = 0, sp_bit_no = 0;
+
+  /* Serial Port Related Variables */
+  static const char host_str[] = "host";
+  bool host = true;
+  if (argc > 0) {
+    host = (strcmp(*argv, host_str) == 0);
+  }
   
   /* Creates a program_status_t structure with all boolean values set to false */
   program_status_t* program_status = (program_status_t*) malloc(sizeof(program_status_t));
