@@ -273,8 +273,8 @@ int vg_render_entity(const Entity* entity, void **buffer) {
   return 0;
 }
 
-int vg_render_entities(const LinkedList* bullets, const Powerup* current_powerup, const Player* player, void **buffer) {
-  if (bullets == NULL || player == NULL) {
+int vg_render_entities(const LinkedList* bullets, const Powerup* current_powerup, const Player* player, const Player* enemy, void **buffer) {
+  if (bullets == NULL || player == NULL || enemy == NULL) {
     return 1;
   }
   
@@ -283,6 +283,7 @@ int vg_render_entities(const LinkedList* bullets, const Powerup* current_powerup
   }
 
   vg_render_entity(player->entity, buffer);
+  vg_render_entity(enemy->entity, buffer);
 
   static Node* current_node;
   

@@ -101,14 +101,26 @@ int main(int argc, char *argv[]) {
 }
 
 int (proj_main_loop)(int argc, char *argv[]) {
-  uint8_t timer_bit_no = 0, rtc_bit_no = 0, kbd_bit_no = 0, mouse_bit_no = 0, sp_bit_no = 0;
+  static const char host_str[] = "host", remote_str[] = "remote";
+  
+  if (argc == 0) {
+    return 1;
+  }
 
   /* Serial Port Related Variables */
-  static const char host_str[] = "host";
-  bool host = true;
-  if (argc > 0) {
-    host = (strcmp(*argv, host_str) == 0);
+  bool host;
+  
+  if (strcmp(argv[0], host_str) == 0) {
+    host = true;
   }
+  else if (strcmp(argv[0], remote_str) == 0) {
+    host = false;
+  }
+  else {
+    return 1;
+  }
+
+  uint8_t timer_bit_no = 0, rtc_bit_no = 0, kbd_bit_no = 0, mouse_bit_no = 0, sp_bit_no = 0;
   
   /* Creates a program_status_t structure with all boolean values set to false */
   program_status_t* program_status = (program_status_t*) malloc(sizeof(program_status_t));
@@ -399,7 +411,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
             update_entity_positions(bullets, &player);
             detect_collisions(bullets, &current_powerup, &player);
             vg_draw_xpm(bg_img, 0, 0, &aux_buffer);
-            vg_render_entities(bullets, current_powerup, &player, &aux_buffer);
+            vg_render_entities(bullets, current_powerup, &player, &enemy, &aux_buffer);
             vg_draw_xpm(cursor_img, round(mouse_cursor.position.x), round(mouse_cursor.position.y), &aux_buffer);
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
             /* Next Sequence to Be Transmitted By the Serial Port */
