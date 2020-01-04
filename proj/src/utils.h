@@ -12,19 +12,19 @@
  * @brief Structure used to implement a generic doubly-linked list.
  */
 typedef struct Node {
-   void* data;
-   struct Node* previous;
-   struct Node* next;
+   void* data;              /**< @brief Memory location of the node's data */
+   struct Node* previous;   /**< @brief Pointer to the previous node. NULL if it doesn't exist */
+   struct Node* next;       /**< @brief Pointer to the next node. NULL if it doesn't exist. */
 } Node;
 
 /**
  * @brief Implementation of a generic doubly-linked list using void* and dynamic memory allocation.
  */
 typedef struct {
-    Node* first;
-    Node* last;
-    size_t size;
-    size_t elem_size;
+    Node* first;        /**< @brief Pointer to the first node of the linked list. NULL if the list is empty */
+    Node* last;         /**< @brief Pointer to the last node of the linked list. NULL if the list is empty */
+    size_t size;        /**< @brief Number of nodes (elements) of the linked list */
+    size_t elem_size;   /**< @brief Size of the each element in the linked list */
 } LinkedList;
 
 /**
