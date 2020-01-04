@@ -103,7 +103,8 @@ int main(int argc, char *argv[]) {
 int (proj_main_loop)(int argc, char *argv[]) {
   static const char host_str[] = "host", remote_str[] = "remote";
   
-  if (argc == 0) {
+  if (argc != 1) {
+    printf("Usage: lcom_run proj <host/remote>\n");
     return 1;
   }
 
@@ -117,6 +118,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
     host = false;
   }
   else {
+    printf("Usage: lcom_run proj <host/remote>\n");
     return 1;
   }
 
@@ -134,12 +136,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
   program_status->timer_int_subscribed = true;
 
-  if (rtc_subscribe_int(&rtc_bit_no)) {
-    exit_program(program_status);
-    printf("Error when calling rtc_subscribe_int.\n");
-    return 1;
+  if (host) {
+    if (rtc_subscribe_int(&rtc_bit_no)) {
+      exit_program(program_status);
+      printf("Error when calling rtc_subscribe_int.\n");
+      return 1;
+    }
+    program_status->rtc_int_subscribed = true;
   }
-  program_status->rtc_int_subscribed = true;
 
   if (kbd_subscribe_int(&kbd_bit_no)) {
     exit_program(program_status);
@@ -219,9 +223,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
     printf("Error when loading xpm.\n");
     return 1;
   }
-
-  Circle* bullet_collision_shape = Circle_new(8.0);
-  Sprite bullet_sprite = { bullet_img, BULLET, CIRCLE, bullet_collision_shape };
   
   ship.n = ship_n_img;
   ship.s = ship_s_img;
@@ -262,6 +263,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
   bool can_fire = true;
   uint8_t frames = 0;
   bool spawn_player_bullet = false, spawn_enemy_bullet = false;
+
+  Circle* bullet_collision_shape = Circle_new(8.0);
+  Sprite bullet_sprite = { bullet_img, BULLET, CIRCLE, bullet_collision_shape };
 
   int ipc_status;
   message msg;
@@ -400,10 +404,15 @@ int (proj_main_loop)(int argc, char *argv[]) {
             }
             else if (player.fire) {
               can_fire = false;
+
               // Shoot bullet
+              Vector2 bullet_position = Vector2_add(Vector2_subtract(player.entity->position, player.entity->offset), 
+              (Vector2) {bullet_sprite.img.width / 2, bullet_sprite.img.height / 2});
               Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {1.0, 0.0}, player.angle));
-              Bullet bullet = { { bullet_sprite, player.entity->position, bullet_velocity, {0.0, 0.0} }, 
+
+              Bullet bullet = { { bullet_sprite, bullet_position, bullet_velocity, {0.0, 0.0} }, 
               PLAYER_ONE, PLAYER_BASE_DAMAGE };
+
               LinkedList_add(bullets, &bullet);
               spawn_player_bullet = true;
             }
@@ -429,6 +438,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   free(aux_buffer);
   LinkedList_delete(bullets);
   free(ship_collision_shape);
+  free(bullet_collision_shape);
   free(powerup_collision_shape);
 
 
@@ -477,12 +487,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
   program_status->kbd_int_subscribed = false;
 
-  if (rtc_unsubscribe_int()) {
-    exit_program(program_status);
-    printf("Error when calling rtc_unsubscribe_int.\n");
-    return 1;
+  if (host) {
+    if (rtc_unsubscribe_int()) {
+      exit_program(program_status);
+      printf("Error when calling rtc_unsubscribe_int.\n");
+      return 1;
+    }
+    program_status->rtc_int_subscribed = false;
   }
-  program_status->rtc_int_subscribed = false;
 
   if (timer_unsubscribe_int()) {
     exit_program(program_status);
