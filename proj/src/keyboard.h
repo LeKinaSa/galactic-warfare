@@ -3,13 +3,30 @@
 
 #include <lcom/lcf.h>
 
-/* Functions specific to the keyboard (not reusable in Lab 4) */
+/** @defgroup keyboard keyboard
+ * @{
+ * @brief Functions specific to the keyboard (not reusable in Lab 4)
+ */
 
-int kbd_subscribe_int(uint8_t *bit_no);   /* Subscribes keyboard interrupts */
-int kbd_unsubscribe_int();                /* Unsubscribes keyboard interrupts */
+/**
+ * @brief Subscribes keyboard interrupts using sys_irqsetpolicy.
+ * @param bit_no    pointer to variable where the interrupt bit number will be stored
+ * @return          zero if no errors occurred, non-zero otherwise
+ */
+int kbd_subscribe_int(uint8_t *bit_no);
+/**
+ * @brief Unsubscribes keyboard interrupts using sys_irqrmpolicy.
+ * @return  zero if no errors occurred, non-zero otherwise
+ */
+int kbd_unsubscribe_int();
 
-int kbd_reenable_int();   /* Reenables keyboard interrupts after kbd_test_poll */
+/**
+ * @brief Retrieves output (scancodes or KBC return values) from 0x60 port.
+ * @param output    pointer to where the information from 0x60 will be stored
+ * @return          zero if no errors occurred, non-zero otherwise
+ */
+int kbd_retrieve_output(uint8_t *output);
 
-int kbd_retrieve_output(uint8_t *output);     /* Retrieves output (scancodes or KBC return values) from 0x60 port */
+/**@}*/
 
 #endif /* __KEYBOARD_H */

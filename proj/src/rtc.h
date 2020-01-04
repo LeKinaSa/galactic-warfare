@@ -11,7 +11,7 @@
 
 /**
  * @brief Subscribes RTC interrupts using sys_irqsetpolicy.
- * @param bit_no    interrupt bit number
+ * @param bit_no    pointer to variable where the interrupt bit number will be stored
  * @return          zero if no errors occurred, non-zero otherwise
  */
 int rtc_subscribe_int(uint8_t *bit_no);
