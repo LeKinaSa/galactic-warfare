@@ -85,11 +85,9 @@ int sp_config(uint32_t bit_rate) {
 void sp_int_handler() {
   uint8_t iir = 0, error = 0;
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
-  
   switch ( iir & SP_IIR_INT ) {
       case SP_IIR_RDR:
         /* Read next char */
-        printf("Read\n"); // RETIRAR
         sp_receive();
         break;
       case SP_IIR_THR:
@@ -140,7 +138,7 @@ void sp_treat_information_received(Player *player, Powerup *powerup, bool *gener
 
   uint8_t msb_x, lsb_x, msb_y, lsb_y;
   uint8_t angle1 = 0, angle2 = 0, angle3 = 0, angle4 = 0;
-  uint8_t type;
+  //uint8_t type;
   uint16_t x = 0, y = 0;
   union angle_to_transmit angle;
 
@@ -148,12 +146,13 @@ void sp_treat_information_received(Player *player, Powerup *powerup, bool *gener
   sp_treat_received_queue(rtc_queue, &rtc_size, player_queue, &player_size, spawn_bullet);
   
   /* Get PowerUp */
-  if (rtc_size == 0) {
+  if (rtc_size != SP_RTC_SIZE - 1) {
     *generate_powerup = false;
   }
   else {
+    /*
     *generate_powerup = true;
-    /* Coordinates and Type */
+    // Coordinates and Type
     msb_x = rtc_queue[0];
     lsb_x = rtc_queue[1];
     msb_y = rtc_queue[2];
@@ -161,13 +160,16 @@ void sp_treat_information_received(Player *player, Powerup *powerup, bool *gener
     type  = rtc_queue[4];
     util_get_val(&x, msb_x, lsb_x);
     util_get_val(&y, msb_y, lsb_y);
-    /* Put the Coordinates and the Type on the PowerUp */
+    // Put the Coordinates and the Type on the PowerUp 
     powerup->entity->position.x = x;
     powerup->entity->position.y = y;
     powerup->type = (enum powerup_type) type;
-  }
+  }*/
 
   /* Get Player */
+  if (player_size != SP_PLAYER_SIZE - 1) {
+    return;
+  }
     /* Coordinates */
   msb_x  = player_queue[0];
   lsb_x  = player_queue[1];
@@ -197,26 +199,6 @@ void sp_retransmit_sequence(Player* player, Powerup* powerup, bool generate_powe
   sp_add_sequence_to_transmission(player, powerup, generate_powerup, spawn_bullet);
 }
 
-int sp_sys_inb(int port, uint8_t *value) {
-  if (value == NULL) {
-    printf("Error occurred: null pointer.\n");
-    return 1;
-  }
-
-  uint32_t word;
-
-  if (sys_inb(port, &word) == EINVAL) {
-    printf("Error when calling sys_inb.\n");
-    return 1;
-  }
-
-  /* Place the char in the less significant byte (shift the number of stop bits + the parity bit) */
-  word = word >> (SP_STOP_BITS + 1);
-
-  *value = (uint8_t)word;
-  return 0;
-}
-
 void sp_add_to_transmission_queue(uint8_t byte) {
   to_transmit[to_transmit_size] = byte;
   ++ to_transmit_size;
@@ -224,7 +206,7 @@ void sp_add_to_transmission_queue(uint8_t byte) {
 
 void sp_treat_received_queue(uint8_t rtc_queue[], int *rtc_size,
                              uint8_t player_queue[], int *player_size, bool *spawn_bullet) {
-  static enum last_read last;
+  static enum last_read last = COMPLETE;
   uint8_t next_char;
 
   for (int index = 0; index < received_size; ++ index) {
@@ -239,9 +221,11 @@ void sp_treat_received_queue(uint8_t rtc_queue[], int *rtc_size,
             last = COMPLETE;
             break;
           case SP_ENEMY_PLAYER:
+            *player_size = 0;
             last = PLAYER_SIZE_0;
             break;
           case SP_RTC_INTERRUPT:
+            *rtc_size = 0;
             last = RTC_SIZE_0;
             break;
           case SP_GENERATE_BULLET:
@@ -397,13 +381,13 @@ void sp_receive() {
   uint8_t byte = 0;
   uint8_t lsr;
   util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
-  printf("LSR : %x\n", lsr); //RETIRAR
-  while (lsr & SP_LSR_RD) {
-    sp_sys_inb(SP1_BASE_ADDR + SP_RBR, &byte);
+  while ((lsr & SP_LSR_RD) != 0) {
+    util_sys_inb(SP1_BASE_ADDR + SP_RBR, &byte);
     received[received_size] = byte;
     ++ received_size;
     util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
-    printf("Ciclo LSR : %x\n", lsr); // RETIRAR
+    if (received_size == SP_FIFO_SIZE * SP_INT_PER_TIMER_INT) {
+      break;
+    }
   }
-  printf("Received : %d", received_size); // RETIRAR
 }

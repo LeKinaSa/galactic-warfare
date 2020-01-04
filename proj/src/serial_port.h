@@ -43,8 +43,6 @@ void sp_new_transmission(Player* player, Powerup* powerup, bool generate_powerup
 
 void sp_retransmit_sequence(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet);
 
-int sp_sys_inb(int port, uint8_t *value);
-
 void sp_add_to_transmission_queue(uint8_t byte);
 
 void sp_treat_received_queue(uint8_t rtc_queue[], int *rtc_size,

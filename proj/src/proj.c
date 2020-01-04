@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
   //lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
 
   // Save the output of printf function calls on a file
-  lcf_log_output("/home/lcom/labs/proj/output.txt");
+  //lcf_log_output("/home/lcom/labs/proj/output.txt");
 
   // handles control over to LCF
   // [LCF handles command line arguments and invokes the right function]
@@ -103,7 +103,6 @@ int main(int argc, char *argv[]) {
 }
 
 int (proj_main_loop)(int argc, char *argv[]) {
-  printf("HI\n\n"); // RETIRAR
   static const char host_str[] = "host", remote_str[] = "remote";
   
   if (argc != 1) {
@@ -372,16 +371,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
           }
         }
         if (msg.m_notify.interrupts & BIT(sp_bit_no)) {
-          printf("SP INT\n"); // RETIRAR
           sp_int_handler();
-          printf("MEDIUM PLACE\n"); // RETIRAR
           if (sp_send_again()) {
-            printf("INSIDE\n"); // RETIRAR
             sp_retransmit_sequence(&player, current_powerup, generate_powerup, spawn_player_bullet);
           }
-          printf("END OF INT\n"); // RETIRAR
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
+          printf("TIMER\n");
           generate_powerup = false;
           if (rtc_interrupted) {
             generate_powerup = true;
@@ -393,8 +389,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             // Update values according to internal game logic.
             // Render a new frame.
-            sp_treat_information_received(&enemy, current_powerup, &generate_enemy_powerup, &spawn_enemy_bullet);
 
+            sp_treat_information_received(&enemy, current_powerup, &generate_enemy_powerup, &spawn_enemy_bullet);
+            
             if (generate_enemy_powerup) {
               /* Generate the PowerUp Coming from the Serial Port */
             }
