@@ -77,6 +77,7 @@ static const xpm_map_t speed_powerup_xpm = (xpm_map_t) SpeedPowerup_xpm;
 static const xpm_map_t damage_powerup_xpm = (xpm_map_t) DamagePowerup_xpm;
 
 static const xpm_map_t bullet_xpm = (xpm_map_t) Bullet_xpm;
+static const xpm_map_t bullet_enemy_xpm = (xpm_map_t) BulletEnemy_xpm;
 
 static void exit_program(program_status_t* status);
 
@@ -203,7 +204,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   xpm_image_t ship_n_img, ship_s_img, ship_e_img, ship_w_img;
   xpm_image_t ship_ne_img, ship_nw_img, ship_se_img, ship_sw_img;
   xpm_image_t speed_powerup_img, damage_powerup_img;
-  xpm_image_t bullet_img;
+  xpm_image_t bullet_img, bullet_enemy_img;
 
   if (
   xpm_load(bg_xpm     , XPM_5_6_5, &bg_img     ) == NULL ||
@@ -218,7 +219,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
   xpm_load(ship_SW_xpm, XPM_5_6_5, &ship_sw_img) == NULL ||
   xpm_load(speed_powerup_xpm, XPM_5_6_5, &speed_powerup_img) == NULL ||
   xpm_load(damage_powerup_xpm, XPM_5_6_5, &damage_powerup_img) == NULL ||
-  xpm_load(bullet_xpm, XPM_5_6_5, &bullet_img) == NULL
+  xpm_load(bullet_xpm, XPM_5_6_5, &bullet_img) == NULL ||
+  xpm_load(bullet_enemy_xpm, XPM_5_6_5, &bullet_enemy_img) == NULL
   ) {
     exit_program(program_status);
     printf("Error when loading xpm.\n");
@@ -267,6 +269,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
   Circle* bullet_collision_shape = Circle_new(8.0);
   Sprite bullet_sprite = { bullet_img, BULLET, CIRCLE, bullet_collision_shape };
+  Sprite bullet_enemy_sprite = { bullet_enemy_img, BULLET, CIRCLE, bullet_collision_shape };
 
   int ipc_status;
   message msg;
@@ -397,6 +400,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
             }
             if (spawn_enemy_bullet) {
               /* Spawn the Bullet on the Enemy Player */
+              Vector2 bullet_position = enemy.entity->position;
+              Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {1.0, 0.0}, enemy.angle));
+
+              Bullet bullet = { {bullet_enemy_sprite, bullet_position, bullet_velocity, {0.0, 0.0}}, PLAYER_TWO, PLAYER_BASE_DAMAGE };
+
+              LinkedList_add(bullets, &bullet);
             }
 
             process_kbd_status(&kbd_status, &player);
