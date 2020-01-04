@@ -130,6 +130,7 @@ int sp_send_again() {
 void sp_treat_information_received(Player *player, Powerup *powerup, bool *generate_powerup, bool *spawn_bullet) {
   *generate_powerup = false;
   *spawn_bullet = false;
+  printf("%d\n", received_size); // RETIRAR
   if (received_size == 0) {
     return;
   }
@@ -167,9 +168,11 @@ void sp_treat_information_received(Player *player, Powerup *powerup, bool *gener
   }
 
   /* Get Player */
+  printf("PLAYER\n"); // RETIRAR
   if (player_size != SP_PLAYER_SIZE - 1) {
     return;
   }
+  printf("Still Player\n"); // RETIRAR
     /* Coordinates */
   msb_x  = player_queue[0];
   lsb_x  = player_queue[1];
@@ -187,6 +190,8 @@ void sp_treat_information_received(Player *player, Powerup *powerup, bool *gener
   player->entity->position.x = x;
   player->entity->position.y = y;
   player->angle = angle.angle;
+  printf("%x %x\n", x, y);  // RETIRAR
+  printf("        %x\n", angle.transmit);  // RETIRAR
 }
 
 void sp_new_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet) {
@@ -360,9 +365,9 @@ void sp_add_sequence_to_transmission(Player* player, Powerup* powerup, bool gene
 }
 
 void sp_check_ready_to_transmit() {
-  uint8_t iir = 0;
-  util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
-  if (( iir & SP_IIR_INT ) == SP_IIR_THR) {
+  uint8_t lsr = 0;
+  util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
+  if (( lsr & SP_LSR_THR_EMPTY ) != 0) {
     ready_to_transmit = true;
   }
 }
@@ -390,4 +395,5 @@ void sp_receive() {
       break;
     }
   }
+  printf("Received : %d\n", received_size); // RETIRAR
 }

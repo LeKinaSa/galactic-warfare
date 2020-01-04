@@ -374,13 +374,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
           }
         }
         if (msg.m_notify.interrupts & BIT(sp_bit_no)) {
+          printf("SP INT\n"); // RETIRAR
           sp_int_handler();
           if (sp_send_again()) {
             sp_retransmit_sequence(&player, current_powerup, generate_powerup, spawn_player_bullet);
           }
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
-          printf("TIMER\n");
           generate_powerup = false;
           if (rtc_interrupted) {
             generate_powerup = true;
@@ -392,9 +392,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             // Update values according to internal game logic.
             // Render a new frame.
-
+            printf("Treat Info\n"); // RETIRAR
             sp_treat_information_received(&enemy, current_powerup, &generate_enemy_powerup, &spawn_enemy_bullet);
-            
+            printf("End of It\n"); // RETIRAR
             if (generate_enemy_powerup) {
               /* Generate the PowerUp Coming from the Serial Port */
             }
