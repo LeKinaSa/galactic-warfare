@@ -5,7 +5,7 @@
 
 /** @defgroup game_constants game_constants
  * @{
- * @brief File containing various constants game-related constants. 
+ * @brief File containing various game-specific constants. 
  */
 
 #define FRAMERATE               30                  /**< @brief Number of frames drawn per second */

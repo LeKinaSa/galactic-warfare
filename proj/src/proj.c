@@ -357,7 +357,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
         }
         if (host) {
           if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
-            rtc_ih();
+            rtc_int_handler();
             if (minute_counter == POWERUP_INTERVAL) {
               minute_counter = 0;
               // Generate random position on screen.

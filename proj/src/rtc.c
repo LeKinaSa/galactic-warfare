@@ -111,7 +111,7 @@ int rtc_init() {
 }
 
 
-void rtc_ih(void) {
+void rtc_int_handler() {
   uint8_t reg_c;
 
   sys_outb(RTC_ADDR_REG, RTC_REG_C);
