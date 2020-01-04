@@ -56,6 +56,8 @@ uint8_t scancode = 0;
 uint8_t packet_byte;
 /* RTC Related Variables */
 uint8_t minute_counter = 0;
+/* Serial Port Related Variables */
+bool ready_to_transmit = false;
 /* XPM Related Variables (for animation) */
 xpm_animated ship;
 
@@ -86,7 +88,7 @@ int main(int argc, char *argv[]) {
   //lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
 
   // Save the output of printf function calls on a file
-  //lcf_log_output("/home/lcom/labs/proj/output.txt");
+  lcf_log_output("/home/lcom/labs/proj/output.txt");
 
   // handles control over to LCF
   // [LCF handles command line arguments and invokes the right function]
@@ -101,14 +103,14 @@ int main(int argc, char *argv[]) {
 }
 
 int (proj_main_loop)(int argc, char *argv[]) {
+  printf("HI\n\n"); // RETIRAR
   static const char host_str[] = "host", remote_str[] = "remote";
   
   if (argc != 1) {
     printf("Usage: lcom_run proj <host/remote>\n");
     return 1;
   }
-
-  /* Serial Port Related Variables */
+  
   bool host;
   
   if (strcmp(argv[0], host_str) == 0) {
@@ -184,7 +186,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
   program_status->sp_int_subscribed = true;
 
-  if (sp_config(19200)) {
+  if (sp_config(SP_BIT_RATE)) {
     exit_program(program_status);
     printf("Error when calling sp_config.\n");
     return 1;
@@ -305,6 +307,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
 
+  sp_check_ready_to_transmit();
+
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
       printf("Error when calling driver_receive.\n");
@@ -368,10 +372,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
           }
         }
         if (msg.m_notify.interrupts & BIT(sp_bit_no)) {
+          printf("SP INT\n"); // RETIRAR
           sp_int_handler();
+          printf("MEDIUM PLACE\n"); // RETIRAR
           if (sp_send_again()) {
+            printf("INSIDE\n"); // RETIRAR
             sp_retransmit_sequence(&player, current_powerup, generate_powerup, spawn_player_bullet);
           }
+          printf("END OF INT\n"); // RETIRAR
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
           generate_powerup = false;
@@ -389,6 +397,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             if (generate_enemy_powerup) {
               /* Generate the PowerUp Coming from the Serial Port */
+            }
+            if (spawn_enemy_bullet) {
+              /* Spawn the Bullet on the Enemy Player */
             }
 
             process_kbd_status(&kbd_status, &player);
@@ -425,6 +436,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
             /* Next Sequence to Be Transmitted By the Serial Port */
             sp_new_transmission(&player, current_powerup, generate_powerup, spawn_player_bullet);
+            if (ready_to_transmit) {
+              sp_transmit();
+            }
           }
         }
         break;
@@ -441,14 +455,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
   free(bullet_collision_shape);
   free(powerup_collision_shape);
 
-
   if (sp_unsubscribe_int()) {
     exit_program(program_status);
     printf("Error when calling sp_unsubscribe_int.\n");
     return 1;
   }
   program_status->sp_int_subscribed = false;
-
+  
   if (mouse_disable_int()) {
     exit_program(program_status);
     printf("Error when calling mouse_disable_int.\n");

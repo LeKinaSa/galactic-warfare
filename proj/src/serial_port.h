@@ -52,4 +52,10 @@ void sp_treat_received_queue(uint8_t rtc_queue[], int *rtc_size,
 
 void sp_add_sequence_to_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet);
 
+void sp_check_ready_to_transmit();
+
+void sp_transmit();
+
+void sp_receive();
+
 #endif /* __SERIAL_PORT_H */

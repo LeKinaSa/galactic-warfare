@@ -2,6 +2,7 @@
 #include "utils.h"
 
 static int serial_port_hook_id = SP1_IRQ;
+extern bool ready_to_transmit;
 
 static uint8_t to_transmit[SP_FIFO_SIZE * SP_INT_PER_TIMER_INT];
 static int to_transmit_size = 0;
@@ -83,45 +84,35 @@ int sp_config(uint32_t bit_rate) {
 
 void sp_int_handler() {
   uint8_t iir = 0, error = 0;
-  uint8_t byte = 0;
-  uint8_t lsr;
-  
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
   
   switch ( iir & SP_IIR_INT ) {
       case SP_IIR_RDR:
         /* Read next char */
-        util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
-        while (lsr & SP_LSR_RD) {
-          sp_sys_inb(SP1_BASE_ADDR + SP_RBR, &byte);
-          received[received_size] = byte;
-          ++ received_size;
-          util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
-        }
+        printf("Read\n"); // RETIRAR
+        sp_receive();
         break;
       case SP_IIR_THR:
         /* Transmit next char */
-        for (int index = 0; index < SP_FIFO_SIZE; ++ index) {
-          byte = to_transmit[index];
-          sys_outb(SP1_BASE_ADDR + SP_THR, byte);
+        if (to_transmit_size == 0) {
+          ready_to_transmit = true;
         }
-        util_erase(to_transmit, &to_transmit_size, SP_FIFO_SIZE);
+        else {
+          sp_transmit();
+          ready_to_transmit = false;
+        }
         break;
       case SP_IIR_CTO:
         /* Character Timeout */
-        util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
-        while (lsr & SP_LSR_RD) {
-          sp_sys_inb(SP1_BASE_ADDR + SP_RBR, &byte);
-          received[received_size] = byte;
-          ++ received_size;
-          util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
-        }
+        sp_receive();
         break;
       case SP_IIR_RLS:
         /* Receiver Line Status - Signals Error in LSR */
         util_sys_inb(SP1_BASE_ADDR + SP_LSR, &error);
-        to_transmit[to_transmit_size] = SP_SEND_SEQUENCE;
-        ++ to_transmit_size;
+        sp_add_to_transmission_queue(SP_SEND_SEQUENCE);
+        if (ready_to_transmit) {
+          sp_transmit();
+        }
         break;
       default:
         break;
@@ -129,6 +120,9 @@ void sp_int_handler() {
 }
 
 int sp_send_again() {
+  if (received_size == 0) {
+    return 0;
+  }
   if (received[received_size] == SP_SEND_SEQUENCE) {
     return 1;
   }
@@ -379,4 +373,37 @@ void sp_add_sequence_to_transmission(Player* player, Powerup* powerup, bool gene
 
   /* End of Sequence */
   sp_add_to_transmission_queue(SP_END_SEQUENCE);
+}
+
+void sp_check_ready_to_transmit() {
+  uint8_t iir = 0;
+  util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
+  if (( iir & SP_IIR_INT ) == SP_IIR_THR) {
+    ready_to_transmit = true;
+  }
+}
+
+void sp_transmit() {
+  uint8_t byte = 0;
+  int minimum = min(SP_FIFO_SIZE, to_transmit_size);
+  for (int index = 0; index < minimum; ++ index) {
+    byte = to_transmit[index];
+    sys_outb(SP1_BASE_ADDR + SP_THR, byte);
+  }
+  util_erase(to_transmit, &to_transmit_size, minimum);
+}
+
+void sp_receive() {
+  uint8_t byte = 0;
+  uint8_t lsr;
+  util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
+  printf("LSR : %x\n", lsr); //RETIRAR
+  while (lsr & SP_LSR_RD) {
+    sp_sys_inb(SP1_BASE_ADDR + SP_RBR, &byte);
+    received[received_size] = byte;
+    ++ received_size;
+    util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
+    printf("Ciclo LSR : %x\n", lsr); // RETIRAR
+  }
+  printf("Received : %d", received_size); // RETIRAR
 }
