@@ -212,56 +212,6 @@ int vg_draw_xpm(xpm_image_t img, uint16_t x, uint16_t y, void** buffer) {
   return 0;
 }
 
-int vg_draw_rotated_xpm(xpm_image_t img, uint16_t x, uint16_t y, double angle, void** buffer) {
-  if (img.bytes == NULL) {
-    printf("Error occurred: null pixmap.\n");
-    return 1;
-  }
-
-  if (*buffer == NULL) {
-    printf("Error occurred: frame buffer not set.\n");
-    return 1;
-  }
-
-  if (x > info.XResolution - img.width || y > info.YResolution - img.height) {
-    return 1;
-  }
-
-  uint32_t transparency_color = xpm_transparency_color(img.type);
-  uint32_t current_color;
-  Vector2 point;
-
-  /* Draw pixelmap */
-  for (uint16_t row = 0; row < img.height; row++) {
-    for (uint16_t col = 0; col < img.width; col++) {
-      current_color = 0;
-
-      switch (img.type) {
-        case XPM_INDEXED:
-          current_color = img.bytes[col + row * img.width];
-          break;
-        case XPM_5_6_5:
-        case XPM_8_8_8:
-        case XPM_8_8_8_8:
-          for (uint8_t i = 0; i < bytes_per_pixel; i++) {
-            current_color |= img.bytes[(col + row * img.width) * bytes_per_pixel + i] << (i * BITS_PER_BYTE);
-          }
-          break;
-        default:
-          break;
-      }
-      
-      if (current_color != transparency_color) {
-        point = (Vector2) { (double) row - 32.0, (double) col - 32.0 };
-        point = rotate_point(point, angle);
-        vg_draw_pixel(x + (uint16_t) round(point.x + 32.0), y + (uint16_t) round(point.y + 32.0), current_color, buffer);
-      }
-    }
-  }
-
-  return 0;
-}
-
 
 int vg_render_entity(const Entity* entity, void **buffer) {
   uint16_t x = (uint16_t) round(entity->position.x), y = (uint16_t) round(entity->position.y);
