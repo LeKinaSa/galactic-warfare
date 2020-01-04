@@ -163,8 +163,8 @@ void sp_treat_information_received(Player *player, Powerup *powerup, bool *gener
     // Put the Coordinates and the Type on the PowerUp 
     powerup->entity->position.x = x;
     powerup->entity->position.y = y;
-    powerup->type = (enum powerup_type) type;
-  }*/
+    powerup->type = (enum powerup_type) type;*/
+  }
 
   /* Get Player */
   if (player_size != SP_PLAYER_SIZE - 1) {
