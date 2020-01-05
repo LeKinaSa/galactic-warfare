@@ -76,7 +76,7 @@ void process_mouse_packet(uint8_t packet_bytes[], mouse_status* status) {
   }
 }
 
-void process_mouse_status(mouse_status* status, MouseCursor* cursor, Player* player) {
+void process_mouse_status(const mouse_status* status, MouseCursor* cursor, Player* player) {
   /* Find the angle between mouse and player */
   Vector2 mouse_pos = (Vector2) {status->x, status->y};
   Vector2 player_center = Vector2_subtract(player->entity->position, player->entity->offset);
