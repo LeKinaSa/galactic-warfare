@@ -73,11 +73,13 @@ int sp_send_again();
 /**
  * @brief Treat information received in the serial port.
  * @param player              Enemy player received from the serial port
- * @param powerup             Powerup generated on the other virtual machine
+ * @param rtc_x               Coordinate X for the generated powerup
+ * @param rtc_y               Coordinate Y for the generated powerup
+ * @param rtc_type            Type for the powerup generated on the other virtual machine
  * @param generate_powerup    true if the other machine generated a powerup, false if it doesn't
  * @param spawn_bullet        true if the other player fired, false if it doesn't
  */
-void sp_treat_information_received(Player* player, Powerup* powerup, bool* generate_powerup, bool* spawn_bullet);
+void sp_treat_information_received(Player* player, uint16_t *rtc_x, uint16_t *rtc_y, enum powerup_type *rtc_type, bool* generate_powerup, bool* spawn_bullet);
 
 /**
  * @brief Update the transmission with new information.

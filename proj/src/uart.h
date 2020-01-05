@@ -47,12 +47,12 @@
 #define SP_FCR_TRIGGER_4            BIT(6)          /* FIFO Trigger 4 */
 #define SP_FCR_TRIGGER_8            BIT(7)          /* FIFO Trigger 8 */
 #define SP_FCR_TRIGGER_14           BIT(6) | BIT(7) /* FIFO Trigger 14 */
-#define SP_FCR_CONFIG              (SP_FCR_ENABLE_FIFO | SP_FCR_CLEAR_RECEIVE | SP_FCR_CLEAR_TRANSMIT | SP_FCR_TRIGGER_4) /* LCR COnfiguration */
+#define SP_FCR_CONFIG              (SP_FCR_ENABLE_FIFO | SP_FCR_CLEAR_RECEIVE | SP_FCR_CLEAR_TRANSMIT | SP_FCR_TRIGGER_8) /* LCR COnfiguration */
 
 #define SP_FIFO_SIZE            16      /* FIFO Size */
-#define SP_FIFO_TRIGGER         4       /* FIFO Trigger Level */
+#define SP_FIFO_TRIGGER         8       /* FIFO Trigger Level */
 
-#define SP_BIT_RATE             9600    /* Bit Rate */
+#define SP_BIT_RATE             19200   /* Bit Rate */
 
 #define SP_INT_PER_TIMER_INT ((SP_BIT_RATE / SP_DATA_LENGHT) / SP_FIFO_TRIGGER) / TIMER0_INTERRUPTS_PER_SECOND /* Interrupts per Timer Interrupt */
 

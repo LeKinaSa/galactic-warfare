@@ -128,11 +128,12 @@ int sp_send_again() {
   return 0;
 }
 
-void sp_treat_information_received(Player *player, Powerup *powerup, bool *generate_powerup, bool *spawn_bullet) {
+void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rtc_y, enum powerup_type *rtc_type, bool *generate_powerup, bool *spawn_bullet) {
   *generate_powerup = false;
   *spawn_bullet = false;
   printf("%d\n", received_size); // RETIRAR
   if (received_size == 0) {
+    printf("Went South\n"); // RETIRAR
     return;
   }
   uint8_t rtc_queue[SP_RTC_SIZE - 1], player_queue[SP_PLAYER_SIZE - 1];
@@ -140,19 +141,21 @@ void sp_treat_information_received(Player *player, Powerup *powerup, bool *gener
 
   uint8_t msb_x, lsb_x, msb_y, lsb_y;
   uint8_t angle1 = 0, angle2 = 0, angle3 = 0, angle4 = 0;
-  //uint8_t type;
+  uint8_t type;
   uint16_t x = 0, y = 0;
   union angle_to_transmit angle;
 
   /* Get the Bullet and the Arrays for Player and RTC Info */
+  printf("Info to Treat\n"); // RETIRAR
   sp_treat_received_queue(player_queue, &player_size, rtc_queue, &rtc_size, spawn_bullet);
-  
+  printf("Info Treated\n"); //RETIRAR
+
   /* Get PowerUp */
   if (rtc_size != SP_RTC_SIZE - 1) {
+    printf("No PowerUp\n"); // RETIRAR
     *generate_powerup = false;
   }
   else {
-    /*
     *generate_powerup = true;
     // Coordinates and Type
     msb_x = rtc_queue[0];
@@ -163,14 +166,15 @@ void sp_treat_information_received(Player *player, Powerup *powerup, bool *gener
     util_get_val(&x, msb_x, lsb_x);
     util_get_val(&y, msb_y, lsb_y);
     // Put the Coordinates and the Type on the PowerUp 
-    powerup->entity->position.x = x;
-    powerup->entity->position.y = y;
-    powerup->type = (enum powerup_type) type;*/
+    *rtc_x = x;
+    *rtc_y = y;
+    *rtc_type = (enum powerup_type) type;
   }
 
   /* Get Player */
   printf("PLAYER\n"); // RETIRAR
   if (player_size != SP_PLAYER_SIZE - 1) {
+    printf("No Player\n"); // RETIRAR
     return;
   }
   printf("Still Player\n"); // RETIRAR
@@ -217,6 +221,7 @@ void sp_treat_received_queue(uint8_t player_queue[], int *player_size,
 
   for (int index = 0; index < received_size; ++ index) {
     next_char = received[index];
+    printf("%x  %d\n", next_char, next_char); // RETIRAR
     switch (last) {
       case COMPLETE:
         switch (next_char) {
@@ -314,6 +319,7 @@ void sp_treat_received_queue(uint8_t player_queue[], int *player_size,
     }
   }
   received_size = 0;
+  printf("end\n"); // RETIRAR
 }
 
 void sp_add_sequence_to_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet) {

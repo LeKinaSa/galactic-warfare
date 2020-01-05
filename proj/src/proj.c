@@ -295,6 +295,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
   const Sprite speed_powerup_sprite = (Sprite) { speed_powerup_img, CIRCLE, powerup_collision_shape };
   const Sprite damage_powerup_sprite = (Sprite) { damage_powerup_img, CIRCLE, powerup_collision_shape };
   const uint16_t powerup_sprite_width = speed_powerup_img.width, powerup_sprite_height = speed_powerup_img.height;
+  uint16_t powerup_x = 0, powerup_y = 0;
+  enum powerup_type type = SPEED;
 
   Powerup* current_powerup = NULL;
   Entity powerup_entity;
@@ -359,29 +361,28 @@ int (proj_main_loop)(int argc, char *argv[]) {
             two_byte_scancode = false;
           }
         }
-        if (host) {
-          if (msg.m_notify.interrupts & BIT(rtc_bit_no)) {
-            rtc_int_handler();
-            if (minute_counter == POWERUP_INTERVAL) {
-              minute_counter = 0;
-              // Generate random position on screen.
-              // Create new powerup entity at position.
-              Powerup_delete(current_powerup);
-              current_powerup = NULL;
+        if ((msg.m_notify.interrupts & BIT(rtc_bit_no)) && (host)) {
+          printf("RTC\n"); // RETIRAR
+          rtc_int_handler();
+          if (minute_counter == POWERUP_INTERVAL) {
+            minute_counter = 0;
+            // Generate random position on screen.
+            // Create new powerup entity at position.
+            Powerup_delete(current_powerup);
+            current_powerup = NULL;
 
-              powerup_entity.position = generate_random_pos(vg_get_x_resolution() - powerup_sprite_width, 
-              vg_get_y_resolution() - powerup_sprite_height);
-              current_powerup = Powerup_new(&powerup_entity, (enum powerup_type) (rand() % 2));
+            powerup_entity.position = generate_random_pos(vg_get_x_resolution() - powerup_sprite_width, 
+            vg_get_y_resolution() - powerup_sprite_height);
+            current_powerup = Powerup_new(&powerup_entity, (enum powerup_type) (rand() % 2));
               
-              if (current_powerup->type == SPEED) {
-                powerup_entity.sprite = speed_powerup_sprite;
-              }
-              else {
-                powerup_entity.sprite = damage_powerup_sprite;
-              }
-
-              rtc_interrupted = true;
+            if (current_powerup->type == SPEED) {
+              powerup_entity.sprite = speed_powerup_sprite;
             }
+            else {
+              powerup_entity.sprite = damage_powerup_sprite;
+            }
+
+            rtc_interrupted = true;
           }
         }
         if (msg.m_notify.interrupts & BIT(sp_bit_no)) {
@@ -395,6 +396,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
           }
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
+          printf("TIMER\n"); // RETIRAR
           timer_int_handler();
           
           generate_powerup = false;
@@ -408,13 +410,15 @@ int (proj_main_loop)(int argc, char *argv[]) {
             // Update values according to internal game logic.
             // Render a new frame.
             printf("Info\n"); // RETIRAR
-            sp_treat_information_received(&enemy, current_powerup, &generate_enemy_powerup, &spawn_enemy_bullet);
+            sp_treat_information_received(&enemy, &powerup_x, &powerup_y, &type, &generate_enemy_powerup, &spawn_enemy_bullet);
             printf("\n\n\n"); // RETIRAR
             if (generate_enemy_powerup) {
 
               /* Generate the PowerUp Coming from the Serial Port */
+              printf("Powerup Generated\n"); // RETIRAR
             }
             if (spawn_enemy_bullet) {
+              printf("Spawn Bullet\n"); // RETIRAR
               /* Spawn the Bullet on the Enemy Player */
               Vector2 bullet_position = Vector2_subtract(Vector2_subtract(enemy.entity->position, enemy.entity->offset), 
               (Vector2) {bullet_enemy_sprite.img.width / 2, bullet_enemy_sprite.img.height / 2});
@@ -424,7 +428,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
               LinkedList_add(bullets, &bullet);
             }
-
+            
+            printf("Process\n"); // RETIRAR
             process_kbd_status(&kbd_status, &player);
             process_mouse_status(&m_status, &mouse_cursor, &player);
 
@@ -457,11 +462,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
             vg_render_entities(bullets, current_powerup, &player, &enemy, &aux_buffer);
             vg_draw_xpm(cursor_img, round(mouse_cursor.position.x), round(mouse_cursor.position.y), &aux_buffer);
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
+            printf("End of Process\n"); // RETIRAR
             /* Next Sequence to Be Transmitted By the Serial Port */
             sp_new_transmission(&player, current_powerup, generate_powerup, spawn_player_bullet);
             if (ready_to_transmit) {
               sp_transmit();
+              printf("transmission succeed.\n"); // RETIRAR
             }
+            printf("New Sequence Sent\n"); // RETIRAR
           }
         }
         break;
