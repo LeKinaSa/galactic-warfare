@@ -413,8 +413,16 @@ int (proj_main_loop)(int argc, char *argv[]) {
             sp_treat_information_received(&enemy, &powerup_x, &powerup_y, &type, &generate_enemy_powerup, &spawn_enemy_bullet);
             printf("\n\n\n"); // RETIRAR
             if (generate_enemy_powerup) {
-
-              /* Generate the PowerUp Coming from the Serial Port */
+              /* Generate the powerup coming from the serial port */
+              Powerup_delete(current_powerup);
+              powerup_entity.position = (Vector2) {powerup_x, powerup_y};
+              if (type == SPEED) {
+                powerup_entity.sprite = speed_powerup_sprite;
+              }
+              else {
+                powerup_entity.sprite = damage_powerup_sprite;
+              }
+              current_powerup = Powerup_new(&powerup_entity, type);
               printf("Powerup Generated\n"); // RETIRAR
             }
             if (spawn_enemy_bullet) {
