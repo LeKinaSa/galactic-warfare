@@ -81,8 +81,6 @@ Triangle* Triangle_new(Vector2 vertex1, Vector2 vertex2, Vector2 vertex3);
  */
 void Triangle_delete(Triangle* this);
 
-double Triangle_area(const Triangle* this);
-
 
 typedef struct {
   double radius;
@@ -100,8 +98,6 @@ Circle* Circle_new(double radius);
  * @param this  pointer to the circle structure to delete
  */
 void Circle_delete(Circle* this);
-
-double Circle_area(const Circle* this);
 
 
 /** @brief Enumeration of the different shape types. */
@@ -141,6 +137,11 @@ typedef struct {
   Vector2 offset;
 } MouseCursor;
 
+/**
+ * @brief Updates the position of the mouse cursor.
+ * @param cursor      pointer to MouseCursor structure
+ * @param mouse_pos   new cursor position
+ */
 void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos);
 
 
@@ -195,7 +196,12 @@ typedef struct {
   enum powerup_type type;
 } Powerup;
 
-
+/**
+ * @brief Creates a new powerup, given an entity and type.
+ * @param entity      pointer to powerup entity
+ * @param type        type of the new powerup
+ * @return            pointer to created powerup. NULL if params were invalid
+ */
 Powerup* Powerup_new(Entity* entity, enum powerup_type type);
 /**
  * @brief Frees memory allocated for a powerup structure.

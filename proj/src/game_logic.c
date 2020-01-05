@@ -86,16 +86,6 @@ void Triangle_delete(Triangle* this) {
   }
 }
 
-double Triangle_area(const Triangle* this) {
-  if (this == NULL) {
-    return 0.0;
-  }
-
-  return 0.5 * (this->vertices[0].x * (this->vertices[1].y - this->vertices[2].y) + 
-  this->vertices[1].x * (this->vertices[2].y - this->vertices[0].y) + 
-  this->vertices[2].x * (this->vertices[0].y - this->vertices[1].y));
-}
-
 
 Circle* Circle_new(double radius) {
   if (radius <= 0.0) {
@@ -113,9 +103,6 @@ void Circle_delete(Circle* this) {
   }
 }
 
-double Circle_area(const Circle* this) {
-  return M_PI * pow(this->radius, 2.0);
-}
 
 bool triangle_circle_collision(const Triangle* triangle, Vector2 triangle_pos, const Circle* circle, Vector2 circle_pos) {
   /* Convert relative vertex positions to absolute */
