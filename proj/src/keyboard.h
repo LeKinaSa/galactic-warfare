@@ -5,7 +5,7 @@
 
 /** @defgroup keyboard keyboard
  * @{
- * @brief Functions specific to the keyboard (not reusable in Lab 4)
+ * @brief Functions specific to the keyboard
  */
 
 /**

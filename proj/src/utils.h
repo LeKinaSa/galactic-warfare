@@ -59,21 +59,67 @@ void LinkedList_add(LinkedList* this, void* elem);
  */
 void LinkedList_erase(LinkedList* this, void* elem);
 
-
+/**
+ * @brief Reads a byte from the specified port.
+ * @param port  port to read
+ * @param value pointer to where the byte will be stored
+ * @return      zero if no errors occurred, non-zero otherwise
+ */
 int (util_sys_inb)(int port, uint8_t *value);
 
-
+/**
+ * @brief Gets least significant byte of a 16 bit number.
+ * @param val   16 bit number
+ * @param lsb   pointer to where the LSB will be stored
+ * @return zero if no errors occurred, non-zero otherwise
+ */
 int (util_get_LSB)(uint16_t val, uint8_t *lsb);
+/**
+ * @brief Gets most significant byte of a 16 bit number.
+ * @param val   16 bit number
+ * @param lsb   pointer to where the MSB will be stored
+ * @return zero if no errors occurred, non-zero otherwise
+ */
 int (util_get_MSB)(uint16_t val, uint8_t *msb);
 
-
+/**
+ * @brief Gets the four bytes that make up a given 32 bit number, from most to least significant.
+ * @param val   32 bit number
+ * @param part1 pointer to where the first byte will be stored
+ * @param part2 pointer to where the second byte will be stored
+ * @param part3 pointer to where the third byte will be stored
+ * @param part4 pointer to where the fourth byte will be stored
+ * @return      zero if no errors occurred, non-zero otherwise
+ */
 int util_get_parts(uint32_t val, uint8_t* part1, uint8_t* part2, uint8_t* part3, uint8_t* part4);
 
+/**
+ * @brief Appends two bytes to make a 16 bit number.
+ * @param val   pointer to where the 16 bit number will be stored
+ * @param msb   most significant byte
+ * @param lsb   least significant byte
+ * @return      zero if no errors occurred, non-zero otherwise
+ */
 int util_get_val(uint16_t* val, uint8_t msb, uint8_t lsb);
 
+/**
+ * @brief Appends four bytes to make a 32 bit number, from most to least significant.
+ * @param val   pointer to where the 32 bit number will be stored
+ * @param part1 first byte
+ * @param part2 second byte
+ * @param part3 third byte
+ * @param part4 fourth byte
+ * @return      zero if no errors occurred, non-zero otherwise
+ */
 int util_join_parts(uint32_t* val, uint8_t part1, uint8_t part2, uint8_t part3, uint8_t part4);
 
-/** @brief Returns the value of x limited by a lower and upper bound */
+/** 
+ * @brief Returns the value of x limited by a lower and upper bound.
+ * @param x     value to clamp
+ * @param lower lower bound
+ * @param upper upper bound
+ * @return      value limited by the bounds
+ */
 double clamp(double x, double lower, double upper);
 
 /** @brief Returns the smallest of two integers. */
@@ -81,6 +127,13 @@ int min(int a, int b);
 /** @brief Returns the largest of two integers. */
 int max(int a, int b);
 
+/**
+ * @brief Erases a given number of bytes from the start of a queue, shifting the next bytes to the
+ * start.
+ * @param queue         queue to perform operation on
+ * @param queue_size    pointer to the size of the queue (so it can be changed later)
+ * @param erase_size    number of bytes to erase
+ */
 void util_erase(uint8_t queue[], int *queue_size, int erase_size);
 
 /**@}*/

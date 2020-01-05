@@ -58,12 +58,21 @@ int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color, void** buffer);
  * @param img       xpm_image_t structure to draw
  * @param x         horizontal position of the first pixel of the xpm
  * @param y         vertical position of the first pixel of the xpm
- * @param buffer    buffer where the pixel should be drawn (this helps with double buffering)
+ * @param buffer    buffer where the xpm should be drawn
  * @return          zero if no errors occurred, non-zero otherwise
  */
 int vg_draw_xpm(xpm_image_t img, uint16_t x, uint16_t y, void** buffer);
 
-/* Draws an array of entities to a buffer according to their z-layer. Entities with a higher z-layer are drawn last (on top of the other entities). Returns 0 on success, non-zero otherwise. */
+/**
+ * @brief Draws entities to a buffer according to their z-layer.
+ * Entities with a higher z-layer are drawn last (on top of the other entities).
+ * @param bullets           linked list containing bullets from the player and the enemy
+ * @param current_powerup   pointer to the current powerup (NULL if it doesn't exist or has been picked up)
+ * @param player            pointer to player
+ * @param enemy             pointer to enemy
+ * @param buffer            buffer where the entities should be drawn
+ * @return                  zero if no errors occurred, non-zero otherwise
+ */
 int vg_render_entities(const LinkedList* bullets, const Powerup* current_powerup, const Player* player, const Player* enemy, void** buffer);
 
 /**@}*/

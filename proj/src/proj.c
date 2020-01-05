@@ -37,13 +37,15 @@
 #include "../res/Bullet.xpm"
 #include "../res/BulletEnemy.xpm"
 
+/** @brief Structure representing the current state of the program.
+ * Useful for knowing what function calls should be made before exiting the program. */
 typedef struct {
-  bool timer_int_subscribed;
-  bool rtc_int_subscribed;
-  bool kbd_int_subscribed;
-  bool mouse_int_subscribed;
-  bool sp_int_subscribed;
-  bool vg_initialized;
+  bool timer_int_subscribed;  /**< @brief Timer interrupts subscribed */
+  bool rtc_int_subscribed;    /**< @brief RTC interrupts subscribed */
+  bool kbd_int_subscribed;    /**< @brief Keyboard interrupts subscribed */
+  bool mouse_int_subscribed;  /**< @brief Mouse interrupts subscribed */
+  bool sp_int_subscribed;     /**< @brief Serial port interrupts subscribed */
+  bool vg_initialized;        /**< @brief Video mode and frame buffer initialized */
 } program_status_t;
 
 /* Video Related Variables */

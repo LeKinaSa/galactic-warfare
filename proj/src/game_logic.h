@@ -4,33 +4,38 @@
 #include <lcom/lcf.h>
 #include "utils.h"
 
-/* Basic two-dimensional vector. */
+/** @defgroup game_logic game_logic
+ * @{
+ * @brief Functions and data structures related to the game's internal logic
+ */
+
+/** @brief Basic two-dimensional vector. */
 typedef struct {
   double x, y;
 } Vector2;
 
-/* Calculates the norm (length) of the given vector */
+/** @brief Calculates the norm (length) of the given vector */
 double Vector2_norm(Vector2 this);
 
-/* Adds two vectors */
+/** @brief Calculates the sum of two vectors */
 Vector2 Vector2_add(Vector2 lhs, Vector2 rhs);
 
-/* Subtracts two vectors */
+/** @brief Calculates the difference of two vectors */
 Vector2 Vector2_subtract(Vector2 lhs, Vector2 rhs);
 
-/* Returns a normalized (length = 1) version of a vector */
+/** @brief Returns a normalized (length = 1) version of a vector */
 Vector2 Vector2_normalized(Vector2 this);
 
-/* Returns the dot product of the given vectors */
+/** @brief Returns the dot product of the given vectors */
 double Vector2_dot_prod(Vector2 lhs, Vector2 rhs);
 
-/* Performs a scalar multiplication on the given vector */
+/** @brief Performs a scalar multiplication on the given vector */
 Vector2 Vector2_scalar_mult(double scalar, Vector2 this);
 
-/* Returns the distance between the two vector */
+/** @brief Returns the distance between the two vectors */
 double Vector2_distance_to(Vector2 lhs, Vector2 rhs);
 
-/* Returns the angle between the two vectors */
+/** @brief Returns the angle between the two vectors in radians */
 double Vector2_angle_to(Vector2 lhs, Vector2 rhs);
 
 static const Vector2 UP = {0.0, -1.0};
@@ -38,14 +43,26 @@ static const Vector2 DOWN = {0.0, 1.0};
 static const Vector2 LEFT = {-1.0, 0.0};
 static const Vector2 RIGHT = {1.0, 0.0};
 
-
+/**
+ * @brief Generates a random position, given maximum values for the x and y coordinates (minimum is 0).
+ * @param max_x     maximum value of x coordinate
+ * @param max_y     maximum value of y coordinate
+ * @return          randomly generated position within the defined bounds
+ */
 Vector2 generate_random_pos(uint16_t max_x, uint16_t max_y);
 
+/**
+ * @brief Rotates a point around the origin by a given angle using a rotation matrix.
+ * The rotation matrix is suited to a cartesian system with an inverted y-axis (positive down, negative up).
+ * @param point point to rotate
+ * @param angle angle of rotation in radians (usually -PI to PI, but works with any angle)
+ * @return      rotated point
+ */
 Vector2 rotate_point(Vector2 point, double angle);
 
 
 typedef struct {
-  Vector2 vertices[3];
+  Vector2 vertices[3];  /**< @brief Array containing the three vertices of the triangle */
 } Triangle;
 
 /**
@@ -87,6 +104,7 @@ void Circle_delete(Circle* this);
 double Circle_area(const Circle* this);
 
 
+/** @brief Enumeration of the different shape types. */
 enum shape_type {
   NO_SHAPE,
   TRIANGLE,
@@ -104,7 +122,8 @@ enum shape_type {
 bool triangle_circle_collision(const Triangle* triangle, Vector2 triangle_pos, const Circle* circle, Vector2 circle_pos);
 
 
-/* Value that controls the rendering order of the sprites. Sprites with a higher z_layer value will be drawn on top. */
+/** @brief Value that controls the rendering order of the sprites. 
+ * Sprites with a higher z_layer value will be drawn on top. */
 enum z_layer {
   BACKGROUND,
   POWERUP,
@@ -112,8 +131,6 @@ enum z_layer {
   BULLET,
   MOUSE_CURSOR
 };
-
-#define NUM_Z_LAYERS  5
 
 
 typedef struct {
@@ -149,6 +166,7 @@ typedef struct {
   bool fire;
 } Player;
 
+/** @brief Enumeration used for identyfing which player fired a particular bullet. */
 enum player_id {
   PLAYER_ONE,
   PLAYER_TWO,
@@ -169,6 +187,7 @@ typedef struct {
 
 /* --- POWERUP --- */
 
+/** @brief Enumeration of the different powerup types. */
 enum powerup_type {
   SPEED,
   DAMAGE
@@ -190,5 +209,7 @@ void Powerup_delete(Powerup* this);
  * @param player            pointer to player
  */
 void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* player);
+
+/**@}*/
 
 #endif /* GAME_LOGIC_H */
