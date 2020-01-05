@@ -111,11 +111,6 @@ void sp_int_handler() {
           sp_transmit();
         }
         break;
-      case SP_IIR_ERROR:
-        /* FIFO Timeout */
-        printf("Caught the CC\n"); // RETIRAR
-        sp_receive();
-        break;
       default:
         printf("Modem  "); // RETIRAR
         break;
@@ -138,7 +133,6 @@ void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rt
   *spawn_bullet = false;
   printf("%d\n", received_size); // RETIRAR
   if (received_size == 0) {
-    printf("Went South\n"); // RETIRAR
     return;
   }
   uint8_t rtc_queue[SP_RTC_SIZE - 1], player_queue[SP_PLAYER_SIZE - 1];
@@ -157,7 +151,6 @@ void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rt
 
   /* Get PowerUp */
   if (rtc_size != SP_RTC_SIZE - 1) {
-    printf("No PowerUp\n"); // RETIRAR
     *generate_powerup = false;
   }
   else {
@@ -416,7 +409,7 @@ void sp_receive() {
 void sp_clear_error() {
   uint8_t iir = 0;
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
-  if (( iir & SP_IIR_INT ) == SP_IIR_ERROR) {
+  if (( iir & SP_IIR_INT ) == SP_IIR_CTO) {
     printf("Caught a Bad Error\n"); // RETIRAR
     uint8_t lsr = 0, byte = 0;
     util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);

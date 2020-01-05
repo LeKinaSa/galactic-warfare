@@ -21,9 +21,8 @@
 #define SP_IIR_INT      0x0E    /* Interrupt pending (1110) */
 #define SP_IIR_RLS      0x06    /* Receiver Line Status (0110) */
 #define SP_IIR_RDR      0x04    /* Received Data Ready (0100) */
-#define SP_IIR_CTO      0x08    /* Character Timeout (1100) */
+#define SP_IIR_CTO      0x0C    /* Character Timeout FIFO (1100) */
 #define SP_IIR_THR      0x02    /* Transmitter Holding Register Empty (0010) */
-#define SP_IIR_ERROR    0x0C    /* FIFO Timeout Error (1100) */
 #define SP_IIR_FIFO     0xC0    /* Both FIFOs Enabled */
 
 #define SP_IER_ENABLE_RDA     BIT(0)        /* Enable Receiver Interrupts */

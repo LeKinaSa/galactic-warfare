@@ -389,14 +389,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
           printf("SP INT : "); // RETIRAR
           sp_int_handler(host);
           util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir); // RETIRAR
-          //sp_clear_error();
-          printf("0x%x\n", iir); // RETIRAR
+          sp_int_handler();
+          printf("0x%x\n\n\n\n", iir); // RETIRAR
           if (sp_send_again()) {
             sp_retransmit_sequence(&player, current_powerup, generate_powerup, spawn_player_bullet);
           }
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
-          printf("TIMER\n"); // RETIRAR
           timer_int_handler();
           
           generate_powerup = false;
@@ -411,7 +410,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
             // Render a new frame.
             printf("Info\n"); // RETIRAR
             sp_treat_information_received(&enemy, &powerup_x, &powerup_y, &type, &generate_enemy_powerup, &spawn_enemy_bullet);
-            printf("\n\n\n"); // RETIRAR
+            printf("end\n"); // RETIRAR
             if (generate_enemy_powerup) {
               /* Generate the powerup coming from the serial port */
               Powerup_delete(current_powerup);
@@ -423,10 +422,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
                 powerup_entity.sprite = damage_powerup_sprite;
               }
               current_powerup = Powerup_new(&powerup_entity, type);
-              printf("Powerup Generated\n"); // RETIRAR
             }
             if (spawn_enemy_bullet) {
-              printf("Spawn Bullet\n"); // RETIRAR
               /* Spawn the Bullet on the Enemy Player */
               Vector2 bullet_position = Vector2_subtract(Vector2_subtract(enemy.entity->position, enemy.entity->offset), 
               (Vector2) {bullet_enemy_sprite.img.width / 2, bullet_enemy_sprite.img.height / 2});
@@ -437,7 +434,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
               LinkedList_add(bullets, &bullet);
             }
             
-            printf("Process\n"); // RETIRAR
             process_kbd_status(&kbd_status, &player);
             process_mouse_status(&m_status, &mouse_cursor, &player);
 
@@ -470,14 +466,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
             vg_render_entities(bullets, current_powerup, &player, &enemy, &aux_buffer);
             vg_draw_xpm(cursor_img, round(mouse_cursor.position.x), round(mouse_cursor.position.y), &aux_buffer);
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
-            printf("End of Process\n"); // RETIRAR
+
             /* Next Sequence to Be Transmitted By the Serial Port */
             sp_new_transmission(&player, current_powerup, generate_powerup, spawn_player_bullet);
             if (ready_to_transmit) {
               sp_transmit();
-              printf("transmission succeed.\n"); // RETIRAR
             }
-            printf("New Sequence Sent\n"); // RETIRAR
           }
         }
         break;
