@@ -21,7 +21,7 @@
 #define SP_IIR_INT      0x0E    /* Interrupt pending (1110) */
 #define SP_IIR_RLS      0x06    /* Receiver Line Status (0110) */
 #define SP_IIR_RDR      0x04    /* Received Data Ready (0100) */
-#define SP_IIR_CTO      0x0C    /* Character Timeout (1100) */
+#define SP_IIR_CTO      0x08    /* Character Timeout (1100) */
 #define SP_IIR_THR      0x02    /* Transmitter Holding Register Empty (0010) */
 #define SP_IIR_ERROR    0x0C    /* FIFO Timeout Error (1100) */
 #define SP_IIR_FIFO     0xC0    /* Both FIFOs Enabled */
@@ -47,10 +47,10 @@
 #define SP_FCR_TRIGGER_4            BIT(6)          /* FIFO Trigger 4 */
 #define SP_FCR_TRIGGER_8            BIT(7)          /* FIFO Trigger 8 */
 #define SP_FCR_TRIGGER_14           BIT(6) | BIT(7) /* FIFO Trigger 14 */
-#define SP_FCR_CONFIG              (SP_FCR_ENABLE_FIFO | SP_FCR_CLEAR_RECEIVE | SP_FCR_CLEAR_TRANSMIT | SP_FCR_TRIGGER_8) /* LCR COnfiguration */
+#define SP_FCR_CONFIG              (SP_FCR_ENABLE_FIFO | SP_FCR_CLEAR_RECEIVE | SP_FCR_CLEAR_TRANSMIT | SP_FCR_TRIGGER_4) /* LCR COnfiguration */
 
 #define SP_FIFO_SIZE            16      /* FIFO Size */
-#define SP_FIFO_TRIGGER         8       /* FIFO Trigger Level */
+#define SP_FIFO_TRIGGER         4       /* FIFO Trigger Level */
 
 #define SP_BIT_RATE             19200   /* Bit Rate */
 

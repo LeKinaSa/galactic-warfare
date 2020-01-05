@@ -111,6 +111,11 @@ void sp_int_handler() {
           sp_transmit();
         }
         break;
+      case SP_IIR_ERROR:
+        /* FIFO Timeout */
+        printf("Caught the CC\n"); // RETIRAR
+        sp_receive();
+        break;
       default:
         printf("Modem  "); // RETIRAR
         break;
