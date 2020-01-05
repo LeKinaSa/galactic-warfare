@@ -31,10 +31,10 @@ enum last_read {
 };
 
 /**
- * Help to transform the angle double into bytes to transmit and the bytes to double when receiving.
+ * Help to transform the angle float into bytes to transmit and the bytes to float when receiving.
  */
 union angle_to_transmit {
-  double angle;
+  float angle;
   uint32_t transmit;
 };
 

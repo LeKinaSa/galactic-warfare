@@ -386,7 +386,7 @@ void sp_transmit() {
 
 void sp_receive() {
   uint8_t byte = 0;
-  uint8_t lsr;
+  uint8_t lsr = 0;
 
   int packets = 0; // RETIRAR
 
