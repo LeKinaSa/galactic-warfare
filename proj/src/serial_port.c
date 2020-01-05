@@ -384,8 +384,7 @@ void sp_transmit() {
 }
 
 void sp_receive() {
-  uint8_t byte = 0;
-  uint8_t lsr;
+  uint8_t lsr = 0, byte = 0;
 
   int packets = 0; // RETIRAR
 
@@ -401,4 +400,19 @@ void sp_receive() {
     ++ packets; // RETIRAR
   }
   printf("Received : %d out of %d packets\n", received_size, packets); // RETIRAR
+}
+
+void sp_clear_error() {
+  printf("Caught a Bad Error\n"); // RETIRAR
+  uint8_t iir = 0;
+  util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
+  if (( iir & SP_IIR_INT ) == SP_IIR_ERROR) {
+    uint8_t lsr = 0, byte = 0;
+    util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
+    while ((lsr & SP_LSR_RD) != 0) {
+      util_sys_inb(SP1_BASE_ADDR + SP_RBR, &byte);
+      util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
+    }
+  sp_add_to_transmission_queue(SP_SEND_SEQUENCE);
+  }
 }

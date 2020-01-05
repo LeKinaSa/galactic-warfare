@@ -138,4 +138,9 @@ void sp_transmit();
  */
 void sp_receive();
 
+/**
+ * @brief Eliminate errors that can appear when checking IIR Register.
+ */
+void sp_clear_error();
+
 #endif /* __SERIAL_PORT_H */
