@@ -146,12 +146,13 @@ void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos);
 
 /* --- PLAYER --- */
 
+/** @brief Structure representing the current state of the player */
 typedef struct {
-  Entity* entity;
-  uint8_t current_health;
-  uint8_t speed;
-  float angle;
-  bool fire;
+  Entity* entity;         /**< @brief Pointer to player entity */
+  uint8_t current_health; /**< @brief Player's current health points */
+  uint8_t speed;          /**< @brief Player's current speed (can be modified by powerups) */
+  float angle;            /**< @brief The player's angle relative to the x-axis (between -PI and PI) */
+  bool fire;              /**< @brief True if the player is attempting to fire a bullet */
 } Player;
 
 /** @brief Enumeration used for identyfing which player fired a particular bullet. */
@@ -162,14 +163,20 @@ enum player_id {
   PLAYER_REMOTE = PLAYER_TWO
 };
 
+/**
+ * @brief Updates the position of the bullets and player.
+ * @param bullets   linked list containing information about all bullets
+ * @param player    pointer to player
+ */
 void update_entity_positions(LinkedList* bullets, Player* player);
 
 /* --- BULLET --- */
 
+/** @brief Structure representing a bullet */
 typedef struct {
-  Entity entity;
-  enum player_id parent;
-  uint8_t damage;
+  Entity entity;          /**< @brief Bullet entity */
+  enum player_id parent;  /**< @brief Player who fired the bullet */
+  uint8_t damage;         /**< @brief Damage the bullet will inflict */
 } Bullet;
 
 
@@ -181,12 +188,19 @@ enum powerup_type {
   DAMAGE
 };
 
+/** @brief Structure representing a powerup (collectable that improves the player's speed or damage
+ * for a short amount of time) */
 typedef struct {
   Entity* entity;
   enum powerup_type type;
 } Powerup;
 
+
 Powerup* Powerup_new(Entity* entity, enum powerup_type type);
+/**
+ * @brief Frees memory allocated for a powerup structure.
+ * @param this  pointer to the powerup structure to delete
+ */
 void Powerup_delete(Powerup* this);
 
 
