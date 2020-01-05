@@ -122,20 +122,8 @@ enum shape_type {
 bool triangle_circle_collision(const Triangle* triangle, Vector2 triangle_pos, const Circle* circle, Vector2 circle_pos);
 
 
-/** @brief Value that controls the rendering order of the sprites. 
- * Sprites with a higher z_layer value will be drawn on top. */
-enum z_layer {
-  BACKGROUND,
-  POWERUP,
-  PLAYER,
-  BULLET,
-  MOUSE_CURSOR
-};
-
-
 typedef struct {
   xpm_image_t img;
-  enum z_layer layer;
   enum shape_type collision_shape_type;
   void* collision_shape;
 } Sprite;

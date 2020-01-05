@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
 
   // Log function invocations that are being "wrapped" by LCF
-  lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
+  //lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
 
   // Save the output of printf function calls on a file
   lcf_log_output("/home/lcom/labs/proj/output.txt");
@@ -239,7 +239,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   ship.sw = ship_sw_img;
 
   Triangle* ship_collision_shape = Triangle_new((Vector2) {-10.0, -5.0}, (Vector2) {0.0, 20.0}, (Vector2) {10.0, -5.0});
-  Sprite ship_sprite = { ship.s, PLAYER, TRIANGLE, ship_collision_shape };
+  Sprite ship_sprite = { ship.s, TRIANGLE, ship_collision_shape };
 
   LinkedList* bullets = LinkedList_new(sizeof(Bullet));
   double x, y, enemy_x, enemy_y;
@@ -270,8 +270,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
   bool spawn_player_bullet = false, spawn_enemy_bullet = false;
 
   Circle* bullet_collision_shape = Circle_new(8.0);
-  Sprite bullet_sprite = { bullet_img, BULLET, CIRCLE, bullet_collision_shape };
-  Sprite bullet_enemy_sprite = { bullet_enemy_img, BULLET, CIRCLE, bullet_collision_shape };
+  Sprite bullet_sprite = { bullet_img, CIRCLE, bullet_collision_shape };
+  Sprite bullet_enemy_sprite = { bullet_enemy_img, CIRCLE, bullet_collision_shape };
 
   int ipc_status;
   message msg;
@@ -286,14 +286,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
   uint8_t packet_bytes[MOUSE_PCK_NUM_BYTES];
   mouse_status m_status = { false, false, false, vg_get_x_resolution() / 2, vg_get_y_resolution() / 2 };
 
-  Sprite cursor_sprite = { cursor_img, MOUSE_CURSOR, NO_SHAPE, NULL };
+  Sprite cursor_sprite = { cursor_img, NO_SHAPE, NULL };
   MouseCursor mouse_cursor = { cursor_sprite, {0.0, 0.0}, {-cursor_img.width / 2, -cursor_img.height / 2}};
 
   void* aux_buffer = malloc(vg_get_frame_buffer_size());
 
   Circle* powerup_collision_shape = Circle_new(16.0);
-  const Sprite speed_powerup_sprite = (Sprite) { speed_powerup_img, POWERUP, CIRCLE, powerup_collision_shape };
-  //const Sprite damage_powerup_sprite = (Sprite) { damage_powerup_img, POWERUP, CIRCLE, powerup_collision_shape };
+  const Sprite speed_powerup_sprite = (Sprite) { speed_powerup_img, CIRCLE, powerup_collision_shape };
+  const Sprite damage_powerup_sprite = (Sprite) { damage_powerup_img, CIRCLE, powerup_collision_shape };
   const uint16_t powerup_sprite_width = speed_powerup_img.width, powerup_sprite_height = speed_powerup_img.height;
 
   Powerup* current_powerup = NULL;
@@ -373,6 +373,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
               vg_get_y_resolution() - powerup_sprite_height);
               current_powerup = Powerup_new(&powerup_entity, (enum powerup_type) (rand() % 2));
               
+              if (current_powerup->type == SPEED) {
+                powerup_entity.sprite = speed_powerup_sprite;
+              }
+              else {
+                powerup_entity.sprite = damage_powerup_sprite;
+              }
+
               rtc_interrupted = true;
             }
           }
@@ -388,11 +395,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
           }
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
+          timer_int_handler();
+          
           generate_powerup = false;
           if (rtc_interrupted) {
             generate_powerup = true;
           }
-          timer_int_handler();
 
           if (counter == INTERRUPTS_PER_FRAME) {
             counter = 0;
@@ -403,11 +411,13 @@ int (proj_main_loop)(int argc, char *argv[]) {
             sp_treat_information_received(&enemy, current_powerup, &generate_enemy_powerup, &spawn_enemy_bullet);
             printf("\n\n\n"); // RETIRAR
             if (generate_enemy_powerup) {
+
               /* Generate the PowerUp Coming from the Serial Port */
             }
             if (spawn_enemy_bullet) {
               /* Spawn the Bullet on the Enemy Player */
-              Vector2 bullet_position = enemy.entity->position;
+              Vector2 bullet_position = Vector2_subtract(Vector2_subtract(enemy.entity->position, enemy.entity->offset), 
+              (Vector2) {bullet_enemy_sprite.img.width / 2, bullet_enemy_sprite.img.height / 2});
               Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {1.0, 0.0}, enemy.angle));
 
               Bullet bullet = { {bullet_enemy_sprite, bullet_position, bullet_velocity, {0.0, 0.0}}, PLAYER_TWO, PLAYER_BASE_DAMAGE };
@@ -430,7 +440,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
               can_fire = false;
 
               // Shoot bullet
-              Vector2 bullet_position = Vector2_add(Vector2_subtract(player.entity->position, player.entity->offset), 
+              Vector2 bullet_position = Vector2_subtract(Vector2_subtract(player.entity->position, player.entity->offset), 
               (Vector2) {bullet_sprite.img.width / 2, bullet_sprite.img.height / 2});
               Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {1.0, 0.0}, player.angle));
 
