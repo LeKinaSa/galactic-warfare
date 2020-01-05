@@ -156,14 +156,6 @@ typedef struct {
   bool fire;              /**< @brief True if the player is attempting to fire a bullet */
 } Player;
 
-/** @brief Enumeration used for identyfing which player fired a particular bullet. */
-enum player_id {
-  PLAYER_ONE,
-  PLAYER_TWO,
-  PLAYER_HOST = PLAYER_ONE,
-  PLAYER_REMOTE = PLAYER_TWO
-};
-
 /**
  * @brief Updates the position of the bullets and player.
  * @param bullets   linked list containing information about all bullets
@@ -176,7 +168,7 @@ void update_entity_positions(LinkedList* bullets, Player* player);
 /** @brief Structure representing a bullet */
 typedef struct {
   Entity entity;          /**< @brief Bullet entity */
-  enum player_id parent;  /**< @brief Player who fired the bullet */
+  bool friendly;          /**< @brief True if the bullet was fired by the player, false if it came from the enemy player. */
   uint8_t damage;         /**< @brief Damage the bullet will inflict */
 } Bullet;
 

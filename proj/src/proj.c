@@ -423,12 +423,12 @@ int (proj_main_loop)(int argc, char *argv[]) {
               current_powerup = Powerup_new(&powerup_entity, type);
             }
             if (spawn_enemy_bullet) {
-              /* Spawn the Bullet on the Enemy Player */
+              // Spawn the Bullet on the enemy player
               Vector2 bullet_position = Vector2_subtract(Vector2_subtract(enemy.entity->position, enemy.entity->offset), 
               (Vector2) {bullet_enemy_sprite.img.width / 2, bullet_enemy_sprite.img.height / 2});
               Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {1.0, 0.0}, enemy.angle));
 
-              Bullet bullet = { {bullet_enemy_sprite, bullet_position, bullet_velocity, {0.0, 0.0}}, PLAYER_TWO, PLAYER_BASE_DAMAGE };
+              Bullet bullet = { {bullet_enemy_sprite, bullet_position, bullet_velocity, {0.0, 0.0}}, false, PLAYER_BASE_DAMAGE };
 
               LinkedList_add(bullets, &bullet);
             }
@@ -452,8 +452,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
               (Vector2) {bullet_sprite.img.width / 2, bullet_sprite.img.height / 2});
               Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {1.0, 0.0}, player.angle));
 
-              Bullet bullet = { { bullet_sprite, bullet_position, bullet_velocity, {0.0, 0.0} }, 
-              PLAYER_ONE, PLAYER_BASE_DAMAGE };
+              Bullet bullet = {{bullet_sprite, bullet_position, bullet_velocity, {0.0, 0.0}}, true, PLAYER_BASE_DAMAGE};
 
               LinkedList_add(bullets, &bullet);
               spawn_player_bullet = true;

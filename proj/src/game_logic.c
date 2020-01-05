@@ -226,6 +226,39 @@ void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* p
       (*current_powerup) = NULL;  
     }
   }
+
+  if (bullets->size > 0) {
+    Node* current_node = bullets->first;
+    Node* node_to_erase;
+    Bullet* current_bullet;
+    Circle* bullet_collision_shape = NULL;
+
+    while (current_node != NULL) {
+      node_to_erase = NULL;
+
+      current_bullet = (Bullet*)(current_node->data);
+      if (bullet_collision_shape == NULL) {
+        bullet_collision_shape = (Circle*)(current_bullet->entity.sprite.collision_shape);
+      }
+
+      if (!current_bullet->friendly) {
+        if (triangle_circle_collision(player_collision_shape, player_entity->position, bullet_collision_shape, current_bullet->entity.position)) {
+          node_to_erase = current_node;
+          if (player->current_health > current_bullet->damage) {
+            player->current_health -= current_bullet->damage;
+          }
+          else {
+            player->current_health = 0;
+          }
+        }
+      }
+
+      current_node = current_node->next;
+      if (node_to_erase != NULL) {
+        LinkedList_erase(bullets, node_to_erase->data); 
+      }
+    }
+  }
 }
 
 
