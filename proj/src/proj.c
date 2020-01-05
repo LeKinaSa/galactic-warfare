@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
 
   // Log function invocations that are being "wrapped" by LCF
-  //lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
+  lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
 
   // Save the output of printf function calls on a file
   lcf_log_output("/home/lcom/labs/proj/output.txt");
@@ -377,7 +377,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
         }
         if (msg.m_notify.interrupts & BIT(sp_bit_no)) {
           printf("SP INT\n"); // RETIRAR
-          sp_int_handler();
+          sp_int_handler(host);
           if (sp_send_again()) {
             sp_retransmit_sequence(&player, current_powerup, generate_powerup, spawn_player_bullet);
           }
@@ -394,9 +394,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             // Update values according to internal game logic.
             // Render a new frame.
-            printf("Treat Info\n"); // RETIRAR
+            printf("Info\n"); // RETIRAR
             sp_treat_information_received(&enemy, current_powerup, &generate_enemy_powerup, &spawn_enemy_bullet);
-            printf("End of It\n"); // RETIRAR
+            printf("\n\n\n"); // RETIRAR
             if (generate_enemy_powerup) {
               /* Generate the PowerUp Coming from the Serial Port */
             }

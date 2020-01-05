@@ -9,11 +9,6 @@ static int to_transmit_size = 0;
 static uint8_t received[SP_FIFO_SIZE * SP_INT_PER_TIMER_INT];
 static int received_size = 0;
 
-union angle_to_transmit {
-  double angle;
-  uint32_t transmit;
-};
-
 int sp_subscribe_int(uint8_t *bit_no) {
   if (bit_no == NULL) {
     printf("Error occurred: null pointer.\n");
@@ -87,10 +82,12 @@ void sp_int_handler() {
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
   switch ( iir & SP_IIR_INT ) {
       case SP_IIR_RDR:
+        printf("Read\n"); // RETIRAR
         /* Read next char */
         sp_receive();
         break;
       case SP_IIR_THR:
+        printf("Transmit\n"); // RETIRAR
         /* Transmit next char */
         if (to_transmit_size == 0) {
           ready_to_transmit = true;
@@ -101,10 +98,12 @@ void sp_int_handler() {
         }
         break;
       case SP_IIR_CTO:
+        printf("Timeout\n"); // RETIRAR
         /* Character Timeout */
         sp_receive();
         break;
       case SP_IIR_RLS:
+        printf("Error\n"); // RETIRAR
         /* Receiver Line Status - Signals Error in LSR */
         util_sys_inb(SP1_BASE_ADDR + SP_LSR, &error);
         sp_add_to_transmission_queue(SP_SEND_SEQUENCE);
@@ -113,15 +112,13 @@ void sp_int_handler() {
         }
         break;
       default:
+        printf("Modem\n"); // RETIRAR
         break;
   }
 }
 
 int sp_send_again() {
-  if (received_size == 0) {
-    return 0;
-  }
-  if (received[received_size] == SP_SEND_SEQUENCE) {
+  if ((received_size != 0) && (received[received_size - 1] == SP_SEND_SEQUENCE)) {
     return 1;
   }
   return 0;
@@ -144,7 +141,7 @@ void sp_treat_information_received(Player *player, Powerup *powerup, bool *gener
   union angle_to_transmit angle;
 
   /* Get the Bullet and the Arrays for Player and RTC Info */
-  sp_treat_received_queue(rtc_queue, &rtc_size, player_queue, &player_size, spawn_bullet);
+  sp_treat_received_queue(player_queue, &player_size, rtc_queue, &rtc_size, spawn_bullet);
   
   /* Get PowerUp */
   if (rtc_size != SP_RTC_SIZE - 1) {
@@ -209,8 +206,8 @@ void sp_add_to_transmission_queue(uint8_t byte) {
   ++ to_transmit_size;
 }
 
-void sp_treat_received_queue(uint8_t rtc_queue[], int *rtc_size,
-                             uint8_t player_queue[], int *player_size, bool *spawn_bullet) {
+void sp_treat_received_queue(uint8_t player_queue[], int *player_size,
+                             uint8_t rtc_queue[], int *rtc_size, bool *spawn_bullet) {
   static enum last_read last = COMPLETE;
   uint8_t next_char;
 
@@ -385,15 +382,19 @@ void sp_transmit() {
 void sp_receive() {
   uint8_t byte = 0;
   uint8_t lsr;
+
+  int packets = 0; // RETIRAR
+
   util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
   while ((lsr & SP_LSR_RD) != 0) {
     util_sys_inb(SP1_BASE_ADDR + SP_RBR, &byte);
     received[received_size] = byte;
     ++ received_size;
     util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
-    if (received_size == SP_FIFO_SIZE * SP_INT_PER_TIMER_INT) {
-      break;
+    if (received_size >= (SP_FIFO_SIZE * SP_INT_PER_TIMER_INT) / 2) {
+      received_size = 0;
     }
+    ++ packets; // RETIRAR
   }
-  printf("Received : %d\n", received_size); // RETIRAR
+  printf("Received : %d out of %d packets\n", received_size, packets); // RETIRAR
 }
