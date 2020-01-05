@@ -82,12 +82,12 @@ void sp_int_handler() {
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
   switch ( iir & SP_IIR_INT ) {
       case SP_IIR_RDR:
-        printf("Read\n"); // RETIRAR
+        printf("Read  "); // RETIRAR
         /* Read next char */
         sp_receive();
         break;
       case SP_IIR_THR:
-        printf("Transmit\n"); // RETIRAR
+        printf("Transmit  "); // RETIRAR
         /* Transmit next char */
         if (to_transmit_size == 0) {
           ready_to_transmit = true;
@@ -98,12 +98,12 @@ void sp_int_handler() {
         }
         break;
       case SP_IIR_CTO:
-        printf("Timeout\n"); // RETIRAR
+        printf("Timeout  "); // RETIRAR
         /* Character Timeout */
         sp_receive();
         break;
       case SP_IIR_RLS:
-        printf("Error\n"); // RETIRAR
+        printf("Error  "); // RETIRAR
         /* Receiver Line Status - Signals Error in LSR */
         util_sys_inb(SP1_BASE_ADDR + SP_LSR, &error);
         sp_add_to_transmission_queue(SP_SEND_SEQUENCE);
@@ -112,8 +112,12 @@ void sp_int_handler() {
         }
         break;
       default:
-        printf("Modem\n"); // RETIRAR
+        printf("Modem  "); // RETIRAR
         break;
+  }
+  util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
+  if (( iir & SP_IIR_INT ) == SP_IIR_THR) {
+    ready_to_transmit = true;
   }
 }
 

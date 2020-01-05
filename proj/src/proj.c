@@ -312,7 +312,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
 
   sp_check_ready_to_transmit();
-
+  
+  uint8_t iir = 0; // RETIRAR
+  
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
       printf("Error when calling driver_receive.\n");
@@ -376,8 +378,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
           }
         }
         if (msg.m_notify.interrupts & BIT(sp_bit_no)) {
-          printf("SP INT\n"); // RETIRAR
+          printf("SP INT : "); // RETIRAR
           sp_int_handler(host);
+          util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir); // RETIRAR
+          printf("0x%x\n", iir); // RETIRAR
           if (sp_send_again()) {
             sp_retransmit_sequence(&player, current_powerup, generate_powerup, spawn_player_bullet);
           }
