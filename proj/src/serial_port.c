@@ -82,28 +82,22 @@ void sp_int_handler() {
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
   switch ( iir & SP_IIR_INT ) {
       case SP_IIR_RDR:
-        printf("Read  "); // RETIRAR
+        printf("Read\n"); // RETIRAR
         /* Read next char */
         sp_receive();
         break;
       case SP_IIR_THR:
-        printf("Transmit  "); // RETIRAR
+        printf("Transmit\n"); // RETIRAR
         /* Transmit next char */
-        if (to_transmit_size == 0) {
-          ready_to_transmit = true;
-        }
-        else {
-          sp_transmit();
-          ready_to_transmit = false;
-        }
+        sp_transmit();
         break;
       case SP_IIR_CTO:
-        printf("Timeout  "); // RETIRAR
+        printf("Timeout\n"); // RETIRAR
         /* Character Timeout */
         sp_receive();
         break;
       case SP_IIR_RLS:
-        printf("Error  "); // RETIRAR
+        printf("Error\n"); // RETIRAR
         /* Receiver Line Status - Signals Error in LSR */
         util_sys_inb(SP1_BASE_ADDR + SP_LSR, &error);
         sp_add_to_transmission_queue(SP_SEND_SEQUENCE);
@@ -112,12 +106,15 @@ void sp_int_handler() {
         }
         break;
       default:
-        printf("Modem  "); // RETIRAR
+        printf("Modem\n"); // RETIRAR
         break;
   }
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
-  if (( iir & SP_IIR_INT ) == SP_IIR_THR) {
-    ready_to_transmit = true;
+  if ((( iir & SP_IIR_INT ) == SP_IIR_CTO) || (( iir & SP_IIR_INT ) == SP_IIR_RDR)) {
+    sp_receive();
+  }
+  else if (( iir & SP_IIR_INT ) == SP_IIR_THR) {
+    sp_transmit();
   }
 }
 
@@ -145,10 +142,8 @@ void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rt
   union angle_to_transmit angle;
 
   /* Get the Bullet and the Arrays for Player and RTC Info */
-  printf("Info to Treat\n"); // RETIRAR
   sp_treat_received_queue(player_queue, &player_size, rtc_queue, &rtc_size, spawn_bullet);
-  printf("Info Treated\n"); //RETIRAR
-
+  
   /* Get PowerUp */
   if (rtc_size != SP_RTC_SIZE - 1) {
     *generate_powerup = false;
@@ -172,7 +167,6 @@ void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rt
   /* Get Player */
   printf("PLAYER\n"); // RETIRAR
   if (player_size != SP_PLAYER_SIZE - 1) {
-    printf("No Player\n"); // RETIRAR
     return;
   }
   printf("Still Player\n"); // RETIRAR
@@ -219,7 +213,6 @@ void sp_treat_received_queue(uint8_t player_queue[], int *player_size,
 
   for (int index = 0; index < received_size; ++ index) {
     next_char = received[index];
-    printf("%x  %d\n", next_char, next_char); // RETIRAR
     switch (last) {
       case COMPLETE:
         switch (next_char) {
@@ -317,7 +310,6 @@ void sp_treat_received_queue(uint8_t player_queue[], int *player_size,
     }
   }
   received_size = 0;
-  printf("end\n"); // RETIRAR
 }
 
 void sp_add_sequence_to_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet) {
@@ -378,6 +370,10 @@ void sp_check_ready_to_transmit() {
 }
 
 void sp_transmit() {
+  if (to_transmit_size == 0) {
+    ready_to_transmit = true;
+    return;
+  }
   uint8_t byte = 0;
   int minimum = min(SP_FIFO_SIZE, to_transmit_size);
   for (int index = 0; index < minimum; ++ index) {
@@ -385,10 +381,12 @@ void sp_transmit() {
     sys_outb(SP1_BASE_ADDR + SP_THR, byte);
   }
   util_erase(to_transmit, &to_transmit_size, minimum);
+  ready_to_transmit = false;
 }
 
 void sp_receive() {
-  uint8_t lsr = 0, byte = 0;
+  uint8_t byte = 0;
+  uint8_t lsr;
 
   int packets = 0; // RETIRAR
 
@@ -404,19 +402,4 @@ void sp_receive() {
     ++ packets; // RETIRAR
   }
   printf("Received : %d out of %d packets\n", received_size, packets); // RETIRAR
-}
-
-void sp_clear_error() {
-  uint8_t iir = 0;
-  util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
-  if (( iir & SP_IIR_INT ) == SP_IIR_CTO) {
-    printf("Caught a Bad Error\n"); // RETIRAR
-    uint8_t lsr = 0, byte = 0;
-    util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
-    while ((lsr & SP_LSR_RD) != 0) {
-      util_sys_inb(SP1_BASE_ADDR + SP_RBR, &byte);
-      util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
-    }
-  sp_add_to_transmission_queue(SP_SEND_SEQUENCE);
-  }
 }

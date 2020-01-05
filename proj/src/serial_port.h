@@ -75,11 +75,11 @@ int sp_send_again();
  * @param player              Enemy player received from the serial port
  * @param rtc_x               Coordinate X for the generated powerup
  * @param rtc_y               Coordinate Y for the generated powerup
- * @param rtc_type            Type for the powerup generated on the other virtual machine
+ * @param rtc_type            Type of the powerup generated on the other virtual machine
  * @param generate_powerup    true if the other machine generated a powerup, false if it doesn't
  * @param spawn_bullet        true if the other player fired, false if it doesn't
  */
-void sp_treat_information_received(Player* player, uint16_t *rtc_x, uint16_t *rtc_y, enum powerup_type *rtc_type, bool* generate_powerup, bool* spawn_bullet);
+void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rtc_y, enum powerup_type *rtc_type, bool *generate_powerup, bool *spawn_bullet);
 
 /**
  * @brief Update the transmission with new information.
@@ -88,7 +88,7 @@ void sp_treat_information_received(Player* player, uint16_t *rtc_x, uint16_t *rt
  * @param generate_powerup    true if the this machine generated a powerup, false if it doesn't
  * @param spawn_bullet        true if the this player fired, false if it doesn't
  */
-void sp_new_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet);
+void sp_new_transmission(Player *player, Powerup *powerup, bool generate_powerup, bool spawn_bullet);
 
 /**
  * @brief Update the transmission with a new sequence but the same information.
@@ -97,7 +97,7 @@ void sp_new_transmission(Player* player, Powerup* powerup, bool generate_powerup
  * @param generate_powerup    true if the this machine generated a powerup, false if it doesn't
  * @param spawn_bullet        true if the this player fired, false if it doesn't
  */
-void sp_retransmit_sequence(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet);
+void sp_retransmit_sequence(Player *player, Powerup *powerup, bool generate_powerup, bool spawn_bullet);
 
 /**
  * @brief Add a byte to the transmission.
@@ -123,7 +123,7 @@ void sp_treat_received_queue(uint8_t player_queue[], int *player_size,
  * @param generate_powerup    true if the this machine generated a powerup, false if it doesn't
  * @param spawn_bullet        true if the this player fired, false if it doesn't
  */
-void sp_add_sequence_to_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet);
+void sp_add_sequence_to_transmission(Player *player, Powerup *powerup, bool generate_powerup, bool spawn_bullet);
 
 /**
  * @brief Initial check to understand if the serial port is ready to transmit in the beginning of the programm.
@@ -139,10 +139,5 @@ void sp_transmit();
  * @brief Receive the Receiver Holding Register to a vector
  */
 void sp_receive();
-
-/**
- * @brief Eliminate errors that can appear when checking IIR Register.
- */
-void sp_clear_error();
 
 #endif /* __SERIAL_PORT_H */

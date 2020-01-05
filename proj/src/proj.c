@@ -389,7 +389,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
           printf("SP INT : "); // RETIRAR
           sp_int_handler(host);
           util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir); // RETIRAR
-          sp_int_handler();
           printf("0x%x\n\n\n\n", iir); // RETIRAR
           if (sp_send_again()) {
             sp_retransmit_sequence(&player, current_powerup, generate_powerup, spawn_player_bullet);
