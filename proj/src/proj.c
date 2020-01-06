@@ -63,8 +63,6 @@ uint8_t scancode = 0;
 uint8_t packet_byte;
 /* RTC Related Variables */
 uint8_t minute_counter = 0;
-/* Serial Port Related Variables */
-bool ready_to_transmit = false;
 /* XPM Related Variables (for animation) */
 xpm_animated ship;
 
@@ -328,7 +326,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
 
-  //sp_check_ready_to_transmit();
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
       printf("Error when calling driver_receive.\n");
@@ -403,6 +400,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
           sp_int_handler();
           if (sp_send_again()) {
             sp_retransmit_sequence(&player, current_powerup, spawn_player_bullet, host);
+            sp_transmit_polled();
           }
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {

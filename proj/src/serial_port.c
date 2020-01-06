@@ -2,7 +2,6 @@
 #include "utils.h"
 
 static int serial_port_hook_id = SP1_IRQ;
-extern bool ready_to_transmit;
 
 static uint8_t to_transmit[SP_FIFO_SIZE * SP_INT_PER_TIMER_INT];
 static int to_transmit_size = 0;
@@ -85,10 +84,6 @@ void sp_int_handler() {
         /* Read next char */
         sp_receive();
         break;
-      /*case SP_IIR_THR:
-        // Transmit next char
-        sp_transmit();
-        break;*/
       case SP_IIR_CTO:
         /* Character Timeout */
         sp_receive();
@@ -97,9 +92,7 @@ void sp_int_handler() {
         /* Receiver Line Status - Signals Error in LSR */
         util_sys_inb(SP1_BASE_ADDR + SP_LSR, &error);
         sp_add_to_transmission_queue(SP_SEND_SEQUENCE);
-        if (ready_to_transmit) {
-          sp_transmit();
-        }
+        sp_transmit_polled();
         break;
       default:
         break;
@@ -108,9 +101,6 @@ void sp_int_handler() {
   if ((( iir & SP_IIR_INT ) == SP_IIR_CTO) || (( iir & SP_IIR_INT ) == SP_IIR_RDR)) {
     sp_receive();
   }
-  /*if (( iir & SP_IIR_INT ) == SP_IIR_THR) {
-    sp_transmit();
-  }*/
 }
 
 int sp_send_again() {
@@ -123,7 +113,6 @@ int sp_send_again() {
 void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rtc_y, enum powerup_type *rtc_type, bool *generate_powerup, bool *spawn_bullet) {
   *generate_powerup = false;
   *spawn_bullet = false;
-  //printf("Received : %d\n", received_size); // RETIRAR
   if (received_size == 0) {
     return;
   }
@@ -180,7 +169,6 @@ void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rt
   player->entity->position.x = x;
   player->entity->position.y = y;
   player->angle = angle.angle;
-  //printf("Player : %x  %x      %x\n", x, y, angle.transmit);  // RETIRAR
 }
 
 void sp_new_transmission(Player* player, Powerup* powerup, bool spawn_bullet, bool host) {
@@ -207,8 +195,7 @@ void sp_treat_received_queue(uint8_t player_queue[], int *player_size,
 
   for (int index = 0; index < received_size; ++ index) {
     next_char = received[index];
-    //printf("%x  %d %d\n", next_char, last, *player_size); // RETIRAR
-
+    
     switch (last) {
       case COMPLETE:
         switch (next_char) {
@@ -223,7 +210,6 @@ void sp_treat_received_queue(uint8_t player_queue[], int *player_size,
             last = PLAYER_SIZE_0;
             break;
           case SP_RTC_INTERRUPT:
-            printf("\n\n\n\tRTC\n\n\n");
             *rtc_size = 0;
             last = RTC_SIZE_0;
             break;
@@ -358,18 +344,8 @@ void sp_add_sequence_to_transmission(Player* player, Powerup* powerup, bool gene
   sp_add_to_transmission_queue(SP_END_SEQUENCE);
 }
 
-void sp_check_ready_to_transmit() {
-  uint8_t lsr = 0;
-  util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
-  if (( lsr & SP_LSR_THR_EMPTY ) != 0) {
-    ready_to_transmit = true;
-  }
-}
-
 void sp_transmit() {
-  //printf("Transmitted : %d\n", to_transmit_size); // RETIRAR
   if (to_transmit_size == 0) {
-    ready_to_transmit = true;
     return;
   }
   uint8_t byte = 0;
@@ -379,7 +355,6 @@ void sp_transmit() {
     sys_outb(SP1_BASE_ADDR + SP_THR, byte);
   }
   util_erase(to_transmit, &to_transmit_size, minimum);
-  ready_to_transmit = false;
 }
 
 void sp_transmit_polled() {
