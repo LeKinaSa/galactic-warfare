@@ -179,7 +179,6 @@ void sp_new_transmission(Player* player, Powerup* powerup, bool spawn_bullet, bo
 
 void sp_retransmit_sequence(Player* player, Powerup* powerup, bool spawn_bullet, bool host) {
   bool generate_powerup = (powerup != NULL) && host;
-  sp_add_to_transmission_queue(SP_NEW_SEQUENCE);
   sp_add_sequence_to_transmission(player, powerup, generate_powerup, spawn_bullet);
 }
 
@@ -199,7 +198,7 @@ void sp_treat_received_queue(uint8_t player_queue[], int *player_size,
     switch (last) {
       case COMPLETE:
         switch (next_char) {
-          case NEW_SEQUENCE:
+          case SP_NEW_SEQUENCE:
             *player_size = 0;
             *rtc_size = 0;
             *spawn_bullet = false;
@@ -301,6 +300,7 @@ void sp_add_sequence_to_transmission(Player* player, Powerup* powerup, bool gene
   uint8_t type;
   union angle_to_transmit angle;
 
+  sp_add_to_transmission_queue(SP_NEW_SEQUENCE);
   /* Player */
   sp_add_to_transmission_queue(SP_ENEMY_PLAYER);
     /* Coordinates */
