@@ -41,7 +41,7 @@ int sp_config(uint32_t bit_rate) {
     return 1;
   }
 
-  /* Configure LCR (to configure DL)*/
+  /* Configure LCR (to configure DL) */
   if (sys_outb(SP1_BASE_ADDR + SP_LCR, SP_LCR_CONFIG | SP_LCR_DLAB)) {
     printf("Error when configuring Line Control Register.\n");
     return 1;
@@ -82,22 +82,17 @@ void sp_int_handler() {
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
   switch ( iir & SP_IIR_INT ) {
       case SP_IIR_RDR:
-        printf("Read\n"); // RETIRAR
+        //printf("Read\n"); // RETIRAR
         /* Read next char */
         sp_receive();
         break;
-      case SP_IIR_THR:
-        printf("Transmit\n"); // RETIRAR
-        /* Transmit next char */
-        sp_transmit();
-        break;
       case SP_IIR_CTO:
-        printf("Timeout\n"); // RETIRAR
+        //printf("Timeout\n"); // RETIRAR
         /* Character Timeout */
         sp_receive();
         break;
       case SP_IIR_RLS:
-        printf("Error\n"); // RETIRAR
+        //printf("Error\n"); // RETIRAR
         /* Receiver Line Status - Signals Error in LSR */
         util_sys_inb(SP1_BASE_ADDR + SP_LSR, &error);
         sp_add_to_transmission_queue(SP_SEND_SEQUENCE);
@@ -106,15 +101,12 @@ void sp_int_handler() {
         }
         break;
       default:
-        printf("Modem\n"); // RETIRAR
+        //printf("Modem\n"); // RETIRAR
         break;
   }
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
   if ((( iir & SP_IIR_INT ) == SP_IIR_CTO) || (( iir & SP_IIR_INT ) == SP_IIR_RDR)) {
     sp_receive();
-  }
-  else if (( iir & SP_IIR_INT ) == SP_IIR_THR) {
-    sp_transmit();
   }
 }
 
@@ -128,7 +120,7 @@ int sp_send_again() {
 void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rtc_y, enum powerup_type *rtc_type, bool *generate_powerup, bool *spawn_bullet) {
   *generate_powerup = false;
   *spawn_bullet = false;
-  printf("%d\n", received_size); // RETIRAR
+  //printf("%d\n", received_size); // RETIRAR
   if (received_size == 0) {
     return;
   }
@@ -165,11 +157,11 @@ void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rt
   }
 
   /* Get Player */
-  printf("PLAYER\n"); // RETIRAR
+  //printf("PLAYER\n"); // RETIRAR
   if (player_size != SP_PLAYER_SIZE - 1) {
     return;
   }
-  printf("Still Player\n"); // RETIRAR
+  //printf("Still Player\n"); // RETIRAR
     /* Coordinates */
   msb_x  = player_queue[0];
   lsb_x  = player_queue[1];
@@ -187,8 +179,8 @@ void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rt
   player->entity->position.x = x;
   player->entity->position.y = y;
   player->angle = angle.angle;
-  printf("%x %x\n", x, y);  // RETIRAR
-  printf("        %x\n", angle.transmit);  // RETIRAR
+  //printf("%x %x\n", x, y);  // RETIRAR
+  //printf("        %x\n", angle.transmit);  // RETIRAR
 }
 
 void sp_new_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet) {
@@ -384,6 +376,24 @@ void sp_transmit() {
   ready_to_transmit = false;
 }
 
+void sp_transmit_polled() {
+  uint8_t byte = 0, lsr = 0;
+  int minimum;
+
+  while (to_transmit_size != 0) {
+    util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
+    if (lsr & SP_LSR_THR_EMPTY) {
+      minimum = min(SP_FIFO_SIZE, to_transmit_size);
+      for (int index = 0; index < minimum; ++ index) {
+        byte = to_transmit[index];
+        sys_outb(SP1_BASE_ADDR + SP_THR, byte);
+      }
+      util_erase(to_transmit, &to_transmit_size, minimum);
+    }
+    micro_delay(500);
+  }
+}
+
 void sp_receive() {
   uint8_t byte = 0;
   uint8_t lsr = 0;
@@ -401,5 +411,5 @@ void sp_receive() {
     }
     ++ packets; // RETIRAR
   }
-  printf("Received : %d out of %d packets\n", received_size, packets); // RETIRAR
+  //printf("Received : %d out of %d packets\n", received_size, packets); // RETIRAR
 }

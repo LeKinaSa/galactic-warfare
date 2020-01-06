@@ -135,6 +135,8 @@ void sp_check_ready_to_transmit();
  */
 void sp_transmit();
 
+void sp_transmit_polled();
+
 /**
  * @brief Receive the Receiver Holding Register to a vector
  */

@@ -28,7 +28,7 @@
 #define SP_IER_ENABLE_RDA     BIT(0)        /* Enable Receiver Interrupts */
 #define SP_IER_ENABLE_THR     BIT(1)        /* Enable Transmitter Interrupts */
 #define SP_IER_ENABLE_RLS     BIT(2)        /* Enable Error Interrupts -> Signals Error in bits 1-4 LSR */
-#define SP_IER_CONFIG        (SP_IER_ENABLE_RDA | SP_IER_ENABLE_THR | SP_IER_ENABLE_RLS) /* IER Configuration */
+#define SP_IER_CONFIG        (SP_IER_ENABLE_RDA | SP_IER_ENABLE_RLS) /* IER Configuration */
 
 #define SP_LCR_LENGHT_8            (BIT(1) | BIT(0))    /* Word Length 8 */
 #define SP_LCR_1_STOP_BIT           BIT(2)              /* 1 Stop Bit */

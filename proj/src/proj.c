@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
   //lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
 
   // Save the output of printf function calls on a file
-  lcf_log_output("/home/lcom/labs/proj/output.txt");
+  //lcf_log_output("/home/lcom/labs/proj/output.txt");
 
   // handles control over to LCF
   // [LCF handles command line arguments and invokes the right function]
@@ -362,7 +362,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
           }
         }
         if ((msg.m_notify.interrupts & BIT(rtc_bit_no)) && (host)) {
-          printf("RTC\n"); // RETIRAR
+          //printf("RTC\n"); // RETIRAR
           rtc_int_handler();
           if (minute_counter == POWERUP_INTERVAL) {
             minute_counter = 0;
@@ -386,10 +386,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
           }
         }
         if (msg.m_notify.interrupts & BIT(sp_bit_no)) {
-          printf("SP INT : "); // RETIRAR
-          sp_int_handler(host);
+          //printf("SP INT : "); // RETIRAR
+          sp_int_handler();
           util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir); // RETIRAR
-          printf("0x%x\n\n\n\n", iir); // RETIRAR
+          //printf("0x%x\n\n\n\n", iir); // RETIRAR
           if (sp_send_again()) {
             sp_retransmit_sequence(&player, current_powerup, generate_powerup, spawn_player_bullet);
           }
@@ -407,9 +407,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             // Update values according to internal game logic.
             // Render a new frame.
-            printf("Info\n"); // RETIRAR
+            //printf("Info\n"); // RETIRAR
             sp_treat_information_received(&enemy, &powerup_x, &powerup_y, &type, &generate_enemy_powerup, &spawn_enemy_bullet);
-            printf("end\n"); // RETIRAR
+            //printf("end\n"); // RETIRAR
             if (generate_enemy_powerup) {
               /* Generate the powerup coming from the serial port */
               Powerup_delete(current_powerup);
@@ -467,9 +467,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             /* Next Sequence to Be Transmitted By the Serial Port */
             sp_new_transmission(&player, current_powerup, generate_powerup, spawn_player_bullet);
-            if (ready_to_transmit) {
-              sp_transmit();
-            }
+            sp_transmit_polled();
           }
         }
         break;
