@@ -60,9 +60,9 @@ Vector2 generate_random_pos(uint16_t max_x, uint16_t max_y);
  */
 Vector2 rotate_point(Vector2 point, double angle);
 
-
+/** @brief Structure that represents a triangle. */
 typedef struct {
-  Vector2 vertices[3];  /**< @brief Array containing the three vertices of the triangle */
+  Vector2 vertices[3];  /**< @brief array containing the three vertices of the triangle */
 } Triangle;
 
 /**
@@ -81,9 +81,9 @@ Triangle* Triangle_new(Vector2 vertex1, Vector2 vertex2, Vector2 vertex3);
  */
 void Triangle_delete(Triangle* this);
 
-
+/** @brief Structure that represents a circle */
 typedef struct {
-  double radius;
+  double radius;  /**< @brief radius of the circle */
 } Circle;
 
 /**
@@ -127,23 +127,26 @@ bool triangle_circle_collision(const Triangle* triangle, Vector2 triangle_pos, c
  */
 bool circle_circle_collision(const Circle* circle1, Vector2 circle1_pos, const Circle* circle2, Vector2 circle2_pos);
 
+/** @brief Structure representing a sprite, with an optional collision shape */
 typedef struct {
-  xpm_image_t img;
-  enum shape_type collision_shape_type;
-  void* collision_shape;
+  xpm_image_t img;                        /**< @brief xpm_image_t structure containing information about the image */
+  enum shape_type collision_shape_type;   /**< @brief type of collision shape */
+  void* collision_shape;                  /**< @brief pointer to the collision shape, NULL if sprite has no collision shape */
 } Sprite;
 
+/** @brief Structure representing an entity (any object that be placed or moved around the display) */
 typedef struct {
-  Sprite sprite;
-  Vector2 position;
-  Vector2 velocity;
-  Vector2 offset;
+  Sprite sprite;    /**< @brief sprite that will be drawn on the display */
+  Vector2 position; /**< @brief exact position of the entity */
+  Vector2 velocity; /**< @brief velocity of the entity, added to the position every frame */
+  Vector2 offset;   /**< @brief position of the centre of the sprite relative to the upper left corner, used for rotation and collision */
 } Entity;
 
+/** @brief Structure representing the mouse cursor */
 typedef struct {
-  Sprite sprite;
-  Vector2 position;
-  Vector2 offset;
+  Sprite sprite;      /**< @brief sprite that will be drawn on the display */
+  Vector2 position;   /**< @brief position of the mouse cursor */
+  Vector2 offset;     /**< @brief position of the centre of the cursor (the cursor is a sight, not an arrow) */
 } MouseCursor;
 
 /**
