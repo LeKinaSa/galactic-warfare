@@ -85,10 +85,10 @@ void sp_int_handler() {
         /* Read next char */
         sp_receive();
         break;
-      case SP_IIR_THR:
+      /*case SP_IIR_THR:
         // Transmit next char
         sp_transmit();
-        break;
+        break;*/
       case SP_IIR_CTO:
         /* Character Timeout */
         sp_receive();
@@ -108,9 +108,9 @@ void sp_int_handler() {
   if ((( iir & SP_IIR_INT ) == SP_IIR_CTO) || (( iir & SP_IIR_INT ) == SP_IIR_RDR)) {
     sp_receive();
   }
-  if (( iir & SP_IIR_INT ) == SP_IIR_THR) {
+  /*if (( iir & SP_IIR_INT ) == SP_IIR_THR) {
     sp_transmit();
-  }
+  }*/
 }
 
 int sp_send_again() {
