@@ -263,8 +263,8 @@ int (proj_main_loop)(int argc, char *argv[]) {
   Entity* ship1_entity_ptr = &ship1_entity;
   Entity* ship2_entity_ptr = &ship2_entity;
 
-  Player player = { ship1_entity_ptr, PLAYER_MAX_HEALTH, PLAYER_BASE_SPEED, 0.0, false };
-  Player enemy  = { ship2_entity_ptr, PLAYER_MAX_HEALTH, PLAYER_BASE_SPEED, 0.0, false };
+  Player player = { ship1_entity_ptr, PLAYER_MAX_HEALTH, PLAYER_BASE_SPEED, PLAYER_BASE_DAMAGE, 0.0, false };
+  Player enemy  = { ship2_entity_ptr, PLAYER_MAX_HEALTH, PLAYER_BASE_SPEED, PLAYER_BASE_DAMAGE, 0.0, false };
   bool can_fire = true;
   uint8_t frames = 0;
   bool spawn_player_bullet = false, spawn_enemy_bullet = false;
@@ -361,8 +361,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
           rtc_int_handler();
           if (minute_counter == POWERUP_INTERVAL) {
             minute_counter = 0;
-            // Generate random position on screen.
-            // Create new powerup entity at position.
+
+            // Reset effects of previous powerup
+            // Generate random position on screen
+            // Create new powerup entity at position
+
+            reset_speed_and_damage(&player);
+            reset_speed_and_damage(&enemy);
+
             Powerup_delete(current_powerup);
             current_powerup = NULL;
 
@@ -390,12 +396,16 @@ int (proj_main_loop)(int argc, char *argv[]) {
           if (counter == INTERRUPTS_PER_FRAME) {
             counter = 0;
 
-            // Update values according to internal game logic.
-            // Render a new frame.
+            // Update values according to internal game logic
+            // Render a new frame
             sp_treat_information_received(&enemy, &powerup_x, &powerup_y, &type, &generate_powerup, &spawn_enemy_bullet);
             rotate_player(&enemy);
             if (generate_powerup) {
-              /* Generate the powerup coming from the serial port */
+              // Reset effects of previous powerup
+              reset_speed_and_damage(&player);
+              reset_speed_and_damage(&enemy);
+
+              // Generate the powerup coming from the serial port
               Powerup_delete(current_powerup);
               powerup_entity.position = (Vector2) {powerup_x, powerup_y};
               if (type == SPEED) {
@@ -410,10 +420,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
               // Spawn the Bullet on the enemy player
               Vector2 bullet_position = Vector2_subtract(Vector2_subtract(enemy.entity->position, enemy.entity->offset), 
               (Vector2) {bullet_enemy_sprite.img.width / 2, bullet_enemy_sprite.img.height / 2});
-              Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {1.0, 0.0}, enemy.angle));
+              Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point(RIGHT, enemy.angle));
               Vector2 bullet_offset = {bullet_enemy_sprite.img.width / 2, bullet_enemy_sprite.img.height / 2};
 
-              Bullet bullet = { {bullet_enemy_sprite, bullet_position, bullet_velocity, bullet_offset}, false, PLAYER_BASE_DAMAGE };
+              Bullet bullet = {{bullet_enemy_sprite, bullet_position, bullet_velocity, bullet_offset}, false, enemy.damage};
 
               LinkedList_add(bullets, &bullet);
             }
@@ -435,10 +445,10 @@ int (proj_main_loop)(int argc, char *argv[]) {
               // Shoot bullet
               Vector2 bullet_position = Vector2_subtract(Vector2_subtract(player.entity->position, player.entity->offset), 
               (Vector2) {bullet_sprite.img.width / 2, bullet_sprite.img.height / 2});
-              Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {1.0, 0.0}, player.angle));
+              Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point(RIGHT, player.angle));
               Vector2 bullet_offset = {bullet_sprite.img.width / 2, bullet_sprite.img.height / 2};
 
-              Bullet bullet = {{bullet_sprite, bullet_position, bullet_velocity, bullet_offset}, true, PLAYER_BASE_DAMAGE};
+              Bullet bullet = {{bullet_sprite, bullet_position, bullet_velocity, bullet_offset}, true, player.damage};
 
               LinkedList_add(bullets, &bullet);
               spawn_player_bullet = true;
@@ -454,10 +464,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
             /* Next Sequence to Be Transmitted By the Serial Port */
             sp_new_transmission(&player, current_powerup, spawn_player_bullet, host);
             sp_transmit_polled();
-            /*sp_check_ready_to_transmit();
-            if (ready_to_transmit) {
-              sp_transmit();
-            }*/
           }
         }
         break;

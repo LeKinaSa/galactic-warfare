@@ -161,6 +161,7 @@ typedef struct {
   Entity* entity;         /**< @brief Pointer to player entity */
   uint8_t current_health; /**< @brief Player's current health points */
   uint8_t speed;          /**< @brief Player's current speed (can be modified by powerups) */
+  uint8_t damage;         /**< @brief Player's current damage (can be modified by powerups) */
   float angle;            /**< @brief The player's angle relative to the x-axis (between -PI and PI) */
   bool fire;              /**< @brief True if the player is attempting to fire a bullet */
 } Player;
@@ -171,6 +172,12 @@ typedef struct {
  * @param player    pointer to player
  */
 void update_entity_positions(LinkedList* bullets, Player* player);
+
+/**
+ * @brief Resets a player's speed and damage to the base values.
+ * @param player  pointer to player to reset
+ */
+void reset_speed_and_damage(Player* player);
 
 /* --- BULLET --- */
 

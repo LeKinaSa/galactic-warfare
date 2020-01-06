@@ -153,6 +153,15 @@ bool circle_circle_collision(const Circle* circle1, Vector2 circle1_pos, const C
 
 
 
+void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos) {
+  cursor->position = Vector2_add(mouse_pos, cursor->offset);
+  const double MAX_X = vg_get_x_resolution() - cursor->sprite.img.width;
+  const double MAX_Y = vg_get_y_resolution() - cursor->sprite.img.height;
+  cursor->position.x = clamp((double) cursor->position.x, 0.0, MAX_X);
+  cursor->position.y = clamp((double) cursor->position.y, 0.0, MAX_Y);
+}
+
+
 void update_entity_position(Entity* entity) {
   const uint16_t x_res = vg_get_x_resolution(), y_res = vg_get_y_resolution();
 
@@ -199,12 +208,10 @@ void update_entity_positions(LinkedList* bullets, Player* player) {
   }
 }
 
-void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos) {
-  cursor->position = Vector2_add(mouse_pos, cursor->offset);
-  const double MAX_X = vg_get_x_resolution() - cursor->sprite.img.width;
-  const double MAX_Y = vg_get_y_resolution() - cursor->sprite.img.height;
-  cursor->position.x = clamp((double) cursor->position.x, 0.0, MAX_X);
-  cursor->position.y = clamp((double) cursor->position.y, 0.0, MAX_Y);
+
+void reset_speed_and_damage(Player* player) {
+  player->speed = PLAYER_BASE_SPEED;
+  player->damage = PLAYER_BASE_DAMAGE;
 }
 
 
@@ -228,17 +235,15 @@ void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* p
         player->speed = PLAYER_BASE_SPEED * 2;
       }
       else {
-        // TODO: Increase player damage
+        player->damage = PLAYER_BASE_DAMAGE * 2;
       }
-      // TODO: Add timer for powerup duration
       (*current_powerup) = NULL;  
     }
     else if (circle_circle_collision(enemy_collision_shape, Vector2_subtract(enemy_entity->position, enemy_entity->offset),
     powerup_collision_shape, Vector2_add(powerup_entity->position, powerup_entity->offset))) {
       if ((*current_powerup)->type == DAMAGE) {
-        // TODO: Increase enemy damage
+        enemy->damage = PLAYER_BASE_DAMAGE * 2;
       }
-      // TODO: Add timer for powerup duration
       (*current_powerup) = NULL;
     }
   }
