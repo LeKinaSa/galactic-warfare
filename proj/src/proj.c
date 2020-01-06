@@ -37,6 +37,11 @@
 #include "../res/Bullet.xpm"
 #include "../res/BulletEnemy.xpm"
 
+/** @defgroup proj proj
+ * @{
+ * @brief File where the project's main loop and global variables are located.
+ */
+
 /** @brief Structure representing the current state of the program.
  * Useful for knowing what function calls should be made before exiting the program. */
 typedef struct {
@@ -105,6 +110,11 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
+/**
+ * @brief The project's main function.
+ * @param argc  argument count when running the program from the command line
+ * @param argv  array containing the arguments given in the command line
+ */
 int (proj_main_loop)(int argc, char *argv[]) {
   static const char host_str[] = "host", remote_str[] = "remote";
   
@@ -476,6 +486,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   // Free dynamically allocated memory
   free(aux_buffer);
   LinkedList_delete(bullets);
+  Powerup_delete(current_powerup);
   free(ship_collision_shape);
   free(bullet_collision_shape);
   free(powerup_collision_shape);
@@ -547,10 +558,14 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
   program_status->vg_initialized = false;
 
+  free(program_status);
   return 0;
 }
 
-
+/**
+ * @brief Exits the program, calling the appropriate functions according to the program's current status.
+ * @param status    pointer to program's current status
+ */
 void exit_program(program_status_t* status) {
   if (status->timer_int_subscribed) {
     timer_unsubscribe_int();
