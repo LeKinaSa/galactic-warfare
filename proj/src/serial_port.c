@@ -86,6 +86,7 @@ void sp_int_handler() {
         sp_receive();
         break;
       case SP_IIR_THR:
+        // Transmit next char
         sp_transmit();
         break;
       case SP_IIR_CTO:
