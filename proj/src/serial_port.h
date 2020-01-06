@@ -6,32 +6,37 @@
 #include "uart.h"
 #include "game_logic.h"
 
+/** @defgroup serial_port serial_port
+ * @{
+ * @brief Functions and data structures related to the serial port
+ */
+
 /**
- * Identify where we are in the received vector treatment.
+ * @brief Identify where we are in the received vector treatment.
  */
 enum last_read {
-  COMPLETE,             /* Last packet is complete */
-  NEW_SEQUENCE,         /* New Sequence */
-  SEND_SEQUENCE,        /* Send Sequence Again */
+  COMPLETE,             /**< @brief Last packet is complete */
+  NEW_SEQUENCE,         /**< @brief New Sequence */
+  SEND_SEQUENCE,        /**< @brief Send Sequence Again */
 
-  RTC_SIZE_0,           /* RTC coordinates and type (0 bytes read) */
-  RTC_SIZE_1,           /* RTC coordinates and type (1 byte  read) */
-  RTC_SIZE_2,           /* RTC coordinates and type (2 bytes read) */
-  RTC_SIZE_3,           /* RTC coordinates and type (3 bytes read) */
-  RTC_SIZE_4,           /* RTC coordinates and type (4 bytes read) */
+  RTC_SIZE_0,           /**< @brief RTC coordinates and type (0 bytes read) */
+  RTC_SIZE_1,           /**< @brief RTC coordinates and type (1 byte  read) */
+  RTC_SIZE_2,           /**< @brief RTC coordinates and type (2 bytes read) */
+  RTC_SIZE_3,           /**< @brief RTC coordinates and type (3 bytes read) */
+  RTC_SIZE_4,           /**< @brief RTC coordinates and type (4 bytes read) */
   
-  PLAYER_SIZE_0,        /* Player coordinates and angle (0 bytes read) */
-  PLAYER_SIZE_1,        /* Player coordinates and angle (1 byte  read) */
-  PLAYER_SIZE_2,        /* Player coordinates and angle (2 bytes read) */
-  PLAYER_SIZE_3,        /* Player coordinates and angle (3 bytes read) */
-  PLAYER_SIZE_4,        /* Player coordinates and angle (4 bytes read) */
-  PLAYER_SIZE_5,        /* Player coordinates and angle (5 bytes read) */
-  PLAYER_SIZE_6,        /* Player coordinates and angle (6 bytes read) */
-  PLAYER_SIZE_7         /* Player coordinates and angle (7 bytes read) */
+  PLAYER_SIZE_0,        /**< @brief Player coordinates and angle (0 bytes read) */
+  PLAYER_SIZE_1,        /**< @brief Player coordinates and angle (1 byte  read) */
+  PLAYER_SIZE_2,        /**< @brief Player coordinates and angle (2 bytes read) */
+  PLAYER_SIZE_3,        /**< @brief Player coordinates and angle (3 bytes read) */
+  PLAYER_SIZE_4,        /**< @brief Player coordinates and angle (4 bytes read) */
+  PLAYER_SIZE_5,        /**< @brief Player coordinates and angle (5 bytes read) */
+  PLAYER_SIZE_6,        /**< @brief Player coordinates and angle (6 bytes read) */
+  PLAYER_SIZE_7         /**< @brief Player coordinates and angle (7 bytes read) */
 };
 
 /**
- * Help to transform the angle float into bytes to transmit and the bytes to float when receiving.
+ * @brief Help to transform the angle float into bytes to transmit and the bytes to float when receiving.
  */
 union angle_to_transmit {
   float angle;
@@ -135,6 +140,9 @@ void sp_check_ready_to_transmit();
  */
 void sp_transmit();
 
+/**
+ * @brief Transmit the vector to the Transmitter Holding Register By Polling
+ */
 void sp_transmit_polled();
 
 /**

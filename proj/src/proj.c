@@ -314,7 +314,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   }
 
   sp_check_ready_to_transmit();
-  
+  printf("HI\n"); // RETIRAR
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
       printf("Error when calling driver_receive.\n");
@@ -360,6 +360,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
           }
         }
         if ((msg.m_notify.interrupts & BIT(rtc_bit_no)) && (host)) {
+          printf("RTC\n\n"); // RETIRAR
           rtc_int_handler();
           if (minute_counter == POWERUP_INTERVAL) {
             minute_counter = 0;
@@ -402,6 +403,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
             // Update values according to internal game logic.
             // Render a new frame.
             sp_treat_information_received(&enemy, &powerup_x, &powerup_y, &type, &generate_enemy_powerup, &spawn_enemy_bullet);
+            rotate_player(&enemy);
             if (generate_enemy_powerup) {
               printf("PowerUp\n"); // RETIRAR
               /* Generate the powerup coming from the serial port */

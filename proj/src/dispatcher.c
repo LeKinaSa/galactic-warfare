@@ -84,32 +84,41 @@ void process_mouse_status(const mouse_status* status, MouseCursor* cursor, Playe
 
   update_cursor_position(cursor, mouse_pos);
 
+  player->angle = angle;
+
   /* Aiming */
-  if ((angle > -0.875 * M_PI) && (angle <= -0.625 * M_PI)) {
+  rotate_player(player);
+
+  /* Shooting */
+  player->fire = status->lb_pressed;
+}
+
+void rotate_player(Player* player) {
+  if ((player->angle > -0.875 * M_PI) && (player->angle <= -0.625 * M_PI)) {
     /* SW */
     player->entity->sprite.img = ship.sw;
   }
-  else if ((angle > -0.625 * M_PI) && (angle <= -0.375 * M_PI)) {
+  else if ((player->angle > -0.625 * M_PI) && (player->angle <= -0.375 * M_PI)) {
     /* S */
     player->entity->sprite.img = ship.s;
   }
-  else if ((angle > -0.375 * M_PI) && (angle <= -0.125 * M_PI)) {
+  else if ((player->angle > -0.375 * M_PI) && (player->angle <= -0.125 * M_PI)) {
     /* SE */
     player->entity->sprite.img = ship.se;
   }
-  else if ((angle > -0.125 * M_PI) && (angle <= 0.125 * M_PI)) {
+  else if ((player->angle > -0.125 * M_PI) && (player->angle <= 0.125 * M_PI)) {
     /* E */
     player->entity->sprite.img = ship.e;
   }
-  else if ((angle > 0.125 * M_PI) && (angle <= 0.375 * M_PI)) {
+  else if ((player->angle > 0.125 * M_PI) && (player->angle <= 0.375 * M_PI)) {
     /* NE */
     player->entity->sprite.img = ship.ne;
   }
-  else if ((angle > 0.375 * M_PI) && (angle <= 0.625 * M_PI)) {
+  else if ((player->angle > 0.375 * M_PI) && (player->angle <= 0.625 * M_PI)) {
     /* N */
     player->entity->sprite.img = ship.n;
   }
-  else if ((angle > 0.625 * M_PI) && (angle <= 0.875 * M_PI)) {
+  else if ((player->angle > 0.625 * M_PI) && (player->angle <= 0.875 * M_PI)) {
     /* NW */
     player->entity->sprite.img = ship.nw;
   }
@@ -117,8 +126,4 @@ void process_mouse_status(const mouse_status* status, MouseCursor* cursor, Playe
     /* W */
     player->entity->sprite.img = ship.w;
   }
-
-  /* Shooting */
-  player->angle = angle;
-  player->fire = status->lb_pressed;
 }

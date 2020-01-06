@@ -116,7 +116,7 @@ int sp_send_again() {
 void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rtc_y, enum powerup_type *rtc_type, bool *generate_powerup, bool *spawn_bullet) {
   *generate_powerup = false;
   *spawn_bullet = false;
-  //printf("%d\n", received_size); // RETIRAR
+  printf("Received : %d\n", received_size); // RETIRAR
   if (received_size == 0) {
     return;
   }
@@ -153,11 +153,9 @@ void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rt
   }
 
   /* Get Player */
-  //printf("PLAYER\n"); // RETIRAR
   if (player_size != SP_PLAYER_SIZE - 1) {
     return;
   }
-  //printf("Still Player\n"); // RETIRAR
     /* Coordinates */
   msb_x  = player_queue[0];
   lsb_x  = player_queue[1];
@@ -175,8 +173,7 @@ void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rt
   player->entity->position.x = x;
   player->entity->position.y = y;
   player->angle = angle.angle;
-  //printf("%x %x\n", x, y);  // RETIRAR
-  //printf("        %x\n", angle.transmit);  // RETIRAR
+  printf("Player : %x  %x      %x\n", x, y, angle.transmit);  // RETIRAR
 }
 
 void sp_new_transmission(Player* player, Powerup* powerup, bool generate_powerup, bool spawn_bullet) {
@@ -201,6 +198,8 @@ void sp_treat_received_queue(uint8_t player_queue[], int *player_size,
 
   for (int index = 0; index < received_size; ++ index) {
     next_char = received[index];
+    printf("%x ", next_char); // RETIRAR
+
     switch (last) {
       case COMPLETE:
         switch (next_char) {
@@ -374,6 +373,7 @@ void sp_transmit() {
 
 void sp_transmit_polled() {
   uint8_t lsr = 0;
+  printf("Transmitted : %d\n", to_transmit_size); // RETIRAR
 
   while (true) {
     util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);

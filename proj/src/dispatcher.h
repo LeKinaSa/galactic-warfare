@@ -63,6 +63,12 @@ void process_mouse_packet(uint8_t packet_bytes[], mouse_status* status);
  */
 void process_mouse_status(const mouse_status* status, MouseCursor* cursor, Player* player);
 
+/**
+ * @brief Updates the player orientation according to the player angle.
+ * @param player  pointer to player
+ */
+void rotate_player(Player* player);
+
 /**@}*/
 
 #endif /* DISPATCHER_H */
