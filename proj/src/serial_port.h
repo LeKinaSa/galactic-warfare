@@ -152,6 +152,4 @@ void sp_receive();
 
 /**@}*/
 
-/**@}*/
-
 #endif /* __SERIAL_PORT_H */

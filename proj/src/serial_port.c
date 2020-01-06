@@ -412,22 +412,3 @@ void sp_receive() {
     }
   }
 }
-
-void sp_transmit_polled_2() {
-  uint8_t byte = 0, lsr = 0;
-  int minimum;
-  //printf("Transmitted : %d\n", to_transmit_size); // RETIRAR
-  while (to_transmit_size != 0) {
-    util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
-    if (lsr & SP_LSR_THR_EMPTY) {
-      minimum = min(SP_FIFO_SIZE, to_transmit_size);
-      for (int index = 0; index < minimum; ++ index) {
-        byte = to_transmit[index];
-        sys_outb(SP1_BASE_ADDR + SP_THR, byte);
-      }
-      util_erase(to_transmit, &to_transmit_size, minimum);
-    }
-    micro_delay(500);
-  }
-}
-

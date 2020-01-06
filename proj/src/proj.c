@@ -312,8 +312,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
 
-  sp_check_ready_to_transmit();
-  printf("HI\n"); // RETIRAR
+  //sp_check_ready_to_transmit();
   while (scancode != KBD_ESC_BREAKCODE) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
       printf("Error when calling driver_receive.\n");
