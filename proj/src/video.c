@@ -165,6 +165,22 @@ int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color, void** buffer) {
 }
 
 
+int vg_draw_rectangle_to_buffer(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color, void** buffer) {
+  if (*buffer == NULL) {
+    printf("Error occurred: frame buffer not set.\n");
+    return 1;
+  }
+
+  for (size_t i = 0; i < width; i++) {
+    for (size_t j = 0; j < height; j++) {
+      vg_draw_pixel(x + i, y + j, color, buffer);
+    }
+  }
+
+  return 0;
+}
+
+
 int vg_draw_xpm(xpm_image_t img, uint16_t x, uint16_t y, void** buffer) {
   if (img.bytes == NULL) {
     printf("Error occurred: null pixmap.\n");

@@ -54,6 +54,18 @@ int video_set_mode(uint16_t mode);
 int vg_draw_pixel(uint16_t x, uint16_t y, uint32_t color, void** buffer);
 
 /**
+ * @brief Draws a rectangle of the given color, width and height in a specified position to a given buffer.
+ * @param x         horizontal position of the rectangle
+ * @param y         vertical position of the rectangle
+ * @param width     width of the rectangle
+ * @param height    height of the rectangle
+ * @param color     rectangle's color in the format specified by the video card's mode
+ * @param buffer    buffer where the rectangle should be drawn
+ * @return          zero if no errors occurred, non-zero otherwise
+ */
+int vg_draw_rectangle_to_buffer(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color, void** buffer);
+
+/**
  * @brief Draws an X Pixmap image in a specified position to a given buffer.
  * @param img       xpm_image_t structure to draw
  * @param x         horizontal position of the first pixel of the xpm

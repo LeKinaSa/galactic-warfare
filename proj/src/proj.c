@@ -317,6 +317,11 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
   bool generate_powerup = false;
 
+  /* Health bar related variables */
+  static const uint16_t health_bar_height = 10;
+  static const uint32_t player_health_bar_color = 0x07E0, enemy_health_bar_color = 0xF800;
+  uint16_t player_health_bar_width = vg_get_x_resolution(), enemy_health_bar_width = vg_get_x_resolution();
+
   if (rtc_init()) {
     exit_program(program_status);
     printf("Error when calling rtc_init.\n");
@@ -464,11 +469,17 @@ int (proj_main_loop)(int argc, char *argv[]) {
               spawn_player_bullet = true;
             }
 
+            player_health_bar_width = vg_get_x_resolution() * player.current_health / PLAYER_MAX_HEALTH;
+            enemy_health_bar_width = vg_get_x_resolution() * enemy.current_health / PLAYER_MAX_HEALTH;
+
             update_entity_positions(bullets, &player);
             detect_collisions(bullets, &current_powerup, &player, &enemy);
             vg_draw_xpm(bg_img, 0, 0, &aux_buffer);
             vg_render_entities(bullets, current_powerup, &player, &enemy, &aux_buffer);
             vg_draw_xpm(cursor_img, round(mouse_cursor.position.x), round(mouse_cursor.position.y), &aux_buffer);
+            vg_draw_rectangle_to_buffer(0, vg_get_y_resolution() - health_bar_height, player_health_bar_width, health_bar_height, 
+            player_health_bar_color, &aux_buffer);
+            vg_draw_rectangle_to_buffer(0, 0, enemy_health_bar_width, health_bar_height, enemy_health_bar_color, &aux_buffer);
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
 
             /* Next Sequence to Be Transmitted By the Serial Port */
