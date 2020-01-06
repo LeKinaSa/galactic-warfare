@@ -462,7 +462,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
 
             /* Next Sequence to Be Transmitted By the Serial Port */
             sp_new_transmission(&player, current_powerup, generate_powerup, spawn_player_bullet);
-            sp_transmit_polled();
+            if (ready_to_transmit) {
+              sp_transmit();
+            }
           }
         }
         break;

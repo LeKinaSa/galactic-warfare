@@ -85,6 +85,9 @@ void sp_int_handler() {
         /* Read next char */
         sp_receive();
         break;
+      case SP_IIR_THR:
+        sp_transmit();
+        break;
       case SP_IIR_CTO:
         /* Character Timeout */
         sp_receive();
@@ -103,6 +106,9 @@ void sp_int_handler() {
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
   if ((( iir & SP_IIR_INT ) == SP_IIR_CTO) || (( iir & SP_IIR_INT ) == SP_IIR_RDR)) {
     sp_receive();
+  }
+  if (( iir & SP_IIR_INT ) == SP_IIR_THR) {
+    sp_transmit();
   }
 }
 
@@ -357,6 +363,7 @@ void sp_check_ready_to_transmit() {
 }
 
 void sp_transmit() {
+  printf("Transmitted : %d\n", to_transmit_size); // RETIRAR
   if (to_transmit_size == 0) {
     ready_to_transmit = true;
     return;
@@ -373,8 +380,7 @@ void sp_transmit() {
 
 void sp_transmit_polled() {
   uint8_t lsr = 0;
-  printf("Transmitted : %d\n", to_transmit_size); // RETIRAR
-
+  
   while (true) {
     util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
     if (lsr & SP_LSR_THR_EMPTY) {
@@ -402,3 +408,22 @@ void sp_receive() {
     }
   }
 }
+
+void sp_transmit_polled_2() {
+  uint8_t byte = 0, lsr = 0;
+  int minimum;
+  printf("Transmitted : %d\n", to_transmit_size); // RETIRAR
+  while (to_transmit_size != 0) {
+    util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
+    if (lsr & SP_LSR_THR_EMPTY) {
+      minimum = min(SP_FIFO_SIZE, to_transmit_size);
+      for (int index = 0; index < minimum; ++ index) {
+        byte = to_transmit[index];
+        sys_outb(SP1_BASE_ADDR + SP_THR, byte);
+      }
+      util_erase(to_transmit, &to_transmit_size, minimum);
+    }
+    micro_delay(500);
+  }
+}
+
