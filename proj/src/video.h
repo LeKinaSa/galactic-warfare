@@ -76,8 +76,8 @@ int vg_draw_rectangle_to_buffer(uint16_t x, uint16_t y, uint16_t width, uint16_t
 int vg_draw_xpm(xpm_image_t img, uint16_t x, uint16_t y, void** buffer);
 
 /**
- * @brief Draws entities to a buffer according to their z-layer.
- * Entities with a higher z-layer are drawn last (on top of the other entities).
+ * @brief Draws entities to a buffer in a specific order.
+ * The entities that are drawn last are drawn on top of the others.
  * @param bullets           linked list containing bullets from the player and the enemy
  * @param current_powerup   pointer to the current powerup (NULL if it doesn't exist or has been picked up)
  * @param player            pointer to player
