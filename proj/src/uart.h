@@ -63,8 +63,8 @@
 
 #define SP_INT_PER_TIMER_INT ((SP_BIT_RATE / SP_DATA_LENGHT) / SP_FIFO_TRIGGER) / TIMER0_INTERRUPTS_PER_SECOND /**< @brief Interrupts per Timer Interrupt */
 
-/**< @brief Adjust the Trigger Level with the Bit Rate */
-/**< @brief Bit Rate Standart Values : 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 */
+/* Adjust the Trigger Level with the Bit Rate */
+/* Bit Rate Standart Values : 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 */
 
 #define SP_LSR_RD               BIT(0)  /**< @brief Data for receiving */
 #define SP_LSR_OVERRUN_ERROR    BIT(1)  /**< @brief Overwritten character */
@@ -74,9 +74,9 @@
 #define SP_LSR_THR_EMPTY        BIT(5)  /**< @brief Ready to transmit a new char */
 #define SP_LSR_TR_EMPTY         BIT(6)  /**< @brief THR and Transmitter Shift Register are Empty */
 #define SP_LSR_FIFO_ERROR       BIT(7)  /**< @brief One Error (parity, framing, break) on FIFO buffer */
-/**< @brief Bits 0-4 and 7 are reset to 0 when LSR is read */
+/* Bits 0-4 and 7 are reset to 0 when LSR is read */
 
-/**< @brief Utility Characters */
+/* Utility Characters */
 
 #define SP_RTC_INTERRUPT        'R'     /**< @brief Coordinates to PowerUp and Type of PowerUp */
 #define SP_GENERATE_BULLET      'B'     /**< @brief Bullet Spawn */

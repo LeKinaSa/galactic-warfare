@@ -90,19 +90,19 @@ void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rt
  * @brief Update the transmission with new information.
  * @param player              Player to be transmitted via serial port
  * @param powerup             Powerup generated in this virtual machine
- * @param generate_powerup    true if the this machine generated a powerup, false if it doesn't
  * @param spawn_bullet        true if the this player fired, false if it doesn't
+ * @param host                true if the player is the host, false if he is the remote
  */
-void sp_new_transmission(Player *player, Powerup *powerup, bool generate_powerup, bool spawn_bullet);
+void sp_new_transmission(Player *player, Powerup *powerup, bool spawn_bullet, bool host);
 
 /**
  * @brief Update the transmission with a new sequence but the same information.
  * @param player              Player to be transmitted via serial port
  * @param powerup             Powerup generated in this virtual machine
- * @param generate_powerup    true if the this machine generated a powerup, false if it doesn't
  * @param spawn_bullet        true if the this player fired, false if it doesn't
+ * @param host                true if the player is the host, false if he is the remote
  */
-void sp_retransmit_sequence(Player *player, Powerup *powerup, bool generate_powerup, bool spawn_bullet);
+void sp_retransmit_sequence(Player *player, Powerup *powerup, bool spawn_bullet, bool host);
 
 /**
  * @brief Add a byte to the transmission.
@@ -141,7 +141,7 @@ void sp_check_ready_to_transmit();
 void sp_transmit();
 
 /**
- * @brief Transmit the vector to the Transmitter Holding Register By Polling
+ * @brief Transmit the vector to the Transmitter Holding Register by polling
  */
 void sp_transmit_polled();
 
@@ -150,7 +150,7 @@ void sp_transmit_polled();
  */
 void sp_receive();
 
-void sp_transmit_polled_2();
+/**@}*/
 
 /**@}*/
 

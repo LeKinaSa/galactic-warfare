@@ -304,8 +304,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   powerup_entity.velocity = (Vector2) { 0.0, 0.0 };
   powerup_entity.sprite = speed_powerup_sprite;
 
-  bool generate_powerup = false, generate_enemy_powerup = false;
-  bool rtc_interrupted;
+  bool generate_powerup = false;
 
   if (rtc_init()) {
     exit_program(program_status);
@@ -321,7 +320,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
       continue;
     }
 
-    rtc_interrupted = false;
     if (is_ipc_notify(ipc_status)) {
       switch (_ENDPOINT_P(msg.m_source)) {
       case HARDWARE:
@@ -360,7 +358,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
           }
         }
         if ((msg.m_notify.interrupts & BIT(rtc_bit_no)) && (host)) {
-          printf("RTC\n\n"); // RETIRAR
           rtc_int_handler();
           if (minute_counter == POWERUP_INTERVAL) {
             minute_counter = 0;
@@ -379,33 +376,25 @@ int (proj_main_loop)(int argc, char *argv[]) {
             else {
               powerup_entity.sprite = damage_powerup_sprite;
             }
-
-            rtc_interrupted = true;
           }
         }
         if (msg.m_notify.interrupts & BIT(sp_bit_no)) {
           sp_int_handler();
           if (sp_send_again()) {
-            sp_retransmit_sequence(&player, current_powerup, generate_powerup, spawn_player_bullet);
+            sp_retransmit_sequence(&player, current_powerup, spawn_player_bullet, host);
           }
         }
         if (msg.m_notify.interrupts & BIT(timer_bit_no)) {
           timer_int_handler();
-          
-          generate_powerup = false;
-          if (rtc_interrupted) {
-            generate_powerup = true;
-          }
 
           if (counter == INTERRUPTS_PER_FRAME) {
             counter = 0;
 
             // Update values according to internal game logic.
             // Render a new frame.
-            sp_treat_information_received(&enemy, &powerup_x, &powerup_y, &type, &generate_enemy_powerup, &spawn_enemy_bullet);
+            sp_treat_information_received(&enemy, &powerup_x, &powerup_y, &type, &generate_powerup, &spawn_enemy_bullet);
             rotate_player(&enemy);
-            if (generate_enemy_powerup) {
-              printf("PowerUp\n"); // RETIRAR
+            if (generate_powerup) {
               /* Generate the powerup coming from the serial port */
               Powerup_delete(current_powerup);
               powerup_entity.position = (Vector2) {powerup_x, powerup_y};
@@ -461,7 +450,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
             memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
 
             /* Next Sequence to Be Transmitted By the Serial Port */
-            sp_new_transmission(&player, current_powerup, generate_powerup, spawn_player_bullet);
+            sp_new_transmission(&player, current_powerup, spawn_player_bullet, host);
             sp_transmit_polled();
             /*sp_check_ready_to_transmit();
             if (ready_to_transmit) {
