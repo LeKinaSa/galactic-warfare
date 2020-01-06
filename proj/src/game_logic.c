@@ -237,9 +237,7 @@ void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* p
       node_to_erase = NULL;
 
       current_bullet = (Bullet*)(current_node->data);
-      if (bullet_collision_shape == NULL) {
-        bullet_collision_shape = (Circle*)(current_bullet->entity.sprite.collision_shape);
-      }
+      bullet_collision_shape = (Circle*)(current_bullet->entity.sprite.collision_shape);
 
       if (!current_bullet->friendly) {
         if (triangle_circle_collision(player_collision_shape, player_entity->position, bullet_collision_shape, current_bullet->entity.position)) {
@@ -254,6 +252,7 @@ void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* p
       }
 
       current_node = current_node->next;
+
       if (node_to_erase != NULL) {
         LinkedList_erase(bullets, node_to_erase->data); 
       }
