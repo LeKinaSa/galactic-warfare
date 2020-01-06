@@ -152,4 +152,6 @@ void sp_receive();
 
 void sp_transmit_polled_2();
 
+/**@}*/
+
 #endif /* __SERIAL_PORT_H */

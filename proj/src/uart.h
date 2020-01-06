@@ -1,4 +1,12 @@
+#ifndef UART_H
+#define UART_H
+
 #include "i8254.h"
+
+/** @defgroup uart uart
+ * @{
+ * @brief Macros related to the serial port.
+ */
 
 #define SP1_IRQ   4     /**< @brief IRQ Line for Serial Port 1 Interrupts */
 #define SP2_IRQ   3     /**< @brief IRQ Line for Serial Port 2 Interrupts */
@@ -81,3 +89,7 @@
 #define SP_RTC_SIZE              6      /**< @brief RTC Packet Size */
 #define SP_BULLET_SIZE           1      /**< @brief Bullet Packet Size */
 #define SP_SEQUENCE_SIZE         SP_PLAYER_SIZE + SP_RTC_SIZE + SP_BULLET_SIZE + 2  /**< @brief Serial Port Trabsmission Max Size Without the Error Part */
+
+/**@}*/
+
+#endif /* UART_H */
