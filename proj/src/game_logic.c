@@ -147,6 +147,11 @@ bool triangle_circle_collision(const Triangle* triangle, Vector2 triangle_pos, c
   return false;
 }
 
+bool circle_circle_collision(const Circle* circle1, Vector2 circle1_pos, const Circle* circle2, Vector2 circle2_pos) {
+  return (Vector2_distance_to(circle1_pos, circle2_pos) < (circle1->radius + circle2->radius));
+}
+
+
 
 void update_entity_position(Entity* entity) {
   const uint16_t x_res = vg_get_x_resolution(), y_res = vg_get_y_resolution();
@@ -203,19 +208,22 @@ void update_cursor_position(MouseCursor* cursor, Vector2 mouse_pos) {
 }
 
 
-void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* player) {
-  if (current_powerup == NULL || player == NULL) {
+void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* player, Player* enemy) {
+  if (current_powerup == NULL || player == NULL || enemy == NULL) {
     return;
   }
 
   Entity* player_entity = player->entity;
-  Triangle* player_collision_shape = (Triangle*)(player_entity->sprite.collision_shape);
+  Entity* enemy_entity = enemy->entity;
+  Circle* player_collision_shape = (Circle*)(player_entity->sprite.collision_shape);
+  Circle* enemy_collision_shape = (Circle*)(enemy_entity->sprite.collision_shape);
 
   if (*current_powerup != NULL) {
     Entity* powerup_entity = (*current_powerup)->entity;
     Circle* powerup_collision_shape = (Circle*)((*current_powerup)->entity->sprite.collision_shape);
     
-    if (triangle_circle_collision(player_collision_shape, player_entity->position, powerup_collision_shape, powerup_entity->position)) {
+    if (circle_circle_collision(player_collision_shape, Vector2_subtract(player_entity->position, player_entity->offset), 
+    powerup_collision_shape, Vector2_add(powerup_entity->position, powerup_entity->offset))) {
       if ((*current_powerup)->type == SPEED) {
         player->speed = PLAYER_BASE_SPEED * 2;
       }
@@ -224,6 +232,14 @@ void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* p
       }
       // TODO: Add timer for powerup duration
       (*current_powerup) = NULL;  
+    }
+    else if (circle_circle_collision(enemy_collision_shape, Vector2_subtract(enemy_entity->position, enemy_entity->offset),
+    powerup_collision_shape, Vector2_add(powerup_entity->position, powerup_entity->offset))) {
+      if ((*current_powerup)->type == DAMAGE) {
+        // TODO: Increase enemy damage
+      }
+      // TODO: Add timer for powerup duration
+      (*current_powerup) = NULL;
     }
   }
 
@@ -240,13 +256,26 @@ void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* p
       bullet_collision_shape = (Circle*)(current_bullet->entity.sprite.collision_shape);
 
       if (!current_bullet->friendly) {
-        if (triangle_circle_collision(player_collision_shape, player_entity->position, bullet_collision_shape, current_bullet->entity.position)) {
+        if (circle_circle_collision(player_collision_shape, Vector2_subtract(player_entity->position, player_entity->offset), 
+        bullet_collision_shape, current_bullet->entity.position)) {
           node_to_erase = current_node;
           if (player->current_health > current_bullet->damage) {
             player->current_health -= current_bullet->damage;
           }
           else {
             player->current_health = 0;
+          }
+        }
+      }
+      else {
+        if (circle_circle_collision(enemy_collision_shape, Vector2_subtract(enemy_entity->position, enemy_entity->offset),
+        bullet_collision_shape, Vector2_add(current_bullet->entity.position, current_bullet->entity.offset))) {
+          node_to_erase = current_node;
+          if (enemy->current_health > current_bullet->damage) {
+            enemy->current_health -= current_bullet->damage;
+          }
+          else {
+            enemy->current_health = 0;
           }
         }
       }

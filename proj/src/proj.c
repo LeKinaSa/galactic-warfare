@@ -238,7 +238,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   ship.se = ship_se_img;
   ship.sw = ship_sw_img;
 
-  Triangle* ship_collision_shape = Triangle_new((Vector2) {-10.0, -5.0}, (Vector2) {0.0, 20.0}, (Vector2) {10.0, -5.0});
+  Circle* ship_collision_shape = Circle_new(22.0);
   Sprite ship_sprite = { ship.s, TRIANGLE, ship_collision_shape };
 
   LinkedList* bullets = LinkedList_new(sizeof(Bullet));
@@ -302,6 +302,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   Entity powerup_entity;
 
   powerup_entity.velocity = (Vector2) { 0.0, 0.0 };
+  powerup_entity.offset = (Vector2) {speed_powerup_sprite.img.width / 2, speed_powerup_sprite.img.height / 2};
   powerup_entity.sprite = speed_powerup_sprite;
 
   bool generate_powerup = false;
@@ -410,8 +411,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
               Vector2 bullet_position = Vector2_subtract(Vector2_subtract(enemy.entity->position, enemy.entity->offset), 
               (Vector2) {bullet_enemy_sprite.img.width / 2, bullet_enemy_sprite.img.height / 2});
               Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {1.0, 0.0}, enemy.angle));
+              Vector2 bullet_offset = {bullet_enemy_sprite.img.width / 2, bullet_enemy_sprite.img.height / 2};
 
-              Bullet bullet = { {bullet_enemy_sprite, bullet_position, bullet_velocity, {0.0, 0.0}}, false, PLAYER_BASE_DAMAGE };
+              Bullet bullet = { {bullet_enemy_sprite, bullet_position, bullet_velocity, bullet_offset}, false, PLAYER_BASE_DAMAGE };
 
               LinkedList_add(bullets, &bullet);
             }
@@ -434,15 +436,16 @@ int (proj_main_loop)(int argc, char *argv[]) {
               Vector2 bullet_position = Vector2_subtract(Vector2_subtract(player.entity->position, player.entity->offset), 
               (Vector2) {bullet_sprite.img.width / 2, bullet_sprite.img.height / 2});
               Vector2 bullet_velocity = Vector2_scalar_mult(BULLET_SPEED, rotate_point((Vector2) {1.0, 0.0}, player.angle));
+              Vector2 bullet_offset = {bullet_sprite.img.width / 2, bullet_sprite.img.height / 2};
 
-              Bullet bullet = {{bullet_sprite, bullet_position, bullet_velocity, {0.0, 0.0}}, true, PLAYER_BASE_DAMAGE};
+              Bullet bullet = {{bullet_sprite, bullet_position, bullet_velocity, bullet_offset}, true, PLAYER_BASE_DAMAGE};
 
               LinkedList_add(bullets, &bullet);
               spawn_player_bullet = true;
             }
 
             update_entity_positions(bullets, &player);
-            detect_collisions(bullets, &current_powerup, &player);
+            detect_collisions(bullets, &current_powerup, &player, &enemy);
             vg_draw_xpm(bg_img, 0, 0, &aux_buffer);
             vg_render_entities(bullets, current_powerup, &player, &enemy, &aux_buffer);
             vg_draw_xpm(cursor_img, round(mouse_cursor.position.x), round(mouse_cursor.position.y), &aux_buffer);

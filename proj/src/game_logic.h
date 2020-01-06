@@ -109,14 +109,23 @@ enum shape_type {
 
 /**
  * @brief Detects a collision between a triangle and a circle, based on at least one of three criteria.
- * @param triangle      Pointer to triangle structure to use for collision detection
- * @param triangle_pos  Position of the centre of the triangle (around which the vertices are defined by their relative position)
- * @param circle        Pointer to circle structure to use for collision detection
- * @param circle_pos    Position of the centre of the circle
+ * @param triangle      pointer to triangle structure to use for collision detection
+ * @param triangle_pos  position of the centre of the triangle (around which the vertices are defined by their relative position)
+ * @param circle        pointer to circle structure to use for collision detection
+ * @param circle_pos    position of the centre of the circle
  * @returns true if the given shapes collide
  */
 bool triangle_circle_collision(const Triangle* triangle, Vector2 triangle_pos, const Circle* circle, Vector2 circle_pos);
 
+/**
+ * @brief Detects a collision between two circles
+ * @param circle1       pointer to first circle structure
+ * @param circle1_pos   position of the centre of th first circle
+ * @param circle2       pointer to second circle structure
+ * @param circle2_pos   position of the centre of the second circle
+ * @return true if the given shapes collide
+ */
+bool circle_circle_collision(const Circle* circle1, Vector2 circle1_pos, const Circle* circle2, Vector2 circle2_pos);
 
 typedef struct {
   xpm_image_t img;
@@ -207,8 +216,9 @@ void Powerup_delete(Powerup* this);
  * @param bullets           linked list containing information about all bullets
  * @param current_powerup   pointer to current powerup pointer, allows for it to be set to NULL if a powerup collision occurs
  * @param player            pointer to player
+ * @param enemy             pointer to enemy
  */
-void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* player);
+void detect_collisions(LinkedList* bullets, Powerup** current_powerup, Player* player, Player* enemy);
 
 /**@}*/
 
