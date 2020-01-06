@@ -1,0 +1,7 @@
+<map id="min" name="min">
+<area shape="rect" id="node2" href="$group__dispatcher.html#ga1e4b30d342dfd9e0d74c334cda7ef324" title="Processes a mouse packet and updates the mouse status accordingly. " alt="" coords="96,5,256,32"/>
+<area shape="rect" id="node4" href="$group__serial__port.html#gadd475e212f2c31efa339bef3be1ceaf1" title="Transmit the vector to the Transmitter Holding Register. " alt="" coords="131,56,221,83"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="483,56,592,83"/>
+<area shape="rect" id="node5" href="$group__serial__port.html#ga329223b2a30242d83bace18bb5a5d67f" title="Serial port interrupt handler. When an interrupt occurs, identify the type of interrupt and process i..." alt="" coords="316,56,423,83"/>
+<area shape="rect" id="node6" href="$group__serial__port.html#ga5a2923b573ad7fb0e77c83914b87cc76" title="Transmit the vector to the Transmitter Holding Register by polling. " alt="" coords="304,107,435,133"/>
+</map>

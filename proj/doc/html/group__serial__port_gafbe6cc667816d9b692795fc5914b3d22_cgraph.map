@@ -1,0 +1,5 @@
+<map id="sp_treat_information_received" name="sp_treat_information_received">
+<area shape="rect" id="node2" href="$group__serial__port.html#gaba6c97f8c0cdadd4d326e0917ba5f8a4" title="Transform received vector in information for player, rtc and bullet. " alt="" coords="193,5,360,32"/>
+<area shape="rect" id="node3" href="$group__utils.html#ga4566ac7fb7474e0fbaa3e6d0f60b789d" title="Appends two bytes to make a 16 bit number. " alt="" coords="233,56,321,83"/>
+<area shape="rect" id="node4" href="$group__utils.html#gaf1856e9fcb6df64ffa8cd2cbc45b45e0" title="Appends four bytes to make a 32 bit number, from most to least significant. " alt="" coords="225,107,328,133"/>
+</map>

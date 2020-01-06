@@ -1,0 +1,9 @@
+<map id="kbc_read_output_buf" name="kbc_read_output_buf">
+<area shape="rect" id="node2" href="$group__mouse.html#gad35b135a465650bd58aef6ee248ca402" title="Writes a command to the PS/2 mouse. Interrupts must be disabled or else the ACK bytes may be automati..." alt="" coords="196,58,356,85"/>
+<area shape="rect" id="node3" href="$group__mouse.html#ga108813d01ba189cc8bb0dca728c932a8" title="Enables data reporting in stream mode. " alt="" coords="624,8,803,34"/>
+<area shape="rect" id="node5" href="$group__mouse.html#gac13ad81d843b4d50815de4b20a28db53" title="Disables data reporting. " alt="" coords="419,80,561,122"/>
+<area shape="rect" id="node7" href="$group__mouse.html#ga16a521d1919cbd8f434d8b5d535a639b" title="Sets the mouse to stream mode. " alt="" coords="404,29,576,56"/>
+<area shape="rect" id="node8" href="$group__mouse.html#gad9af204f34377e145a404c74a50cfbdb" title="Sets the mouse to remote mode. " alt="" coords="404,146,576,173"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="851,58,960,85"/>
+<area shape="rect" id="node6" href="$group__proj.html#gaff2fca31aa37d9157250fd2222b14456" title="Exits the program, calling the appropriate functions according to the program&#39;s current status..." alt="" coords="665,109,762,136"/>
+</map>

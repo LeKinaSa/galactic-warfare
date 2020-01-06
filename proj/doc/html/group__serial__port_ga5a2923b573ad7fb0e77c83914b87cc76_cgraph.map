@@ -1,0 +1,6 @@
+<map id="sp_transmit_polled" name="sp_transmit_polled">
+<area shape="rect" id="node2" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Reads a byte from the specified port. " alt="" coords="184,5,275,32"/>
+<area shape="rect" id="node3" href="$group__serial__port.html#gadd475e212f2c31efa339bef3be1ceaf1" title="Transmit the vector to the Transmitter Holding Register. " alt="" coords="184,56,275,83"/>
+<area shape="rect" id="node4" href="$group__utils.html#gabd8bbcfabb3ddef2ccaafb9928a37b95" title="Returns the smallest of two integers. " alt="" coords="341,31,383,57"/>
+<area shape="rect" id="node5" href="$group__utils.html#ga0bb8bf253e25c4e51ff35215cf92d581" title="Erases a given number of bytes from the start of a queue, shifting the next bytes to the start..." alt="" coords="323,81,401,108"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="update_cursor_position" name="update_cursor_position">
+<area shape="rect" id="node2" href="$group__game__logic.html#gaf60d50aa55bd6501e471aac89efec799" title="Calculates the sum of two vectors. " alt="" coords="231,5,326,32"/>
+<area shape="rect" id="node3" href="$group__video.html#gaef2cf20e38835a1d3144f9ac0e9454f3" title="Returns the screen&#39;s horizontal resolution in pixels. Returns 0 if the video mode or frame buffer hav..." alt="" coords="209,56,348,83"/>
+<area shape="rect" id="node4" href="$group__video.html#ga0d2573ac48cc74944b57403fac2a5797" title="Returns the screen&#39;s vertical resolution in pixels. Returns 0 if the video mode or frame buffer haven..." alt="" coords="209,107,348,133"/>
+<area shape="rect" id="node5" href="$group__utils.html#ga7bd2a3e76557131d9099c06fb3b52af4" title="Returns the value of x limited by a lower and upper bound. " alt="" coords="250,157,307,184"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="util_get_LSB" name="util_get_LSB">
+<area shape="rect" id="node2" href="$group__serial__port.html#ga65498757ed4056101bd29645c8c8d23e" title="Initializes serial port and configures it. " alt="" coords="183,5,261,32"/>
+<area shape="rect" id="node4" href="$group__serial__port.html#gab71fa17d64d2c95053410f12b0276074" title="Transform player, powerup and bullet information into bytes to be transmitted. " alt="" coords="149,57,295,98"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="555,56,664,83"/>
+<area shape="rect" id="node5" href="$group__serial__port.html#ga3f97f989bc21fe99607931390eedb776" title="Update the transmission with new information. " alt="" coords="351,56,499,83"/>
+<area shape="rect" id="node6" href="$group__serial__port.html#gaf1ec489b5340cded627b83d8e2771cde" title="Update the transmission with a new sequence but the same information. " alt="" coords="343,107,507,133"/>
+</map>

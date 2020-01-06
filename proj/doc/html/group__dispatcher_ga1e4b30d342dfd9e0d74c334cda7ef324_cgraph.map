@@ -1,0 +1,12 @@
+<map id="process_mouse_packet" name="process_mouse_packet">
+<area shape="rect" id="node2" href="$group__mouse.html#ga04801d603b3c217e849f2d37d7c70394" title="mouse_parse_packet" alt="" coords="213,122,360,149"/>
+<area shape="rect" id="node8" href="$group__utils.html#gabd8bbcfabb3ddef2ccaafb9928a37b95" title="Returns the smallest of two integers. " alt="" coords="265,173,308,199"/>
+<area shape="rect" id="node9" href="$group__utils.html#gaf082905f7eac6d03e92015146bbc1925" title="Returns the largest of two integers. " alt="" coords="263,223,310,250"/>
+<area shape="rect" id="node10" href="$group__video.html#gaef2cf20e38835a1d3144f9ac0e9454f3" title="Returns the screen&#39;s horizontal resolution in pixels. Returns 0 if the video mode or frame buffer hav..." alt="" coords="217,274,356,301"/>
+<area shape="rect" id="node11" href="$group__video.html#ga0d2573ac48cc74944b57403fac2a5797" title="Returns the screen&#39;s vertical resolution in pixels. Returns 0 if the video mode or frame buffer haven..." alt="" coords="217,325,356,351"/>
+<area shape="rect" id="node3" href="$group__mouse.html#gad1ab1b763a6bdb1de1779e0a02809df6" title="mouse_put_bytes_on\l_packet" alt="" coords="429,5,576,47"/>
+<area shape="rect" id="node4" href="$group__mouse.html#gaa968bd798197a2abab567fc46bdf8ed1" title="mouse_get_buttons_pressed" alt="" coords="408,71,597,98"/>
+<area shape="rect" id="node5" href="$group__mouse.html#gaa85649a27dd5cec7384188b5a816c9fc" title="mouse_get_x_displacement" alt="" coords="411,122,595,149"/>
+<area shape="rect" id="node6" href="$group__mouse.html#gaff82f0871b2116ed7acad3c983915cad" title="mouse_get_y_displacement" alt="" coords="411,173,595,199"/>
+<area shape="rect" id="node7" href="$group__mouse.html#ga5d00d2b38a2c228ba1a089c501afc210" title="mouse_get_overflow" alt="" coords="431,223,574,250"/>
+</map>

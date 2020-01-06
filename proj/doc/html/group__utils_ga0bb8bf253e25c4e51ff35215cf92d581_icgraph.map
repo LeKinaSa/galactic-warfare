@@ -1,0 +1,6 @@
+<map id="util_erase" name="util_erase">
+<area shape="rect" id="node2" href="$group__serial__port.html#gadd475e212f2c31efa339bef3be1ceaf1" title="Transmit the vector to the Transmitter Holding Register. " alt="" coords="132,31,223,57"/>
+<area shape="rect" id="node3" href="$group__serial__port.html#ga329223b2a30242d83bace18bb5a5d67f" title="Serial port interrupt handler. When an interrupt occurs, identify the type of interrupt and process i..." alt="" coords="283,5,389,32"/>
+<area shape="rect" id="node5" href="$group__serial__port.html#ga5a2923b573ad7fb0e77c83914b87cc76" title="Transmit the vector to the Transmitter Holding Register by polling. " alt="" coords="271,56,401,83"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="449,31,559,57"/>
+</map>

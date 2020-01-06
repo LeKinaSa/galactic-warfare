@@ -1,0 +1,4 @@
+<map id="Vector2_distance_to" name="Vector2_distance_to">
+<area shape="rect" id="node2" href="$group__game__logic.html#gaa50f5776598439bec252c8de0faa2e14" title="Calculates the norm (length) of the given vector. " alt="" coords="204,5,307,32"/>
+<area shape="rect" id="node3" href="$group__game__logic.html#gab4ad9e64cf0d6d5f515e60ed8695ce31" title="Calculates the difference of two vectors. " alt="" coords="195,56,316,83"/>
+</map>

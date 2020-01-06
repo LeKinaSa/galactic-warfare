@@ -1,0 +1,4 @@
+<map id="update_cursor_position" name="update_cursor_position">
+<area shape="rect" id="node2" href="$group__dispatcher.html#ga145408686ead4294096058e3090ad969" title="Updates the cursors&#39;s position and player orientation according to the mouse status. Called every frame. " alt="" coords="209,5,367,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="415,5,524,32"/>
+</map>

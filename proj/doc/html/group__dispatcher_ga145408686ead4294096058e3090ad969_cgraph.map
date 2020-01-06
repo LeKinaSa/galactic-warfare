@@ -1,0 +1,10 @@
+<map id="process_mouse_status" name="process_mouse_status">
+<area shape="rect" id="node2" href="$group__game__logic.html#gab4ad9e64cf0d6d5f515e60ed8695ce31" title="Calculates the difference of two vectors. " alt="" coords="228,5,349,32"/>
+<area shape="rect" id="node3" href="$group__game__logic.html#ga130c3e63388cd3634247a99d45b41fe2" title="Returns the angle between the two vectors in radians. " alt="" coords="227,56,350,83"/>
+<area shape="rect" id="node4" href="$group__game__logic.html#gabc9becb6747f8908a0ff6d1a4737fce2" title="Updates the position of the mouse cursor. " alt="" coords="211,107,367,133"/>
+<area shape="rect" id="node9" href="$group__dispatcher.html#gaccff351f7274ad73f82c577e3872276c" title="Updates the player orientation according to the player angle. " alt="" coords="240,157,337,184"/>
+<area shape="rect" id="node5" href="$group__game__logic.html#gaf60d50aa55bd6501e471aac89efec799" title="Calculates the sum of two vectors. " alt="" coords="437,31,531,57"/>
+<area shape="rect" id="node6" href="$group__video.html#gaef2cf20e38835a1d3144f9ac0e9454f3" title="Returns the screen&#39;s horizontal resolution in pixels. Returns 0 if the video mode or frame buffer hav..." alt="" coords="415,81,553,108"/>
+<area shape="rect" id="node7" href="$group__video.html#ga0d2573ac48cc74944b57403fac2a5797" title="Returns the screen&#39;s vertical resolution in pixels. Returns 0 if the video mode or frame buffer haven..." alt="" coords="415,132,553,159"/>
+<area shape="rect" id="node8" href="$group__utils.html#ga7bd2a3e76557131d9099c06fb3b52af4" title="Returns the value of x limited by a lower and upper bound. " alt="" coords="455,183,513,209"/>
+</map>

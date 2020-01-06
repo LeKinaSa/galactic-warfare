@@ -1,0 +1,7 @@
+<map id="clamp" name="clamp">
+<area shape="rect" id="node2" href="$group__game__logic.html#gabc9becb6747f8908a0ff6d1a4737fce2" title="Updates the position of the mouse cursor. " alt="" coords="111,5,267,32"/>
+<area shape="rect" id="node5" href="$game__logic_8c.html#a16797ec72c9dae60717b8f8546a4f630" title="update_entity_position" alt="" coords="113,56,265,83"/>
+<area shape="rect" id="node3" href="$group__dispatcher.html#ga145408686ead4294096058e3090ad969" title="Updates the cursors&#39;s position and player orientation according to the mouse status. Called every frame. " alt="" coords="315,5,473,32"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="521,31,631,57"/>
+<area shape="rect" id="node6" href="$group__game__logic.html#ga2055b63540d1a3c4d2343a7d35ffccc2" title="Updates the position of the bullets and player. " alt="" coords="315,56,473,83"/>
+</map>

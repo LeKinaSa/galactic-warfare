@@ -1,0 +1,5 @@
+<map id="sp_add_sequence_to_transmission" name="sp_add_sequence_to_transmission">
+<area shape="rect" id="node2" href="$group__serial__port.html#ga3f97f989bc21fe99607931390eedb776" title="Update the transmission with new information. " alt="" coords="207,5,355,32"/>
+<area shape="rect" id="node4" href="$group__serial__port.html#gaf1ec489b5340cded627b83d8e2771cde" title="Update the transmission with a new sequence but the same information. " alt="" coords="199,56,363,83"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="411,31,520,57"/>
+</map>

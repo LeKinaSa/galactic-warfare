@@ -1,0 +1,4 @@
+<map id="circle_circle_collision" name="circle_circle_collision">
+<area shape="rect" id="node2" href="$group__game__logic.html#ga5b5da0616a5ac26237ecae4e9c0eb1d2" title="Detects collisions between the player and powerups / bullets, updating entities accordingly. " alt="" coords="199,5,317,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="365,5,475,32"/>
+</map>

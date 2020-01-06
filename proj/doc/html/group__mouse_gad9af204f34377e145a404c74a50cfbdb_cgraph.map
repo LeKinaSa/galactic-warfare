@@ -1,0 +1,8 @@
+<map id="mouse_set_remote_mode" name="mouse_set_remote_mode">
+<area shape="rect" id="node2" href="$group__mouse.html#gad35b135a465650bd58aef6ee248ca402" title="Writes a command to the PS/2 mouse. Interrupts must be disabled or else the ACK bytes may be automati..." alt="" coords="225,56,385,83"/>
+<area shape="rect" id="node3" href="$group__kbc.html#ga8c467e640bc33719fe3ed7bcb73f2121" title="Writes a KBC command to the 0x64 port. " alt="" coords="433,5,576,32"/>
+<area shape="rect" id="node6" href="$group__kbc.html#gab7c3aa73d53fa86cf82ef40b5032784d" title="Writes an argument for a KBC command to the 0x60 port. " alt="" coords="453,56,556,83"/>
+<area shape="rect" id="node7" href="$group__kbc.html#ga19f24da562326ef540548f54c1b648c3" title="Reads output (data or return value) from the 0x60 port. " alt="" coords="433,107,576,133"/>
+<area shape="rect" id="node4" href="$group__kbc.html#gaa4c58a11cd49c54cc0eb02a79010a9cc" title="Reads status byte from the 0x64 port. " alt="" coords="624,56,743,83"/>
+<area shape="rect" id="node5" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Reads a byte from the specified port. " alt="" coords="791,81,881,108"/>
+</map>

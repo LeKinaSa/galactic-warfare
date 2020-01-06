@@ -1,0 +1,6 @@
+<map id="process_kbd_status" name="process_kbd_status">
+<area shape="rect" id="node2" href="$group__game__logic.html#gaf60d50aa55bd6501e471aac89efec799" title="Calculates the sum of two vectors. " alt="" coords="215,5,310,32"/>
+<area shape="rect" id="node3" href="$group__game__logic.html#gade0911b9125be9387bc068ac1d342c65" title="Performs a scalar multiplication on the given vector. " alt="" coords="192,56,333,83"/>
+<area shape="rect" id="node4" href="$group__game__logic.html#ga2306491105159c8c5dbf40b970c73536" title="Returns a normalized (length = 1) version of a vector. " alt="" coords="194,107,331,133"/>
+<area shape="rect" id="node5" href="$group__game__logic.html#gaa50f5776598439bec252c8de0faa2e14" title="Calculates the norm (length) of the given vector. " alt="" coords="381,107,484,133"/>
+</map>

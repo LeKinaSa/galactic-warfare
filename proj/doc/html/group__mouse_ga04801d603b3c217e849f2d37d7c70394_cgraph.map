@@ -1,0 +1,7 @@
+<map id="mouse_parse_packet" name="mouse_parse_packet">
+<area shape="rect" id="node2" href="$group__mouse.html#gad1ab1b763a6bdb1de1779e0a02809df6" title="mouse_put_bytes_on\l_packet" alt="" coords="221,5,368,47"/>
+<area shape="rect" id="node3" href="$group__mouse.html#gaa968bd798197a2abab567fc46bdf8ed1" title="mouse_get_buttons_pressed" alt="" coords="200,71,389,98"/>
+<area shape="rect" id="node4" href="$group__mouse.html#gaa85649a27dd5cec7384188b5a816c9fc" title="mouse_get_x_displacement" alt="" coords="203,122,387,149"/>
+<area shape="rect" id="node5" href="$group__mouse.html#gaff82f0871b2116ed7acad3c983915cad" title="mouse_get_y_displacement" alt="" coords="203,173,387,199"/>
+<area shape="rect" id="node6" href="$group__mouse.html#ga5d00d2b38a2c228ba1a089c501afc210" title="mouse_get_overflow" alt="" coords="223,223,366,250"/>
+</map>

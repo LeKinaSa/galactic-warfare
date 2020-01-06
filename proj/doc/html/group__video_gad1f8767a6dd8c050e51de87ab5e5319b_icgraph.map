@@ -1,0 +1,5 @@
+<map id="vg_draw_xpm" name="vg_draw_xpm">
+<area shape="rect" id="node2" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="499,5,608,32"/>
+<area shape="rect" id="node3" href="$video_8c.html#ac27d5fe327e07a511da32f3985a22e9f" title="vg_render_entity" alt="" coords="156,31,275,57"/>
+<area shape="rect" id="node4" href="$group__video.html#gac1143fc335be99b1c84e5a8d95aa7013" title="Draws entities to a buffer according to their z&#45;layer. Entities with a higher z&#45;layer are drawn last ..." alt="" coords="323,31,451,57"/>
+</map>

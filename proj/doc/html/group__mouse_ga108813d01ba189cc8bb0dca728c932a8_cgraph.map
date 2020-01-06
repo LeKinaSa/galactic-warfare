@@ -1,0 +1,9 @@
+<map id="mouse_enable_data_report" name="mouse_enable_data_report">
+<area shape="rect" id="node2" href="$group__mouse.html#ga16a521d1919cbd8f434d8b5d535a639b" title="Sets the mouse to stream mode. " alt="" coords="232,31,404,57"/>
+<area shape="rect" id="node3" href="$group__mouse.html#gad35b135a465650bd58aef6ee248ca402" title="Writes a command to the PS/2 mouse. Interrupts must be disabled or else the ACK bytes may be automati..." alt="" coords="452,56,612,83"/>
+<area shape="rect" id="node4" href="$group__kbc.html#ga8c467e640bc33719fe3ed7bcb73f2121" title="Writes a KBC command to the 0x64 port. " alt="" coords="660,5,803,32"/>
+<area shape="rect" id="node7" href="$group__kbc.html#gab7c3aa73d53fa86cf82ef40b5032784d" title="Writes an argument for a KBC command to the 0x60 port. " alt="" coords="680,56,783,83"/>
+<area shape="rect" id="node8" href="$group__kbc.html#ga19f24da562326ef540548f54c1b648c3" title="Reads output (data or return value) from the 0x60 port. " alt="" coords="660,107,803,133"/>
+<area shape="rect" id="node5" href="$group__kbc.html#gaa4c58a11cd49c54cc0eb02a79010a9cc" title="Reads status byte from the 0x64 port. " alt="" coords="851,56,969,83"/>
+<area shape="rect" id="node6" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Reads a byte from the specified port. " alt="" coords="1017,81,1108,108"/>
+</map>

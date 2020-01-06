@@ -1,0 +1,4 @@
+<map id="sp_transmit" name="sp_transmit">
+<area shape="rect" id="node2" href="$group__utils.html#gabd8bbcfabb3ddef2ccaafb9928a37b95" title="Returns the smallest of two integers. " alt="" coords="162,5,205,32"/>
+<area shape="rect" id="node3" href="$group__utils.html#ga0bb8bf253e25c4e51ff35215cf92d581" title="Erases a given number of bytes from the start of a queue, shifting the next bytes to the start..." alt="" coords="144,56,223,83"/>
+</map>

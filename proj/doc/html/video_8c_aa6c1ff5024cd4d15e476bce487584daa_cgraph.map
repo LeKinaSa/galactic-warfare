@@ -1,0 +1,4 @@
+<map id="vg_init" name="vg_init">
+<area shape="rect" id="node2" href="$group__video.html#ga4640b9c7378a0bfee35c28cade4f9576" title="Our implementation of vbe_get_mode_info. Returns information about the specified video card mode..." alt="" coords="113,5,264,32"/>
+<area shape="rect" id="node3" href="$group__video.html#gaed60fb8312287ec82fa90fed7fef715a" title="Sets the operating mode of the video card. " alt="" coords="130,56,247,83"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="mouse_put_bytes_on_packet" name="mouse_put_bytes_on_packet">
+<area shape="rect" id="node2" href="$group__mouse.html#ga04801d603b3c217e849f2d37d7c70394" title="mouse_parse_packet" alt="" coords="200,13,347,39"/>
+<area shape="rect" id="node3" href="$group__dispatcher.html#ga1e4b30d342dfd9e0d74c334cda7ef324" title="Processes a mouse packet and updates the mouse status accordingly. " alt="" coords="395,13,555,39"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="603,13,712,39"/>
+</map>

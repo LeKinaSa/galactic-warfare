@@ -1,0 +1,4 @@
+<map id="kbc_reset_cmd_byte" name="kbc_reset_cmd_byte">
+<area shape="rect" id="node2" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="341,5,451,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#gaff2fca31aa37d9157250fd2222b14456" title="Exits the program, calling the appropriate functions according to the program&#39;s current status..." alt="" coords="196,31,293,57"/>
+</map>

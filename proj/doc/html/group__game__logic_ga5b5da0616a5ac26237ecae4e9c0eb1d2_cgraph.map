@@ -1,0 +1,8 @@
+<map id="detect_collisions" name="detect_collisions">
+<area shape="rect" id="node2" href="$group__game__logic.html#gaa38e1f395a44d0690e8ea0452ff494e2" title="Detects a collision between two circles. " alt="" coords="172,5,317,32"/>
+<area shape="rect" id="node5" href="$group__game__logic.html#gab4ad9e64cf0d6d5f515e60ed8695ce31" title="Calculates the difference of two vectors. " alt="" coords="555,56,676,83"/>
+<area shape="rect" id="node6" href="$group__game__logic.html#gaf60d50aa55bd6501e471aac89efec799" title="Calculates the sum of two vectors. " alt="" coords="197,107,292,133"/>
+<area shape="rect" id="node7" href="$group__utils.html#ga751b8cc4510bc24ec95605a9161de540" title="Deletes the first occurrence of a given element from the linked list. " alt="" coords="185,157,305,184"/>
+<area shape="rect" id="node3" href="$group__game__logic.html#ga2144cfd35ea040a59e24ed701b5c27f8" title="Returns the distance between the two vectors. " alt="" coords="365,5,507,32"/>
+<area shape="rect" id="node4" href="$group__game__logic.html#gaa50f5776598439bec252c8de0faa2e14" title="Calculates the norm (length) of the given vector. " alt="" coords="564,5,667,32"/>
+</map>

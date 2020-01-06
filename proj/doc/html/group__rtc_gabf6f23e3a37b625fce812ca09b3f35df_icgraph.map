@@ -1,0 +1,4 @@
+<map id="rtc_read_register" name="rtc_read_register">
+<area shape="rect" id="node2" href="$group__rtc.html#ga023cfe181f8a45fabb033751cb4356dc" title="Initializes the RTC&#39;s registers so that the RTC creates an alarm interrupt every minute. " alt="" coords="172,5,233,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="281,5,391,32"/>
+</map>

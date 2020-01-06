@@ -1,0 +1,9 @@
+<map id="Vector2_norm" name="Vector2_norm">
+<area shape="rect" id="node2" href="$group__game__logic.html#ga2306491105159c8c5dbf40b970c73536" title="Returns a normalized (length = 1) version of a vector. " alt="" coords="158,5,295,32"/>
+<area shape="rect" id="node5" href="$group__game__logic.html#ga2144cfd35ea040a59e24ed701b5c27f8" title="Returns the distance between the two vectors. " alt="" coords="156,56,297,83"/>
+<area shape="rect" id="node3" href="$group__dispatcher.html#gabe630109db9a0ca92f0a407a76960fa8" title="Updates the player&#39;s position according to the keyboard status. Called every frame. " alt="" coords="549,19,688,45"/>
+<area shape="rect" id="node4" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="736,56,845,83"/>
+<area shape="rect" id="node6" href="$group__game__logic.html#gaa6558fd86d249ebf1ecfec994f8de8e5" title="Detects a collision between a triangle and a circle, based on at least one of three criteria..." alt="" coords="345,56,501,83"/>
+<area shape="rect" id="node7" href="$group__game__logic.html#gaa38e1f395a44d0690e8ea0452ff494e2" title="Detects a collision between two circles. " alt="" coords="351,107,496,133"/>
+<area shape="rect" id="node8" href="$group__game__logic.html#ga5b5da0616a5ac26237ecae4e9c0eb1d2" title="Detects collisions between the player and powerups / bullets, updating entities accordingly. " alt="" coords="559,81,678,108"/>
+</map>

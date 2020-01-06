@@ -1,0 +1,4 @@
+<map id="Vector2_scalar_mult" name="Vector2_scalar_mult">
+<area shape="rect" id="node2" href="$group__dispatcher.html#gabe630109db9a0ca92f0a407a76960fa8" title="Updates the player&#39;s position according to the keyboard status. Called every frame. " alt="" coords="195,5,333,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="381,31,491,57"/>
+</map>

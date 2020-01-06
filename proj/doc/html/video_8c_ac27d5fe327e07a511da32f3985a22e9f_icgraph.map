@@ -1,0 +1,4 @@
+<map id="vg_render_entity" name="vg_render_entity">
+<area shape="rect" id="node2" href="$group__video.html#gac1143fc335be99b1c84e5a8d95aa7013" title="Draws entities to a buffer according to their z&#45;layer. Entities with a higher z&#45;layer are drawn last ..." alt="" coords="172,5,300,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="348,5,457,32"/>
+</map>

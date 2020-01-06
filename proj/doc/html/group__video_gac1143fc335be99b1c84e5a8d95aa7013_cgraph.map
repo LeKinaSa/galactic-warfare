@@ -1,0 +1,5 @@
+<map id="vg_render_entities" name="vg_render_entities">
+<area shape="rect" id="node2" href="$video_8c.html#ac27d5fe327e07a511da32f3985a22e9f" title="vg_render_entity" alt="" coords="181,5,300,32"/>
+<area shape="rect" id="node3" href="$group__video.html#gad1f8767a6dd8c050e51de87ab5e5319b" title="Draws an X Pixmap image in a specified position to a given buffer. " alt="" coords="348,5,451,32"/>
+<area shape="rect" id="node4" href="$group__video.html#gab25167202fb0e55ce46a3832bd53d464" title="Draws a pixel of the given color in a specified position to a given buffer. " alt="" coords="499,5,604,32"/>
+</map>

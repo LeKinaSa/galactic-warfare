@@ -1,0 +1,6 @@
+<map id="kbc_reset_cmd_byte" name="kbc_reset_cmd_byte">
+<area shape="rect" id="node2" href="$group__kbc.html#ga8c467e640bc33719fe3ed7bcb73f2121" title="Writes a KBC command to the 0x64 port. " alt="" coords="196,5,339,32"/>
+<area shape="rect" id="node5" href="$group__kbc.html#gab7c3aa73d53fa86cf82ef40b5032784d" title="Writes an argument for a KBC command to the 0x60 port. " alt="" coords="216,56,319,83"/>
+<area shape="rect" id="node3" href="$group__kbc.html#gaa4c58a11cd49c54cc0eb02a79010a9cc" title="Reads status byte from the 0x64 port. " alt="" coords="387,31,505,57"/>
+<area shape="rect" id="node4" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Reads a byte from the specified port. " alt="" coords="553,31,644,57"/>
+</map>

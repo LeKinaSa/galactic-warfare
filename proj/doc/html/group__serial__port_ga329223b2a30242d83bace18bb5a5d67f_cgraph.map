@@ -1,0 +1,8 @@
+<map id="sp_int_handler" name="sp_int_handler">
+<area shape="rect" id="node2" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Reads a byte from the specified port. " alt="" coords="371,5,461,32"/>
+<area shape="rect" id="node3" href="$group__serial__port.html#gad9ebdab85b01da1edde0fc0176243608" title="Receive the Receiver Holding Register to a vector. " alt="" coords="199,31,284,57"/>
+<area shape="rect" id="node4" href="$group__serial__port.html#ga49f2bb5bcfcad0d807d263b9586fa817" title="Add a byte to the transmission. " alt="" coords="160,82,323,123"/>
+<area shape="rect" id="node5" href="$group__serial__port.html#gadd475e212f2c31efa339bef3be1ceaf1" title="Transmit the vector to the Transmitter Holding Register. " alt="" coords="196,148,287,175"/>
+<area shape="rect" id="node6" href="$group__utils.html#gabd8bbcfabb3ddef2ccaafb9928a37b95" title="Returns the smallest of two integers. " alt="" coords="395,123,437,149"/>
+<area shape="rect" id="node7" href="$group__utils.html#ga0bb8bf253e25c4e51ff35215cf92d581" title="Erases a given number of bytes from the start of a queue, shifting the next bytes to the start..." alt="" coords="377,173,455,200"/>
+</map>

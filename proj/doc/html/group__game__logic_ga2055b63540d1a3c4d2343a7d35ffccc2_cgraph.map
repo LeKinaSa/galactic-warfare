@@ -1,0 +1,7 @@
+<map id="update_entity_positions" name="update_entity_positions">
+<area shape="rect" id="node2" href="$group__video.html#gaef2cf20e38835a1d3144f9ac0e9454f3" title="Returns the screen&#39;s horizontal resolution in pixels. Returns 0 if the video mode or frame buffer hav..." alt="" coords="412,5,551,32"/>
+<area shape="rect" id="node3" href="$group__video.html#ga0d2573ac48cc74944b57403fac2a5797" title="Returns the screen&#39;s vertical resolution in pixels. Returns 0 if the video mode or frame buffer haven..." alt="" coords="412,107,551,133"/>
+<area shape="rect" id="node4" href="$game__logic_8c.html#a16797ec72c9dae60717b8f8546a4f630" title="update_entity_position" alt="" coords="212,56,364,83"/>
+<area shape="rect" id="node6" href="$group__utils.html#ga751b8cc4510bc24ec95605a9161de540" title="Deletes the first occurrence of a given element from the linked list. " alt="" coords="228,157,348,184"/>
+<area shape="rect" id="node5" href="$group__utils.html#ga7bd2a3e76557131d9099c06fb3b52af4" title="Returns the value of x limited by a lower and upper bound. " alt="" coords="453,56,510,83"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="/home/goncalo/VirtualMachines/MINIX&#45;LCOM/shared/proj/src/i8254.h" name="/home/goncalo/VirtualMachines/MINIX&#45;LCOM/shared/proj/src/i8254.h">
+<area shape="rect" id="node2" href="$game__constants_8h.html" title="/home/goncalo/VirtualMachines\l/MINIX&#45;LCOM/shared/proj/src\l/game_constants.h" alt="" coords="252,109,456,165"/>
+<area shape="rect" id="node6" href="$uart_8h.html" title="/home/goncalo/VirtualMachines\l/MINIX&#45;LCOM/shared/proj/src/uart.h" alt="" coords="489,117,723,158"/>
+<area shape="rect" id="node9" href="$timer_8c.html" title="/home/goncalo/VirtualMachines\l/MINIX&#45;LCOM/shared/proj/src\l/timer.c" alt="" coords="747,109,951,165"/>
+<area shape="rect" id="node3" href="$dispatcher_8c.html" title="/home/goncalo/VirtualMachines\l/MINIX&#45;LCOM/shared/proj/src\l/dispatcher.c" alt="" coords="5,213,209,269"/>
+<area shape="rect" id="node4" href="$game__logic_8c.html" title="/home/goncalo/VirtualMachines\l/MINIX&#45;LCOM/shared/proj/src\l/game_logic.c" alt="" coords="233,213,437,269"/>
+<area shape="rect" id="node5" href="$proj_8c.html" title="/home/goncalo/VirtualMachines\l/MINIX&#45;LCOM/shared/proj/src/proj.c" alt="" coords="359,325,591,366"/>
+<area shape="rect" id="node7" href="$serial__port_8h.html" title="/home/goncalo/VirtualMachines\l/MINIX&#45;LCOM/shared/proj/src\l/serial_port.h" alt="" coords="513,213,717,269"/>
+<area shape="rect" id="node8" href="$serial__port_8c.html" title="/home/goncalo/VirtualMachines\l/MINIX&#45;LCOM/shared/proj/src\l/serial_port.c" alt="" coords="616,317,820,373"/>
+</map>

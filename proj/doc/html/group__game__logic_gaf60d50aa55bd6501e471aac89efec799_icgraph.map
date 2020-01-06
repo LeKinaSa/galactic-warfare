@@ -1,0 +1,8 @@
+<map id="Vector2_add" name="Vector2_add">
+<area shape="rect" id="node2" href="$group__dispatcher.html#gabe630109db9a0ca92f0a407a76960fa8" title="Updates the player&#39;s position according to the keyboard status. Called every frame. " alt="" coords="361,6,500,33"/>
+<area shape="rect" id="node4" href="$group__game__logic.html#gaa6558fd86d249ebf1ecfec994f8de8e5" title="Detects a collision between a triangle and a circle, based on at least one of three criteria..." alt="" coords="148,31,304,58"/>
+<area shape="rect" id="node5" href="$group__game__logic.html#gabc9becb6747f8908a0ff6d1a4737fce2" title="Updates the position of the mouse cursor. " alt="" coords="148,82,304,109"/>
+<area shape="rect" id="node7" href="$group__game__logic.html#ga5b5da0616a5ac26237ecae4e9c0eb1d2" title="Detects collisions between the player and powerups / bullets, updating entities accordingly. " alt="" coords="371,133,490,159"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="557,82,667,109"/>
+<area shape="rect" id="node6" href="$group__dispatcher.html#ga145408686ead4294096058e3090ad969" title="Updates the cursors&#39;s position and player orientation according to the mouse status. Called every frame. " alt="" coords="352,82,509,109"/>
+</map>

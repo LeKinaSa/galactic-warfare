@@ -1,0 +1,8 @@
+<map id="vg_get_x_resolution" name="vg_get_x_resolution">
+<area shape="rect" id="node2" href="$group__dispatcher.html#ga1e4b30d342dfd9e0d74c334cda7ef324" title="Processes a mouse packet and updates the mouse status accordingly. " alt="" coords="396,5,556,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="604,81,713,108"/>
+<area shape="rect" id="node4" href="$group__game__logic.html#gabc9becb6747f8908a0ff6d1a4737fce2" title="Updates the position of the mouse cursor. " alt="" coords="192,107,348,133"/>
+<area shape="rect" id="node6" href="$game__logic_8c.html#a16797ec72c9dae60717b8f8546a4f630" title="update_entity_position" alt="" coords="194,157,346,184"/>
+<area shape="rect" id="node7" href="$group__game__logic.html#ga2055b63540d1a3c4d2343a7d35ffccc2" title="Updates the position of the bullets and player. " alt="" coords="397,157,555,184"/>
+<area shape="rect" id="node5" href="$group__dispatcher.html#ga145408686ead4294096058e3090ad969" title="Updates the cursors&#39;s position and player orientation according to the mouse status. Called every frame. " alt="" coords="397,107,555,133"/>
+</map>
