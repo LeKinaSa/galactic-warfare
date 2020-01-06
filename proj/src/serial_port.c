@@ -128,7 +128,7 @@ void sp_treat_information_received(Player *player, uint16_t *rtc_x, uint16_t *rt
     return;
   }
   uint8_t rtc_queue[SP_RTC_SIZE - 1], player_queue[SP_PLAYER_SIZE - 1];
-  int rtc_size, player_size;
+  int rtc_size = 0, player_size = 0;
 
   uint8_t msb_x, lsb_x, msb_y, lsb_y;
   uint8_t angle1 = 0, angle2 = 0, angle3 = 0, angle4 = 0;
@@ -205,7 +205,7 @@ void sp_treat_received_queue(uint8_t player_queue[], int *player_size,
 
   for (int index = 0; index < received_size; ++ index) {
     next_char = received[index];
-    printf("%x ", next_char); // RETIRAR
+    printf("%x  %d %d\n", next_char, last, *player_size); // RETIRAR
 
     switch (last) {
       case COMPLETE:
