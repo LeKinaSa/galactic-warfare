@@ -1,4 +1,4 @@
 <map id="MouseCursor" name="MouseCursor">
-<area shape="rect" id="node2" href="$struct_sprite.html" title="Sprite" alt="" coords="5,5,61,32"/>
+<area shape="rect" id="node2" href="$struct_sprite.html" title="Structure representing a sprite, with an optional collision shape. " alt="" coords="5,5,61,32"/>
 <area shape="rect" id="node3" href="$struct_vector2.html" title="Basic two&#45;dimensional vector. " alt="" coords="85,5,152,32"/>
 </map>

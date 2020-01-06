@@ -89,11 +89,14 @@ Functions</h2></td></tr>
 <tr class="memitem:gab25167202fb0e55ce46a3832bd53d464"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__video.html#gab25167202fb0e55ce46a3832bd53d464">vg_draw_pixel</a> (uint16_t x, uint16_t y, uint32_t color, void **buffer)</td></tr>
 <tr class="memdesc:gab25167202fb0e55ce46a3832bd53d464"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws a pixel of the given color in a specified position to a given buffer.  <a href="#gab25167202fb0e55ce46a3832bd53d464">More...</a><br /></td></tr>
 <tr class="separator:gab25167202fb0e55ce46a3832bd53d464"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gade49fffaa2fc1b8cb1c013cab612b538"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__video.html#gade49fffaa2fc1b8cb1c013cab612b538">vg_draw_rectangle_to_buffer</a> (uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color, void **buffer)</td></tr>
+<tr class="memdesc:gade49fffaa2fc1b8cb1c013cab612b538"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws a rectangle of the given color, width and height in a specified position to a given buffer.  <a href="#gade49fffaa2fc1b8cb1c013cab612b538">More...</a><br /></td></tr>
+<tr class="separator:gade49fffaa2fc1b8cb1c013cab612b538"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad1f8767a6dd8c050e51de87ab5e5319b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__video.html#gad1f8767a6dd8c050e51de87ab5e5319b">vg_draw_xpm</a> (xpm_image_t img, uint16_t x, uint16_t y, void **buffer)</td></tr>
 <tr class="memdesc:gad1f8767a6dd8c050e51de87ab5e5319b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws an X Pixmap image in a specified position to a given buffer.  <a href="#gad1f8767a6dd8c050e51de87ab5e5319b">More...</a><br /></td></tr>
 <tr class="separator:gad1f8767a6dd8c050e51de87ab5e5319b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac1143fc335be99b1c84e5a8d95aa7013"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__video.html#gac1143fc335be99b1c84e5a8d95aa7013">vg_render_entities</a> (const <a class="el" href="struct_linked_list.html">LinkedList</a> *bullets, const <a class="el" href="struct_powerup.html">Powerup</a> *current_powerup, const <a class="el" href="struct_player.html">Player</a> *player, const <a class="el" href="struct_player.html">Player</a> *enemy, void **buffer)</td></tr>
-<tr class="memdesc:gac1143fc335be99b1c84e5a8d95aa7013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws entities to a buffer according to their z-layer. Entities with a higher z-layer are drawn last (on top of the other entities).  <a href="#gac1143fc335be99b1c84e5a8d95aa7013">More...</a><br /></td></tr>
+<tr class="memdesc:gac1143fc335be99b1c84e5a8d95aa7013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws entities to a buffer in a specific order. The entities that are drawn last are drawn on top of the others.  <a href="#gac1143fc335be99b1c84e5a8d95aa7013">More...</a><br /></td></tr>
 <tr class="separator:gac1143fc335be99b1c84e5a8d95aa7013"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -200,10 +203,93 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__video_gab25167202fb0e55ce46a3832bd53d464_icgraph.png" border="0" usemap="#group__video_gab25167202fb0e55ce46a3832bd53d464_icgraph" alt=""/></div>
 <map name="group__video_gab25167202fb0e55ce46a3832bd53d464_icgraph" id="group__video_gab25167202fb0e55ce46a3832bd53d464_icgraph">
-<area shape="rect" id="node2" href="group__video.html#gad1f8767a6dd8c050e51de87ab5e5319b" title="Draws an X Pixmap image in a specified position to a given buffer. " alt="" coords="159,5,261,32"/>
-<area shape="rect" id="node3" href="group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="652,5,761,32"/>
-<area shape="rect" id="node4" href="video_8c.html#ac27d5fe327e07a511da32f3985a22e9f" title="vg_render_entity" alt="" coords="309,31,428,57"/>
-<area shape="rect" id="node5" href="group__video.html#gac1143fc335be99b1c84e5a8d95aa7013" title="Draws entities to a buffer according to their z&#45;layer. Entities with a higher z&#45;layer are drawn last ..." alt="" coords="476,31,604,57"/>
+<area shape="rect" id="node2" href="group__video.html#gade49fffaa2fc1b8cb1c013cab612b538" title="Draws a rectangle of the given color, width and height in a specified position to a given buffer..." alt="" coords="309,5,459,47"/>
+<area shape="rect" id="node4" href="group__video.html#gad1f8767a6dd8c050e51de87ab5e5319b" title="Draws an X Pixmap image in a specified position to a given buffer. " alt="" coords="159,71,261,98"/>
+<area shape="rect" id="node3" href="group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="683,71,792,98"/>
+<area shape="rect" id="node5" href="video_8c.html#ac27d5fe327e07a511da32f3985a22e9f" title="vg_render_entity" alt="" coords="325,122,443,149"/>
+<area shape="rect" id="node6" href="group__video.html#gac1143fc335be99b1c84e5a8d95aa7013" title="Draws entities to a buffer in a specific order. The entities that are drawn last are drawn on top of ..." alt="" coords="507,122,635,149"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="gade49fffaa2fc1b8cb1c013cab612b538"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gade49fffaa2fc1b8cb1c013cab612b538">&#9670;&nbsp;</a></span>vg_draw_rectangle_to_buffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int vg_draw_rectangle_to_buffer </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>color</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void **&#160;</td>
+          <td class="paramname"><em>buffer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Draws a rectangle of the given color, width and height in a specified position to a given buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>horizontal position of the rectangle </td></tr>
+    <tr><td class="paramname">y</td><td>vertical position of the rectangle </td></tr>
+    <tr><td class="paramname">width</td><td>width of the rectangle </td></tr>
+    <tr><td class="paramname">height</td><td>height of the rectangle </td></tr>
+    <tr><td class="paramname">color</td><td>rectangle's color in the format specified by the video card's mode </td></tr>
+    <tr><td class="paramname">buffer</td><td>buffer where the rectangle should be drawn </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>zero if no errors occurred, non-zero otherwise </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__video_gade49fffaa2fc1b8cb1c013cab612b538_cgraph.png" border="0" usemap="#group__video_gade49fffaa2fc1b8cb1c013cab612b538_cgraph" alt=""/></div>
+<map name="group__video_gade49fffaa2fc1b8cb1c013cab612b538_cgraph" id="group__video_gade49fffaa2fc1b8cb1c013cab612b538_cgraph">
+<area shape="rect" id="node2" href="group__video.html#gab25167202fb0e55ce46a3832bd53d464" title="Draws a pixel of the given color in a specified position to a given buffer. " alt="" coords="203,13,308,39"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__video_gade49fffaa2fc1b8cb1c013cab612b538_icgraph.png" border="0" usemap="#group__video_gade49fffaa2fc1b8cb1c013cab612b538_icgraph" alt=""/></div>
+<map name="group__video_gade49fffaa2fc1b8cb1c013cab612b538_icgraph" id="group__video_gade49fffaa2fc1b8cb1c013cab612b538_icgraph">
+<area shape="rect" id="node2" href="group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="203,13,312,39"/>
 </map>
 </div>
 
@@ -273,7 +359,7 @@ Here is the caller graph for this function:</div>
 <map name="group__video_gad1f8767a6dd8c050e51de87ab5e5319b_icgraph" id="group__video_gad1f8767a6dd8c050e51de87ab5e5319b_icgraph">
 <area shape="rect" id="node2" href="group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="499,5,608,32"/>
 <area shape="rect" id="node3" href="video_8c.html#ac27d5fe327e07a511da32f3985a22e9f" title="vg_render_entity" alt="" coords="156,31,275,57"/>
-<area shape="rect" id="node4" href="group__video.html#gac1143fc335be99b1c84e5a8d95aa7013" title="Draws entities to a buffer according to their z&#45;layer. Entities with a higher z&#45;layer are drawn last ..." alt="" coords="323,31,451,57"/>
+<area shape="rect" id="node4" href="group__video.html#gac1143fc335be99b1c84e5a8d95aa7013" title="Draws entities to a buffer in a specific order. The entities that are drawn last are drawn on top of ..." alt="" coords="323,31,451,57"/>
 </map>
 </div>
 
@@ -414,7 +500,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Draws entities to a buffer according to their z-layer. Entities with a higher z-layer are drawn last (on top of the other entities). </p>
+<p>Draws entities to a buffer in a specific order. The entities that are drawn last are drawn on top of the others. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">bullets</td><td>linked list containing bullets from the player and the enemy </td></tr>

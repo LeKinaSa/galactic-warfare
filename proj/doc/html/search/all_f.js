@@ -29,7 +29,6 @@ var searchData=
   ['sp_5fadd_5fto_5ftransmission_5fqueue',['sp_add_to_transmission_queue',['../group__serial__port.html#ga49f2bb5bcfcad0d807d263b9586fa817',1,'sp_add_to_transmission_queue(uint8_t byte):&#160;serial_port.c'],['../group__serial__port.html#ga49f2bb5bcfcad0d807d263b9586fa817',1,'sp_add_to_transmission_queue(uint8_t byte):&#160;serial_port.c']]],
   ['sp_5fbit_5frate',['SP_BIT_RATE',['../group__uart.html#ga4311663ea382379a212eef9573eb4512',1,'uart.h']]],
   ['sp_5fbullet_5fsize',['SP_BULLET_SIZE',['../group__uart.html#ga9ad10a4ff6bb441e8998ce9c835f5e19',1,'uart.h']]],
-  ['sp_5fcheck_5fready_5fto_5ftransmit',['sp_check_ready_to_transmit',['../group__serial__port.html#ga5b2072225230b0eaff6afed4452512f3',1,'sp_check_ready_to_transmit():&#160;serial_port.c'],['../group__serial__port.html#ga5b2072225230b0eaff6afed4452512f3',1,'sp_check_ready_to_transmit():&#160;serial_port.c']]],
   ['sp_5fconfig',['sp_config',['../group__serial__port.html#ga65498757ed4056101bd29645c8c8d23e',1,'sp_config(uint32_t bit_rate):&#160;serial_port.c'],['../group__serial__port.html#ga65498757ed4056101bd29645c8c8d23e',1,'sp_config(uint32_t bit_rate):&#160;serial_port.c']]],
   ['sp_5fdata_5flenght',['SP_DATA_LENGHT',['../group__uart.html#ga642ceb2bf8c4ade7d9018e992780e282',1,'uart.h']]],
   ['sp_5fdl_5fvalue',['SP_DL_VALUE',['../group__uart.html#ga421982df3311d5ddbef3bc3efbf86e69',1,'uart.h']]],

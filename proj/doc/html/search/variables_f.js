@@ -1,9 +1,23 @@
 var searchData=
 [
-  ['timer_5fhook_5fid',['timer_hook_id',['../timer_8c.html#a96e6321e488d93a8134897510c435eb7',1,'timer.c']]],
-  ['timer_5fint_5fsubscribed',['timer_int_subscribed',['../group__proj.html#gad488bb7f62f65074efb4522072856371',1,'program_status_t']]],
-  ['to_5ftransmit',['to_transmit',['../serial__port_8c.html#aff53b516b3e27f36ab54a1b5255848d3',1,'serial_port.c']]],
-  ['to_5ftransmit_5fsize',['to_transmit_size',['../serial__port_8c.html#a6bb7d9d5c56d220e3ee091c386334ba8',1,'serial_port.c']]],
-  ['transmit',['transmit',['../unionangle__to__transmit.html#a482be212557ff66251b160feeb127dc0',1,'angle_to_transmit']]],
-  ['type',['type',['../struct_powerup.html#aa72447123f752645640867a23e69e360',1,'Powerup']]]
+  ['s',['s',['../structxpm__animated.html#af35394cd0cfe94bc15151376b8db15da',1,'xpm_animated']]],
+  ['s_5fpressed',['s_pressed',['../structkeyboard__status.html#a61df415bf75ede0a024b4f085e35be95',1,'keyboard_status']]],
+  ['scancode',['scancode',['../group__proj.html#gaa1de7a5557e9d96b83cf03f73c92163f',1,'scancode():&#160;proj.c'],['../group__proj.html#gaa1de7a5557e9d96b83cf03f73c92163f',1,'scancode():&#160;proj.c']]],
+  ['se',['se',['../structxpm__animated.html#a29b2d9cba53f11b700af3dc733e6c35b',1,'xpm_animated']]],
+  ['serial_5fport_5fhook_5fid',['serial_port_hook_id',['../serial__port_8c.html#a091df63b54bb40a05c33b1c72e224b62',1,'serial_port.c']]],
+  ['ship',['ship',['../group__proj.html#ga3a482e83639e976071552700c08a88b2',1,'ship():&#160;proj.c'],['../group__proj.html#ga3a482e83639e976071552700c08a88b2',1,'ship():&#160;proj.c']]],
+  ['ship_5fe_5fxpm',['ship_E_xpm',['../group__proj.html#gae8cf1f32ebcf5b9f54cf9b664f7983a7',1,'proj.c']]],
+  ['ship_5fn_5fxpm',['ship_N_xpm',['../group__proj.html#ga5601bbae67be221b7e46fb12fce625c7',1,'proj.c']]],
+  ['ship_5fne_5fxpm',['ship_NE_xpm',['../group__proj.html#ga96f1090a36eb331da7fa6cae30bafae2',1,'proj.c']]],
+  ['ship_5fnw_5fxpm',['ship_NW_xpm',['../group__proj.html#gab865cb2b999f046c0b2bb575721db965',1,'proj.c']]],
+  ['ship_5fs_5fxpm',['ship_S_xpm',['../group__proj.html#gacdd78836448a6eaf10e5fc928b361404',1,'proj.c']]],
+  ['ship_5fse_5fxpm',['ship_SE_xpm',['../group__proj.html#gac3c3cd71118752dff719da28ba904254',1,'proj.c']]],
+  ['ship_5fsw_5fxpm',['ship_SW_xpm',['../group__proj.html#gaf0951f1619b55f14907acb8794789170',1,'proj.c']]],
+  ['ship_5fw_5fxpm',['ship_W_xpm',['../group__proj.html#gab34547e13d980cc4bb9728b199052593',1,'proj.c']]],
+  ['size',['size',['../struct_linked_list.html#a854352f53b148adc24983a58a1866d66',1,'LinkedList']]],
+  ['sp_5fint_5fsubscribed',['sp_int_subscribed',['../group__proj.html#gace58d2734062e1fdfd1d5d0b08bcca16',1,'program_status_t']]],
+  ['speed',['speed',['../struct_player.html#aae32029df16a54aa86c0aec2df9f7bb7',1,'Player']]],
+  ['speed_5fpowerup_5fxpm',['speed_powerup_xpm',['../group__proj.html#ga164aa47f8e8a922515d9c108c292bc94',1,'proj.c']]],
+  ['sprite',['sprite',['../struct_entity.html#a3b07e45db440aac51fcedd79931bb691',1,'Entity::sprite()'],['../struct_mouse_cursor.html#a3b07e45db440aac51fcedd79931bb691',1,'MouseCursor::sprite()']]],
+  ['sw',['sw',['../structxpm__animated.html#a2a1590720e31eed011fa35b329f1b066',1,'xpm_animated']]]
 ];

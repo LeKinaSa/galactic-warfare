@@ -1,7 +1,7 @@
 <map id="sp_add_to_transmission_queue" name="sp_add_to_transmission_queue">
 <area shape="rect" id="node2" href="$group__serial__port.html#ga329223b2a30242d83bace18bb5a5d67f" title="Serial port interrupt handler. When an interrupt occurs, identify the type of interrupt and process i..." alt="" coords="235,5,342,32"/>
-<area shape="rect" id="node4" href="$group__serial__port.html#gaf1ec489b5340cded627b83d8e2771cde" title="Update the transmission with a new sequence but the same information. " alt="" coords="409,59,573,85"/>
-<area shape="rect" id="node5" href="$group__serial__port.html#gab71fa17d64d2c95053410f12b0276074" title="Transform player, powerup and bullet information into bytes to be transmitted. " alt="" coords="216,107,361,149"/>
-<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="621,59,731,85"/>
-<area shape="rect" id="node6" href="$group__serial__port.html#ga3f97f989bc21fe99607931390eedb776" title="Update the transmission with new information. " alt="" coords="417,111,565,137"/>
+<area shape="rect" id="node4" href="$group__serial__port.html#gab71fa17d64d2c95053410f12b0276074" title="Transform player, powerup and bullet information into bytes to be transmitted. " alt="" coords="216,57,361,98"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="621,56,731,83"/>
+<area shape="rect" id="node5" href="$group__serial__port.html#ga3f97f989bc21fe99607931390eedb776" title="Update the transmission with new information. " alt="" coords="417,56,565,83"/>
+<area shape="rect" id="node6" href="$group__serial__port.html#gaf1ec489b5340cded627b83d8e2771cde" title="Update the transmission with a new sequence but the same information. " alt="" coords="409,107,573,133"/>
 </map>

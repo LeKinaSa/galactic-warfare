@@ -1,0 +1,13 @@
+<map id="detect_collisions" name="detect_collisions">
+<area shape="rect" id="node2" href="$group__game__logic.html#gaa6558fd86d249ebf1ecfec994f8de8e5" title="Detects a collision between a triangle and a circle, based on at least one of three criteria..." alt="" coords="172,132,328,159"/>
+<area shape="rect" id="node3" href="$group__game__logic.html#gaf60d50aa55bd6501e471aac89efec799" title="Calculates the sum of two vectors. " alt="" coords="399,5,494,32"/>
+<area shape="rect" id="node4" href="$group__game__logic.html#ga2144cfd35ea040a59e24ed701b5c27f8" title="Returns the distance between the two vectors. " alt="" coords="376,56,517,83"/>
+<area shape="rect" id="node7" href="$group__game__logic.html#gacbe7f4c7d5e87e8944a441f1a891a688" title="Returns the dot product of the given vectors. " alt="" coords="385,107,509,133"/>
+<area shape="rect" id="node8" href="$group__video.html#gaef2cf20e38835a1d3144f9ac0e9454f3" title="Returns the screen&#39;s horizontal resolution in pixels. Returns 0 if the video mode or frame buffer hav..." alt="" coords="377,157,516,184"/>
+<area shape="rect" id="node9" href="$group__video.html#ga0d2573ac48cc74944b57403fac2a5797" title="Returns the screen&#39;s vertical resolution in pixels. Returns 0 if the video mode or frame buffer haven..." alt="" coords="377,208,516,235"/>
+<area shape="rect" id="node12" href="$group__utils.html#ga7bd2a3e76557131d9099c06fb3b52af4" title="Returns the value of x limited by a lower and upper bound. " alt="" coords="418,259,475,285"/>
+<area shape="rect" id="node5" href="$group__game__logic.html#gaa50f5776598439bec252c8de0faa2e14" title="Calculates the norm (length) of the given vector. " alt="" coords="589,31,692,57"/>
+<area shape="rect" id="node6" href="$group__game__logic.html#gab4ad9e64cf0d6d5f515e60ed8695ce31" title="Calculates the difference of two vectors. " alt="" coords="580,81,701,108"/>
+<area shape="rect" id="node10" href="$group__video.html#ga4640b9c7378a0bfee35c28cade4f9576" title="Our implementation of vbe_get_mode_info. Returns information about the specified video card mode..." alt="" coords="565,183,716,209"/>
+<area shape="rect" id="node11" href="$group__video.html#gaed60fb8312287ec82fa90fed7fef715a" title="Sets the operating mode of the video card. " alt="" coords="582,233,699,260"/>
+</map>

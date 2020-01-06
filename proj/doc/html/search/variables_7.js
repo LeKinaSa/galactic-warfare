@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['kbd_5fhook_5fid',['kbd_hook_id',['../keyboard_8c.html#a74708534432e98d4ab30ba40e2e5dcc3',1,'keyboard.c']]],
-  ['kbd_5fint_5fsubscribed',['kbd_int_subscribed',['../group__proj.html#ga23175dbab3f49b4eec42dba0f912eef4',1,'program_status_t']]]
+  ['img',['img',['../struct_sprite.html#ac16ac5b5982366cbba9038d9e97c250d',1,'Sprite']]],
+  ['info',['info',['../video_8c.html#a0cb3d0ba34458283fd5bfe568bc6b2ac',1,'video.c']]]
 ];

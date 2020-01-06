@@ -66,13 +66,16 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Structure representing an entity (any object that be placed or moved around the display)  
+ <a href="struct_entity.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="game__logic_8h_source.html">game_logic.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for Entity:</div>
 <div class="dyncontent">
 <div class="center"><img src="struct_entity__coll__graph.png" border="0" usemap="#_entity_coll__map" alt="Collaboration graph"/></div>
 <map name="_entity_coll__map" id="_entity_coll__map">
-<area shape="rect" id="node2" href="struct_sprite.html" title="Sprite" alt="" coords="5,5,61,32"/>
+<area shape="rect" id="node2" href="struct_sprite.html" title="Structure representing a sprite, with an optional collision shape. " alt="" coords="5,5,61,32"/>
 <area shape="rect" id="node3" href="struct_vector2.html" title="Basic two&#45;dimensional vector. " alt="" coords="85,5,152,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -80,15 +83,21 @@ Collaboration diagram for Entity:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:a3b07e45db440aac51fcedd79931bb691"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_sprite.html">Sprite</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_entity.html#a3b07e45db440aac51fcedd79931bb691">sprite</a></td></tr>
+<tr class="memdesc:a3b07e45db440aac51fcedd79931bb691"><td class="mdescLeft">&#160;</td><td class="mdescRight">sprite that will be drawn on the display  <a href="#a3b07e45db440aac51fcedd79931bb691">More...</a><br /></td></tr>
 <tr class="separator:a3b07e45db440aac51fcedd79931bb691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a568c4f7cea202cebb7430ebac674107a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_vector2.html">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_entity.html#a568c4f7cea202cebb7430ebac674107a">position</a></td></tr>
+<tr class="memdesc:a568c4f7cea202cebb7430ebac674107a"><td class="mdescLeft">&#160;</td><td class="mdescRight">exact position of the entity  <a href="#a568c4f7cea202cebb7430ebac674107a">More...</a><br /></td></tr>
 <tr class="separator:a568c4f7cea202cebb7430ebac674107a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab173eafbd76f9d340b5dd1accfeb27e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_vector2.html">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_entity.html#ab173eafbd76f9d340b5dd1accfeb27e7">velocity</a></td></tr>
+<tr class="memdesc:ab173eafbd76f9d340b5dd1accfeb27e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">velocity of the entity, added to the position every frame  <a href="#ab173eafbd76f9d340b5dd1accfeb27e7">More...</a><br /></td></tr>
 <tr class="separator:ab173eafbd76f9d340b5dd1accfeb27e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05a86d9e3d6f4daa58feabb0351c15a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_vector2.html">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_entity.html#a05a86d9e3d6f4daa58feabb0351c15a8">offset</a></td></tr>
+<tr class="memdesc:a05a86d9e3d6f4daa58feabb0351c15a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">position of the centre of the sprite relative to the upper left corner, used for rotation and collision  <a href="#a05a86d9e3d6f4daa58feabb0351c15a8">More...</a><br /></td></tr>
 <tr class="separator:a05a86d9e3d6f4daa58feabb0351c15a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Field Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Structure representing an entity (any object that be placed or moved around the display) </p>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a id="a05a86d9e3d6f4daa58feabb0351c15a8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a05a86d9e3d6f4daa58feabb0351c15a8">&#9670;&nbsp;</a></span>offset</h2>
 
@@ -100,6 +109,8 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>position of the centre of the sprite relative to the upper left corner, used for rotation and collision </p>
 
 </div>
 </div>
@@ -115,6 +126,8 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>exact position of the entity </p>
+
 </div>
 </div>
 <a id="a3b07e45db440aac51fcedd79931bb691"></a>
@@ -129,6 +142,8 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>sprite that will be drawn on the display </p>
+
 </div>
 </div>
 <a id="ab173eafbd76f9d340b5dd1accfeb27e7"></a>
@@ -142,6 +157,8 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>velocity of the entity, added to the position every frame </p>
 
 </div>
 </div>

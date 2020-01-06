@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y',['y',['../structmouse__status.html#ab0580f504a7428539be299fa71565f30',1,'mouse_status::y()'],['../struct_vector2.html#ab927965981178aa1fba979a37168db2a',1,'Vector2::y()']]]
+  ['x',['x',['../structmouse__status.html#a4dde988b1b2adba65ae3efa69f65d960',1,'mouse_status::x()'],['../struct_vector2.html#af88b946fb90d5f08b5fb740c70e98c10',1,'Vector2::x()']]]
 ];

@@ -1,23 +1,10 @@
 var searchData=
 [
-  ['s',['s',['../structxpm__animated.html#af35394cd0cfe94bc15151376b8db15da',1,'xpm_animated']]],
-  ['s_5fpressed',['s_pressed',['../structkeyboard__status.html#a61df415bf75ede0a024b4f085e35be95',1,'keyboard_status']]],
-  ['scancode',['scancode',['../group__proj.html#gaa1de7a5557e9d96b83cf03f73c92163f',1,'scancode():&#160;proj.c'],['../group__proj.html#gaa1de7a5557e9d96b83cf03f73c92163f',1,'scancode():&#160;proj.c']]],
-  ['se',['se',['../structxpm__animated.html#a29b2d9cba53f11b700af3dc733e6c35b',1,'xpm_animated']]],
-  ['serial_5fport_5fhook_5fid',['serial_port_hook_id',['../serial__port_8c.html#a091df63b54bb40a05c33b1c72e224b62',1,'serial_port.c']]],
-  ['ship',['ship',['../group__proj.html#ga3a482e83639e976071552700c08a88b2',1,'ship():&#160;proj.c'],['../group__proj.html#ga3a482e83639e976071552700c08a88b2',1,'ship():&#160;proj.c']]],
-  ['ship_5fe_5fxpm',['ship_E_xpm',['../group__proj.html#gae8cf1f32ebcf5b9f54cf9b664f7983a7',1,'proj.c']]],
-  ['ship_5fn_5fxpm',['ship_N_xpm',['../group__proj.html#ga5601bbae67be221b7e46fb12fce625c7',1,'proj.c']]],
-  ['ship_5fne_5fxpm',['ship_NE_xpm',['../group__proj.html#ga96f1090a36eb331da7fa6cae30bafae2',1,'proj.c']]],
-  ['ship_5fnw_5fxpm',['ship_NW_xpm',['../group__proj.html#gab865cb2b999f046c0b2bb575721db965',1,'proj.c']]],
-  ['ship_5fs_5fxpm',['ship_S_xpm',['../group__proj.html#gacdd78836448a6eaf10e5fc928b361404',1,'proj.c']]],
-  ['ship_5fse_5fxpm',['ship_SE_xpm',['../group__proj.html#gac3c3cd71118752dff719da28ba904254',1,'proj.c']]],
-  ['ship_5fsw_5fxpm',['ship_SW_xpm',['../group__proj.html#gaf0951f1619b55f14907acb8794789170',1,'proj.c']]],
-  ['ship_5fw_5fxpm',['ship_W_xpm',['../group__proj.html#gab34547e13d980cc4bb9728b199052593',1,'proj.c']]],
-  ['size',['size',['../struct_linked_list.html#a854352f53b148adc24983a58a1866d66',1,'LinkedList']]],
-  ['sp_5fint_5fsubscribed',['sp_int_subscribed',['../group__proj.html#gace58d2734062e1fdfd1d5d0b08bcca16',1,'program_status_t']]],
-  ['speed',['speed',['../struct_player.html#aae32029df16a54aa86c0aec2df9f7bb7',1,'Player']]],
-  ['speed_5fpowerup_5fxpm',['speed_powerup_xpm',['../group__proj.html#ga164aa47f8e8a922515d9c108c292bc94',1,'proj.c']]],
-  ['sprite',['sprite',['../struct_entity.html#a3b07e45db440aac51fcedd79931bb691',1,'Entity::sprite()'],['../struct_mouse_cursor.html#a3b07e45db440aac51fcedd79931bb691',1,'MouseCursor::sprite()']]],
-  ['sw',['sw',['../structxpm__animated.html#a2a1590720e31eed011fa35b329f1b066',1,'xpm_animated']]]
+  ['radius',['radius',['../struct_circle.html#a3f67c53b80389c5f53961936edba04c9',1,'Circle']]],
+  ['rb_5fpressed',['rb_pressed',['../structmouse__status.html#a39e9768a8908ec7dcfac08d9f650207a',1,'mouse_status']]],
+  ['received',['received',['../serial__port_8c.html#a5c2b177e6e333c6f5bc1363d5b9f5fec',1,'serial_port.c']]],
+  ['received_5fsize',['received_size',['../serial__port_8c.html#abdf17c30365d000e59e1a2d8a5bce602',1,'serial_port.c']]],
+  ['right',['RIGHT',['../group__game__logic.html#ga8000ed377e7da37660c6b44b69c20430',1,'game_logic.h']]],
+  ['rtc_5fhook_5fid',['rtc_hook_id',['../rtc_8c.html#a6c52a1d32571a429369253ce7c3a3d7a',1,'rtc.c']]],
+  ['rtc_5fint_5fsubscribed',['rtc_int_subscribed',['../group__proj.html#ga4fce630dd3565ef060d8f657585d979f',1,'program_status_t']]]
 ];

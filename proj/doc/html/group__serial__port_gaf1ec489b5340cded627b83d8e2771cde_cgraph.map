@@ -1,6 +1,6 @@
 <map id="sp_retransmit_sequence" name="sp_retransmit_sequence">
-<area shape="rect" id="node2" href="$group__serial__port.html#ga49f2bb5bcfcad0d807d263b9586fa817" title="Add a byte to the transmission. " alt="" coords="411,5,573,47"/>
-<area shape="rect" id="node3" href="$group__serial__port.html#gab71fa17d64d2c95053410f12b0276074" title="Transform player, powerup and bullet information into bytes to be transmitted. " alt="" coords="217,64,363,105"/>
+<area shape="rect" id="node2" href="$group__serial__port.html#gab71fa17d64d2c95053410f12b0276074" title="Transform player, powerup and bullet information into bytes to be transmitted. " alt="" coords="217,89,363,131"/>
+<area shape="rect" id="node3" href="$group__serial__port.html#ga49f2bb5bcfcad0d807d263b9586fa817" title="Add a byte to the transmission. " alt="" coords="411,5,573,47"/>
 <area shape="rect" id="node4" href="$group__utils.html#ga6a880076cd2ec468834438b6e0c58836" title="Gets most significant byte of a 16 bit number. " alt="" coords="442,71,542,98"/>
 <area shape="rect" id="node5" href="$group__utils.html#ga81621440b3d65680979425e39aa8c789" title="Gets least significant byte of a 16 bit number. " alt="" coords="444,122,540,149"/>
 <area shape="rect" id="node6" href="$group__utils.html#ga211515e715b741116f67afaf6f214d70" title="Gets the four bytes that make up a given 32 bit number, from most to least significant. " alt="" coords="442,173,542,199"/>

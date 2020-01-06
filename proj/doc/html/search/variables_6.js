@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['img',['img',['../struct_sprite.html#ac16ac5b5982366cbba9038d9e97c250d',1,'Sprite']]],
-  ['info',['info',['../video_8c.html#a0cb3d0ba34458283fd5bfe568bc6b2ac',1,'video.c']]]
+  ['game_5fover_5fplayer_5f1_5fxpm',['game_over_player_1_xpm',['../group__proj.html#ga8a81d1eb67c67f5b544085138c61e0d1',1,'proj.c']]],
+  ['game_5fover_5fplayer_5f2_5fxpm',['game_over_player_2_xpm',['../group__proj.html#ga4b566efe550110975fa912161a44fee5',1,'proj.c']]]
 ];

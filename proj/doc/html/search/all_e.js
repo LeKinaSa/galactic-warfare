@@ -2,7 +2,6 @@ var searchData=
 [
   ['radius',['radius',['../struct_circle.html#a3f67c53b80389c5f53961936edba04c9',1,'Circle']]],
   ['rb_5fpressed',['rb_pressed',['../structmouse__status.html#a39e9768a8908ec7dcfac08d9f650207a',1,'mouse_status']]],
-  ['ready_5fto_5ftransmit',['ready_to_transmit',['../group__proj.html#ga7e37f52e77ca8f2897e1f6fdf856dbee',1,'ready_to_transmit():&#160;proj.c'],['../group__proj.html#ga7e37f52e77ca8f2897e1f6fdf856dbee',1,'ready_to_transmit():&#160;proj.c']]],
   ['received',['received',['../serial__port_8c.html#a5c2b177e6e333c6f5bc1363d5b9f5fec',1,'serial_port.c']]],
   ['received_5fsize',['received_size',['../serial__port_8c.html#abdf17c30365d000e59e1a2d8a5bce602',1,'serial_port.c']]],
   ['reg_5fa_5fuip',['REG_A_UIP',['../group__rtc__constants.html#gabf750280c8f263587fd8830fe0f85866',1,'rtc_constants.h']]],

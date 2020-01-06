@@ -1,0 +1,4 @@
+<map id="kbc_write_arg" name="kbc_write_arg">
+<area shape="rect" id="node2" href="$group__kbc.html#gaa4c58a11cd49c54cc0eb02a79010a9cc" title="Reads status byte from the 0x64 port. " alt="" coords="156,5,275,32"/>
+<area shape="rect" id="node3" href="$group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Reads a byte from the specified port. " alt="" coords="323,5,413,32"/>
+</map>

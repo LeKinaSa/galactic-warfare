@@ -118,8 +118,6 @@ Variables</h2></td></tr>
 <tr class="separator:gaa930701390a0652cab793497401d4736"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga04f7afff5b83a07aaaaa1f95ac493bda"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__proj.html#ga04f7afff5b83a07aaaaa1f95ac493bda">minute_counter</a> = 0</td></tr>
 <tr class="separator:ga04f7afff5b83a07aaaaa1f95ac493bda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7e37f52e77ca8f2897e1f6fdf856dbee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__proj.html#ga7e37f52e77ca8f2897e1f6fdf856dbee">ready_to_transmit</a> = false</td></tr>
-<tr class="separator:ga7e37f52e77ca8f2897e1f6fdf856dbee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3a482e83639e976071552700c08a88b2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structxpm__animated.html">xpm_animated</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__proj.html#ga3a482e83639e976071552700c08a88b2">ship</a></td></tr>
 <tr class="separator:ga3a482e83639e976071552700c08a88b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga35b83210ec12963139e97f67de1799c4"><td class="memItemLeft" align="right" valign="top">static const xpm_map_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__proj.html#ga35b83210ec12963139e97f67de1799c4">bg_xpm</a> = (xpm_map_t) Background_xpm</td></tr>
@@ -150,6 +148,10 @@ Variables</h2></td></tr>
 <tr class="separator:ga0d119f1661a7ac49c8daea1ec3c50972"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac6e65073d1a4bbce00d497f8a3ccac41"><td class="memItemLeft" align="right" valign="top">static const xpm_map_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__proj.html#gac6e65073d1a4bbce00d497f8a3ccac41">bullet_enemy_xpm</a> = (xpm_map_t) BulletEnemy_xpm</td></tr>
 <tr class="separator:gac6e65073d1a4bbce00d497f8a3ccac41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8a81d1eb67c67f5b544085138c61e0d1"><td class="memItemLeft" align="right" valign="top">static const xpm_map_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__proj.html#ga8a81d1eb67c67f5b544085138c61e0d1">game_over_player_1_xpm</a> = (xpm_map_t) GameOverPlayer1_xpm</td></tr>
+<tr class="separator:ga8a81d1eb67c67f5b544085138c61e0d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4b566efe550110975fa912161a44fee5"><td class="memItemLeft" align="right" valign="top">static const xpm_map_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__proj.html#ga4b566efe550110975fa912161a44fee5">game_over_player_2_xpm</a> = (xpm_map_t) GameOverPlayer2_xpm</td></tr>
+<tr class="separator:ga4b566efe550110975fa912161a44fee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>File where the project's main loop and global variables are located. </p>
@@ -287,98 +289,99 @@ Here is the call graph for this function:</div>
 <map name="group__proj_ga2a16f651eccbd248e1ad3b3b924b143b_cgraph" id="group__proj_ga2a16f651eccbd248e1ad3b3b924b143b_cgraph">
 <area shape="rect" id="node2" href="timer_8c.html#ac57a7e1140a7e00ad95ac5488d2a671b" title="timer_subscribe_int" alt="" coords="185,5,319,32"/>
 <area shape="rect" id="node3" href="group__rtc.html#ga5171a9c0f54940fe60f7500896afcc86" title="Subscribes RTC interrupts using sys_irqsetpolicy. " alt="" coords="191,56,313,83"/>
-<area shape="rect" id="node4" href="group__proj.html#gaff2fca31aa37d9157250fd2222b14456" title="Exits the program, calling the appropriate functions according to the program&#39;s current status..." alt="" coords="203,360,301,387"/>
-<area shape="rect" id="node5" href="timer_8c.html#afabd21de449be154dd65d5fdb2d8045d" title="timer_unsubscribe_int" alt="" coords="401,157,550,184"/>
-<area shape="rect" id="node6" href="group__rtc.html#gab8f17bf5280c908c8b199a90fefcc758" title="Unsubscribes RTC interrupts using sys_irqrmpolicy. " alt="" coords="408,208,543,235"/>
-<area shape="rect" id="node7" href="group__keyboard.html#ga5bdf6cfb570c375192b0d87913b65c57" title="Unsubscribes keyboard interrupts using sys_irqrmpolicy. " alt="" coords="405,259,546,285"/>
-<area shape="rect" id="node8" href="group__mouse.html#ga9b5d5366f7067f50586c03e9a3f000cd" title="Disables mouse interrupts using sys_irqdisable. " alt="" coords="410,309,541,336"/>
-<area shape="rect" id="node9" href="group__mouse.html#gac13ad81d843b4d50815de4b20a28db53" title="Disables data reporting. " alt="" coords="405,563,546,605"/>
-<area shape="rect" id="node16" href="group__mouse.html#gaf19e0109275a1162be7188deb9c02b41" title="Enables mouse interrupts using sys_irqenable. " alt="" coords="412,411,539,437"/>
-<area shape="rect" id="node17" href="group__mouse.html#ga685ad2706aca36d9869a30a19b9f446a" title="Unsubscribes mouse interrupts using sys_irqrmpolicy. " alt="" coords="396,461,555,488"/>
-<area shape="rect" id="node18" href="group__kbc.html#ga4b5f23170680e4252a535345b43be855" title="Resets the KBC command byte to Minix&#39;s default. " alt="" coords="619,469,762,496"/>
-<area shape="rect" id="node19" href="group__serial__port.html#gad9cfa399df9032ec99f760195d457e9a" title="Unsubscribes serial port interrupts using sys_irqrmpolicy. " alt="" coords="408,512,543,539"/>
-<area shape="rect" id="node20" href="group__keyboard.html#gaa7a491d4d95eab5ca5326c4000ad67f8" title="Subscribes keyboard interrupts using sys_irqsetpolicy. " alt="" coords="189,1760,315,1787"/>
-<area shape="rect" id="node21" href="group__mouse.html#ga9da18257ff113b686bb826d154bfaa87" title="Subscribes mouse interrupts using sys_irqsetpolicy. " alt="" coords="179,1811,325,1837"/>
-<area shape="rect" id="node22" href="group__mouse.html#ga108813d01ba189cc8bb0dca728c932a8" title="Enables data reporting in stream mode. " alt="" coords="163,680,341,707"/>
-<area shape="rect" id="node24" href="group__serial__port.html#gadd73cd919e6e0f34b7d7d550f8ba5b1b" title="Subscribes serial port interrupts using sys_irqsetpolicy. " alt="" coords="192,1861,312,1888"/>
-<area shape="rect" id="node25" href="group__serial__port.html#ga65498757ed4056101bd29645c8c8d23e" title="Initializes serial port and configures it. " alt="" coords="436,1203,515,1229"/>
-<area shape="rect" id="node28" href="video_8c.html#aa6c1ff5024cd4d15e476bce487584daa" title="vg_init" alt="" coords="222,1912,282,1939"/>
-<area shape="rect" id="node31" href="group__game__logic.html#ga9cd6e7be6e6f77bcafc48e88cb0b2dae" title="Creates a new circle structure. " alt="" coords="209,1963,295,1989"/>
-<area shape="rect" id="node32" href="group__utils.html#gaba7cd1ba8aee351b0d14fb225bd1ef0a" title="Creates a new linked list with elements of the given size. Memory for the linked list is dynamically ..." alt="" coords="196,2013,308,2040"/>
-<area shape="rect" id="node33" href="group__video.html#gaef2cf20e38835a1d3144f9ac0e9454f3" title="Returns the screen&#39;s horizontal resolution in pixels. Returns 0 if the video mode or frame buffer hav..." alt="" coords="621,1507,760,1533"/>
-<area shape="rect" id="node34" href="group__video.html#ga0d2573ac48cc74944b57403fac2a5797" title="Returns the screen&#39;s vertical resolution in pixels. Returns 0 if the video mode or frame buffer haven..." alt="" coords="621,1557,760,1584"/>
-<area shape="rect" id="node35" href="group__video.html#gabd66b8992d3c7d605553ec1ff0c9e566" title="Returns size of frame buffer in bytes. Returns 0 if frame buffer hasn&#39;t been initialized. " alt="" coords="166,2064,338,2091"/>
-<area shape="rect" id="node36" href="group__rtc.html#ga023cfe181f8a45fabb033751cb4356dc" title="Initializes the RTC&#39;s registers so that the RTC creates an alarm interrupt every minute. " alt="" coords="221,781,283,808"/>
-<area shape="rect" id="node39" href="mouse_8c.html#aed4404005e4c565ac36656307386e0ac" title="mouse_ih" alt="" coords="1077,781,1156,808"/>
-<area shape="rect" id="node40" href="group__dispatcher.html#ga1e4b30d342dfd9e0d74c334cda7ef324" title="Processes a mouse packet and updates the mouse status accordingly. " alt="" coords="395,1253,555,1280"/>
-<area shape="rect" id="node49" href="keyboard_8c.html#a5761bd4aad91ac1d68916ad88f583d9f" title="kbc_ih" alt="" coords="1087,832,1147,859"/>
-<area shape="rect" id="node50" href="group__dispatcher.html#gacd17af9322fa12f15c8050c90eca963a" title="Processes a keyboard scancode and updates the keyboard status accordingly. " alt="" coords="173,2115,331,2141"/>
-<area shape="rect" id="node51" href="group__rtc.html#ga7c5bbf3e782c24a81ca4db173fb7e7a7" title="Real time clock interrupt handler. When an alarm interrupt occurs, increments the minute_counter vari..." alt="" coords="1063,883,1170,909"/>
-<area shape="rect" id="node52" href="group__game__logic.html#ga484e45e7b7a7f79688e522c123f39eff" title="Resets a player&#39;s speed and damage to the base values. " alt="" coords="165,2165,339,2192"/>
-<area shape="rect" id="node53" href="group__game__logic.html#gae36b80c18bb1b0282886f621f140c2ce" title="Frees memory allocated for a powerup structure. " alt="" coords="195,2216,309,2243"/>
-<area shape="rect" id="node54" href="group__game__logic.html#gaefb5da44c92e698254435f20ea9b5f97" title="Generates a random position, given maximum values for the x and y coordinates (minimum is 0)..." alt="" coords="177,2267,327,2293"/>
-<area shape="rect" id="node55" href="group__game__logic.html#ga85dc991679898ac54a44b2b1fba84171" title="Creates a new powerup, given an entity and type. " alt="" coords="200,2317,304,2344"/>
-<area shape="rect" id="node56" href="group__serial__port.html#ga329223b2a30242d83bace18bb5a5d67f" title="Serial port interrupt handler. When an interrupt occurs, identify the type of interrupt and process i..." alt="" coords="422,984,529,1011"/>
-<area shape="rect" id="node61" href="group__serial__port.html#ga3066c62d12278dadb51beab0bb822b1e" title="Serial port communication error detector. If there an error on the other machine, this will detect..." alt="" coords="197,2368,307,2395"/>
-<area shape="rect" id="node62" href="group__serial__port.html#gaf1ec489b5340cded627b83d8e2771cde" title="Update the transmission with a new sequence but the same information. " alt="" coords="170,1101,334,1128"/>
-<area shape="rect" id="node65" href="timer_8c.html#a91a2072306c68353712a6b771287dc2c" title="timer_int_handler" alt="" coords="191,2419,313,2445"/>
-<area shape="rect" id="node66" href="group__serial__port.html#gafbe6cc667816d9b692795fc5914b3d22" title="Treat information received in the serial port. " alt="" coords="182,2470,322,2511"/>
-<area shape="rect" id="node70" href="group__dispatcher.html#gaccff351f7274ad73f82c577e3872276c" title="Updates the player orientation according to the player angle. " alt="" coords="427,1760,524,1787"/>
-<area shape="rect" id="node71" href="group__game__logic.html#gab4ad9e64cf0d6d5f515e60ed8695ce31" title="Calculates the difference of two vectors. " alt="" coords="854,1951,975,1977"/>
-<area shape="rect" id="node72" href="group__game__logic.html#gade0911b9125be9387bc068ac1d342c65" title="Performs a scalar multiplication on the given vector. " alt="" coords="405,2115,546,2141"/>
-<area shape="rect" id="node73" href="group__game__logic.html#ga31fdad3f5c996bbbecb1411b75b5bba7" title="Rotates a point around the origin by a given angle using a rotation matrix. The rotation matrix is su..." alt="" coords="207,2536,297,2563"/>
-<area shape="rect" id="node74" href="group__utils.html#ga04295ee1659c2544794e3e0a7ee1f7ef" title="Adds a new element to the linked list. " alt="" coords="197,2587,307,2613"/>
-<area shape="rect" id="node75" href="group__dispatcher.html#gabe630109db9a0ca92f0a407a76960fa8" title="Updates the player&#39;s position according to the keyboard status. Called every frame. " alt="" coords="183,1659,321,1685"/>
-<area shape="rect" id="node79" href="group__dispatcher.html#ga145408686ead4294096058e3090ad969" title="Updates the cursors&#39;s position and player orientation according to the mouse status. Called every frame. " alt="" coords="173,1456,331,1483"/>
-<area shape="rect" id="node83" href="group__game__logic.html#ga2055b63540d1a3c4d2343a7d35ffccc2" title="Updates the position of the bullets and player. " alt="" coords="173,1405,331,1432"/>
-<area shape="rect" id="node86" href="group__game__logic.html#ga5b5da0616a5ac26237ecae4e9c0eb1d2" title="Detects collisions between the player and powerups / bullets, updating entities accordingly. " alt="" coords="193,1608,311,1635"/>
-<area shape="rect" id="node89" href="group__video.html#gad1f8767a6dd8c050e51de87ab5e5319b" title="Draws an X Pixmap image in a specified position to a given buffer. " alt="" coords="639,2663,742,2689"/>
-<area shape="rect" id="node91" href="group__video.html#gac1143fc335be99b1c84e5a8d95aa7013" title="Draws entities to a buffer according to their z&#45;layer. Entities with a higher z&#45;layer are drawn last ..." alt="" coords="188,2637,316,2664"/>
-<area shape="rect" id="node93" href="group__serial__port.html#ga3f97f989bc21fe99607931390eedb776" title="Update the transmission with new information. " alt="" coords="178,1152,326,1179"/>
-<area shape="rect" id="node94" href="group__serial__port.html#ga5a2923b573ad7fb0e77c83914b87cc76" title="Transmit the vector to the Transmitter Holding Register by polling. " alt="" coords="410,1035,541,1061"/>
-<area shape="rect" id="node95" href="group__utils.html#gaa811aabff84c792c6da9576914974c8a" title="Safely deletes a linked list. Any dynamically allocated memory is freed. " alt="" coords="191,2739,313,2765"/>
-<area shape="rect" id="node10" href="group__mouse.html#gad35b135a465650bd58aef6ee248ca402" title="Writes a command to the PS/2 mouse. Interrupts must be disabled or else the ACK bytes may be automati..." alt="" coords="611,629,771,656"/>
-<area shape="rect" id="node11" href="group__kbc.html#ga8c467e640bc33719fe3ed7bcb73f2121" title="Writes a KBC command to the 0x64 port. " alt="" coords="843,629,986,656"/>
-<area shape="rect" id="node14" href="group__kbc.html#gab7c3aa73d53fa86cf82ef40b5032784d" title="Writes an argument for a KBC command to the 0x60 port. " alt="" coords="863,579,966,605"/>
-<area shape="rect" id="node15" href="group__kbc.html#ga19f24da562326ef540548f54c1b648c3" title="Reads output (data or return value) from the 0x60 port. " alt="" coords="843,680,986,707"/>
-<area shape="rect" id="node12" href="group__kbc.html#gaa4c58a11cd49c54cc0eb02a79010a9cc" title="Reads status byte from the 0x64 port. " alt="" coords="1057,629,1176,656"/>
-<area shape="rect" id="node13" href="group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Reads a byte from the specified port. " alt="" coords="1224,832,1315,859"/>
-<area shape="rect" id="node23" href="group__mouse.html#ga16a521d1919cbd8f434d8b5d535a639b" title="Sets the mouse to stream mode. " alt="" coords="389,629,561,656"/>
-<area shape="rect" id="node26" href="group__utils.html#ga81621440b3d65680979425e39aa8c789" title="Gets least significant byte of a 16 bit number. " alt="" coords="643,1304,739,1331"/>
-<area shape="rect" id="node27" href="group__utils.html#ga6a880076cd2ec468834438b6e0c58836" title="Gets most significant byte of a 16 bit number. " alt="" coords="641,1253,741,1280"/>
-<area shape="rect" id="node29" href="group__video.html#ga4640b9c7378a0bfee35c28cade4f9576" title="Our implementation of vbe_get_mode_info. Returns information about the specified video card mode..." alt="" coords="400,2216,551,2243"/>
-<area shape="rect" id="node30" href="group__video.html#gaed60fb8312287ec82fa90fed7fef715a" title="Sets the operating mode of the video card. " alt="" coords="417,2165,534,2192"/>
-<area shape="rect" id="node37" href="group__rtc.html#gabf6f23e3a37b625fce812ca09b3f35df" title="Reads data from the specified RTC register. " alt="" coords="1057,731,1176,757"/>
-<area shape="rect" id="node38" href="group__rtc.html#ga9356a574f1893f56d0973dd06db6ed74" title="Writes data to the specified RTC register. " alt="" coords="414,731,537,757"/>
-<area shape="rect" id="node41" href="group__mouse.html#ga04801d603b3c217e849f2d37d7c70394" title="mouse_parse_packet" alt="" coords="617,1405,764,1432"/>
-<area shape="rect" id="node47" href="group__utils.html#gabd8bbcfabb3ddef2ccaafb9928a37b95" title="Returns the smallest of two integers. " alt="" coords="893,1187,936,1213"/>
-<area shape="rect" id="node48" href="group__utils.html#gaf082905f7eac6d03e92015146bbc1925" title="Returns the largest of two integers. " alt="" coords="667,1456,714,1483"/>
-<area shape="rect" id="node42" href="group__mouse.html#gad1ab1b763a6bdb1de1779e0a02809df6" title="mouse_put_bytes_on\l_packet" alt="" coords="841,1289,988,1330"/>
-<area shape="rect" id="node43" href="group__mouse.html#gaa968bd798197a2abab567fc46bdf8ed1" title="mouse_get_buttons_pressed" alt="" coords="820,1355,1009,1381"/>
-<area shape="rect" id="node44" href="group__mouse.html#gaa85649a27dd5cec7384188b5a816c9fc" title="mouse_get_x_displacement" alt="" coords="823,1405,1007,1432"/>
-<area shape="rect" id="node45" href="group__mouse.html#gaff82f0871b2116ed7acad3c983915cad" title="mouse_get_y_displacement" alt="" coords="823,1456,1007,1483"/>
-<area shape="rect" id="node46" href="group__mouse.html#ga5d00d2b38a2c228ba1a089c501afc210" title="mouse_get_overflow" alt="" coords="843,1507,986,1533"/>
-<area shape="rect" id="node57" href="group__serial__port.html#gad9ebdab85b01da1edde0fc0176243608" title="Receive the Receiver Holding Register to a vector. " alt="" coords="1074,933,1159,960"/>
-<area shape="rect" id="node58" href="group__serial__port.html#ga49f2bb5bcfcad0d807d263b9586fa817" title="Add a byte to the transmission. " alt="" coords="609,1137,772,1178"/>
-<area shape="rect" id="node59" href="group__serial__port.html#gadd475e212f2c31efa339bef3be1ceaf1" title="Transmit the vector to the Transmitter Holding Register. " alt="" coords="645,1035,736,1061"/>
-<area shape="rect" id="node60" href="group__utils.html#ga0bb8bf253e25c4e51ff35215cf92d581" title="Erases a given number of bytes from the start of a queue, shifting the next bytes to the start..." alt="" coords="875,1035,954,1061"/>
-<area shape="rect" id="node63" href="group__serial__port.html#gab71fa17d64d2c95053410f12b0276074" title="Transform player, powerup and bullet information into bytes to be transmitted. " alt="" coords="403,1137,548,1178"/>
-<area shape="rect" id="node64" href="group__utils.html#ga211515e715b741116f67afaf6f214d70" title="Gets the four bytes that make up a given 32 bit number, from most to least significant. " alt="" coords="641,1203,741,1229"/>
-<area shape="rect" id="node67" href="group__serial__port.html#gaba6c97f8c0cdadd4d326e0917ba5f8a4" title="Transform received vector in information for player, rtc and bullet. " alt="" coords="392,2427,559,2453"/>
-<area shape="rect" id="node68" href="group__utils.html#ga4566ac7fb7474e0fbaa3e6d0f60b789d" title="Appends two bytes to make a 16 bit number. " alt="" coords="431,2477,519,2504"/>
-<area shape="rect" id="node69" href="group__utils.html#gaf1856e9fcb6df64ffa8cd2cbc45b45e0" title="Appends four bytes to make a 32 bit number, from most to least significant. " alt="" coords="424,2528,527,2555"/>
-<area shape="rect" id="node76" href="group__game__logic.html#gaf60d50aa55bd6501e471aac89efec799" title="Calculates the sum of two vectors. " alt="" coords="643,1861,738,1888"/>
-<area shape="rect" id="node77" href="group__game__logic.html#ga2306491105159c8c5dbf40b970c73536" title="Returns a normalized (length = 1) version of a vector. " alt="" coords="622,2064,759,2091"/>
-<area shape="rect" id="node78" href="group__game__logic.html#gaa50f5776598439bec252c8de0faa2e14" title="Calculates the norm (length) of the given vector. " alt="" coords="863,2027,966,2053"/>
-<area shape="rect" id="node80" href="group__game__logic.html#ga130c3e63388cd3634247a99d45b41fe2" title="Returns the angle between the two vectors in radians. " alt="" coords="414,1709,537,1736"/>
-<area shape="rect" id="node81" href="group__game__logic.html#gabc9becb6747f8908a0ff6d1a4737fce2" title="Updates the position of the mouse cursor. " alt="" coords="397,1557,553,1584"/>
-<area shape="rect" id="node82" href="group__utils.html#ga7bd2a3e76557131d9099c06fb3b52af4" title="Returns the value of x limited by a lower and upper bound. " alt="" coords="662,1608,719,1635"/>
-<area shape="rect" id="node84" href="game__logic_8c.html#a16797ec72c9dae60717b8f8546a4f630" title="update_entity_position" alt="" coords="399,1507,551,1533"/>
-<area shape="rect" id="node85" href="group__utils.html#ga751b8cc4510bc24ec95605a9161de540" title="Deletes the first occurrence of a given element from the linked list. " alt="" coords="415,1608,535,1635"/>
-<area shape="rect" id="node87" href="group__game__logic.html#gaa38e1f395a44d0690e8ea0452ff494e2" title="Detects a collision between two circles. " alt="" coords="403,2013,548,2040"/>
-<area shape="rect" id="node88" href="group__game__logic.html#ga2144cfd35ea040a59e24ed701b5c27f8" title="Returns the distance between the two vectors. " alt="" coords="620,2013,761,2040"/>
-<area shape="rect" id="node90" href="group__video.html#gab25167202fb0e55ce46a3832bd53d464" title="Draws a pixel of the given color in a specified position to a given buffer. " alt="" coords="862,2663,967,2689"/>
-<area shape="rect" id="node92" href="video_8c.html#ac27d5fe327e07a511da32f3985a22e9f" title="vg_render_entity" alt="" coords="416,2637,535,2664"/>
+<area shape="rect" id="node4" href="group__proj.html#gaff2fca31aa37d9157250fd2222b14456" title="Exits the program, calling the appropriate functions according to the program&#39;s current status..." alt="" coords="203,411,301,437"/>
+<area shape="rect" id="node5" href="timer_8c.html#afabd21de449be154dd65d5fdb2d8045d" title="timer_unsubscribe_int" alt="" coords="401,208,550,235"/>
+<area shape="rect" id="node6" href="group__rtc.html#gab8f17bf5280c908c8b199a90fefcc758" title="Unsubscribes RTC interrupts using sys_irqrmpolicy. " alt="" coords="408,259,543,285"/>
+<area shape="rect" id="node7" href="group__keyboard.html#ga5bdf6cfb570c375192b0d87913b65c57" title="Unsubscribes keyboard interrupts using sys_irqrmpolicy. " alt="" coords="405,309,546,336"/>
+<area shape="rect" id="node8" href="group__mouse.html#ga9b5d5366f7067f50586c03e9a3f000cd" title="Disables mouse interrupts using sys_irqdisable. " alt="" coords="410,360,541,387"/>
+<area shape="rect" id="node9" href="group__mouse.html#gac13ad81d843b4d50815de4b20a28db53" title="Disables data reporting. " alt="" coords="405,665,546,706"/>
+<area shape="rect" id="node16" href="group__mouse.html#gaf19e0109275a1162be7188deb9c02b41" title="Enables mouse interrupts using sys_irqenable. " alt="" coords="412,461,539,488"/>
+<area shape="rect" id="node17" href="group__mouse.html#ga685ad2706aca36d9869a30a19b9f446a" title="Unsubscribes mouse interrupts using sys_irqrmpolicy. " alt="" coords="396,512,555,539"/>
+<area shape="rect" id="node18" href="group__kbc.html#ga4b5f23170680e4252a535345b43be855" title="Resets the KBC command byte to Minix&#39;s default. " alt="" coords="619,617,762,644"/>
+<area shape="rect" id="node19" href="group__serial__port.html#gad9cfa399df9032ec99f760195d457e9a" title="Unsubscribes serial port interrupts using sys_irqrmpolicy. " alt="" coords="408,563,543,589"/>
+<area shape="rect" id="node20" href="group__keyboard.html#gaa7a491d4d95eab5ca5326c4000ad67f8" title="Subscribes keyboard interrupts using sys_irqsetpolicy. " alt="" coords="189,1744,315,1771"/>
+<area shape="rect" id="node21" href="group__mouse.html#ga9da18257ff113b686bb826d154bfaa87" title="Subscribes mouse interrupts using sys_irqsetpolicy. " alt="" coords="179,1795,325,1821"/>
+<area shape="rect" id="node22" href="group__mouse.html#ga108813d01ba189cc8bb0dca728c932a8" title="Enables data reporting in stream mode. " alt="" coords="163,781,341,808"/>
+<area shape="rect" id="node24" href="group__serial__port.html#gadd73cd919e6e0f34b7d7d550f8ba5b1b" title="Subscribes serial port interrupts using sys_irqsetpolicy. " alt="" coords="192,1845,312,1872"/>
+<area shape="rect" id="node25" href="group__serial__port.html#ga65498757ed4056101bd29645c8c8d23e" title="Initializes serial port and configures it. " alt="" coords="436,1152,515,1179"/>
+<area shape="rect" id="node28" href="video_8c.html#aa6c1ff5024cd4d15e476bce487584daa" title="vg_init" alt="" coords="222,1896,282,1923"/>
+<area shape="rect" id="node31" href="group__game__logic.html#ga9cd6e7be6e6f77bcafc48e88cb0b2dae" title="Creates a new circle structure. " alt="" coords="209,1947,295,1973"/>
+<area shape="rect" id="node32" href="group__utils.html#gaba7cd1ba8aee351b0d14fb225bd1ef0a" title="Creates a new linked list with elements of the given size. Memory for the linked list is dynamically ..." alt="" coords="196,1997,308,2024"/>
+<area shape="rect" id="node33" href="group__video.html#gaef2cf20e38835a1d3144f9ac0e9454f3" title="Returns the screen&#39;s horizontal resolution in pixels. Returns 0 if the video mode or frame buffer hav..." alt="" coords="621,1397,760,1424"/>
+<area shape="rect" id="node34" href="group__video.html#ga0d2573ac48cc74944b57403fac2a5797" title="Returns the screen&#39;s vertical resolution in pixels. Returns 0 if the video mode or frame buffer haven..." alt="" coords="621,1448,760,1475"/>
+<area shape="rect" id="node35" href="group__video.html#gabd66b8992d3c7d605553ec1ff0c9e566" title="Returns size of frame buffer in bytes. Returns 0 if frame buffer hasn&#39;t been initialized. " alt="" coords="166,2048,338,2075"/>
+<area shape="rect" id="node36" href="group__rtc.html#ga023cfe181f8a45fabb033751cb4356dc" title="Initializes the RTC&#39;s registers so that the RTC creates an alarm interrupt every minute. " alt="" coords="221,883,283,909"/>
+<area shape="rect" id="node39" href="mouse_8c.html#aed4404005e4c565ac36656307386e0ac" title="mouse_ih" alt="" coords="1077,925,1156,952"/>
+<area shape="rect" id="node40" href="group__dispatcher.html#ga1e4b30d342dfd9e0d74c334cda7ef324" title="Processes a mouse packet and updates the mouse status accordingly. " alt="" coords="395,1203,555,1229"/>
+<area shape="rect" id="node49" href="keyboard_8c.html#a5761bd4aad91ac1d68916ad88f583d9f" title="kbc_ih" alt="" coords="1087,223,1147,249"/>
+<area shape="rect" id="node50" href="group__dispatcher.html#gacd17af9322fa12f15c8050c90eca963a" title="Processes a keyboard scancode and updates the keyboard status accordingly. " alt="" coords="173,2099,331,2125"/>
+<area shape="rect" id="node51" href="group__rtc.html#ga7c5bbf3e782c24a81ca4db173fb7e7a7" title="Real time clock interrupt handler. When an alarm interrupt occurs, increments the minute_counter vari..." alt="" coords="1063,389,1170,416"/>
+<area shape="rect" id="node52" href="group__game__logic.html#ga484e45e7b7a7f79688e522c123f39eff" title="Resets a player&#39;s speed and damage to the base values. " alt="" coords="165,2149,339,2176"/>
+<area shape="rect" id="node53" href="group__game__logic.html#gae36b80c18bb1b0282886f621f140c2ce" title="Frees memory allocated for a powerup structure. " alt="" coords="195,2200,309,2227"/>
+<area shape="rect" id="node54" href="group__game__logic.html#gaefb5da44c92e698254435f20ea9b5f97" title="Generates a random position, given maximum values for the x and y coordinates (minimum is 0)..." alt="" coords="177,2251,327,2277"/>
+<area shape="rect" id="node55" href="group__game__logic.html#ga85dc991679898ac54a44b2b1fba84171" title="Creates a new powerup, given an entity and type. " alt="" coords="200,2301,304,2328"/>
+<area shape="rect" id="node56" href="group__serial__port.html#ga329223b2a30242d83bace18bb5a5d67f" title="Serial port interrupt handler. When an interrupt occurs, identify the type of interrupt and process i..." alt="" coords="422,933,529,960"/>
+<area shape="rect" id="node59" href="group__serial__port.html#ga5a2923b573ad7fb0e77c83914b87cc76" title="Transmit the vector to the Transmitter Holding Register by polling. " alt="" coords="625,976,756,1003"/>
+<area shape="rect" id="node62" href="group__serial__port.html#ga3066c62d12278dadb51beab0bb822b1e" title="Serial port communication error detector. If there an error on the other machine, this will detect..." alt="" coords="197,2352,307,2379"/>
+<area shape="rect" id="node63" href="group__serial__port.html#gaf1ec489b5340cded627b83d8e2771cde" title="Update the transmission with a new sequence but the same information. " alt="" coords="170,1136,334,1163"/>
+<area shape="rect" id="node66" href="timer_8c.html#a91a2072306c68353712a6b771287dc2c" title="timer_int_handler" alt="" coords="191,2403,313,2429"/>
+<area shape="rect" id="node67" href="group__serial__port.html#gafbe6cc667816d9b692795fc5914b3d22" title="Treat information received in the serial port. " alt="" coords="182,2454,322,2495"/>
+<area shape="rect" id="node71" href="group__dispatcher.html#gaccff351f7274ad73f82c577e3872276c" title="Updates the player orientation according to the player angle. " alt="" coords="427,1659,524,1685"/>
+<area shape="rect" id="node72" href="group__game__logic.html#gab4ad9e64cf0d6d5f515e60ed8695ce31" title="Calculates the difference of two vectors. " alt="" coords="854,1811,975,1837"/>
+<area shape="rect" id="node73" href="group__game__logic.html#gade0911b9125be9387bc068ac1d342c65" title="Performs a scalar multiplication on the given vector. " alt="" coords="405,2064,546,2091"/>
+<area shape="rect" id="node74" href="group__game__logic.html#ga31fdad3f5c996bbbecb1411b75b5bba7" title="Rotates a point around the origin by a given angle using a rotation matrix. The rotation matrix is su..." alt="" coords="207,2520,297,2547"/>
+<area shape="rect" id="node75" href="group__utils.html#ga04295ee1659c2544794e3e0a7ee1f7ef" title="Adds a new element to the linked list. " alt="" coords="197,2571,307,2597"/>
+<area shape="rect" id="node76" href="group__dispatcher.html#gabe630109db9a0ca92f0a407a76960fa8" title="Updates the player&#39;s position according to the keyboard status. Called every frame. " alt="" coords="183,1643,321,1669"/>
+<area shape="rect" id="node80" href="group__dispatcher.html#ga145408686ead4294096058e3090ad969" title="Updates the cursors&#39;s position and player orientation according to the mouse status. Called every frame. " alt="" coords="173,1440,331,1467"/>
+<area shape="rect" id="node84" href="group__game__logic.html#ga2055b63540d1a3c4d2343a7d35ffccc2" title="Updates the position of the bullets and player. " alt="" coords="173,1389,331,1416"/>
+<area shape="rect" id="node87" href="group__game__logic.html#ga5b5da0616a5ac26237ecae4e9c0eb1d2" title="Detects collisions between the player and powerups / bullets, updating entities accordingly. " alt="" coords="193,1592,311,1619"/>
+<area shape="rect" id="node90" href="group__video.html#gad1f8767a6dd8c050e51de87ab5e5319b" title="Draws an X Pixmap image in a specified position to a given buffer. " alt="" coords="639,2680,742,2707"/>
+<area shape="rect" id="node92" href="group__video.html#gac1143fc335be99b1c84e5a8d95aa7013" title="Draws entities to a buffer in a specific order. The entities that are drawn last are drawn on top of ..." alt="" coords="188,2672,316,2699"/>
+<area shape="rect" id="node94" href="group__video.html#gade49fffaa2fc1b8cb1c013cab612b538" title="Draws a rectangle of the given color, width and height in a specified position to a given buffer..." alt="" coords="616,2614,765,2655"/>
+<area shape="rect" id="node95" href="group__serial__port.html#ga3f97f989bc21fe99607931390eedb776" title="Update the transmission with new information. " alt="" coords="178,1085,326,1112"/>
+<area shape="rect" id="node96" href="group__utils.html#gaa811aabff84c792c6da9576914974c8a" title="Safely deletes a linked list. Any dynamically allocated memory is freed. " alt="" coords="191,2773,313,2800"/>
+<area shape="rect" id="node10" href="group__mouse.html#gad35b135a465650bd58aef6ee248ca402" title="Writes a command to the PS/2 mouse. Interrupts must be disabled or else the ACK bytes may be automati..." alt="" coords="611,697,771,724"/>
+<area shape="rect" id="node11" href="group__kbc.html#ga8c467e640bc33719fe3ed7bcb73f2121" title="Writes a KBC command to the 0x64 port. " alt="" coords="843,621,986,648"/>
+<area shape="rect" id="node14" href="group__kbc.html#gab7c3aa73d53fa86cf82ef40b5032784d" title="Writes an argument for a KBC command to the 0x60 port. " alt="" coords="863,672,966,699"/>
+<area shape="rect" id="node15" href="group__kbc.html#ga19f24da562326ef540548f54c1b648c3" title="Reads output (data or return value) from the 0x60 port. " alt="" coords="843,723,986,749"/>
+<area shape="rect" id="node12" href="group__kbc.html#gaa4c58a11cd49c54cc0eb02a79010a9cc" title="Reads status byte from the 0x64 port. " alt="" coords="1057,672,1176,699"/>
+<area shape="rect" id="node13" href="group__utils.html#ga79a031a8611f5b2d6afa4158e92b0fb4" title="Reads a byte from the specified port. " alt="" coords="1224,773,1315,800"/>
+<area shape="rect" id="node23" href="group__mouse.html#ga16a521d1919cbd8f434d8b5d535a639b" title="Sets the mouse to stream mode. " alt="" coords="389,781,561,808"/>
+<area shape="rect" id="node26" href="group__utils.html#ga81621440b3d65680979425e39aa8c789" title="Gets least significant byte of a 16 bit number. " alt="" coords="643,1195,739,1221"/>
+<area shape="rect" id="node27" href="group__utils.html#ga6a880076cd2ec468834438b6e0c58836" title="Gets most significant byte of a 16 bit number. " alt="" coords="641,1144,741,1171"/>
+<area shape="rect" id="node29" href="group__video.html#ga4640b9c7378a0bfee35c28cade4f9576" title="Our implementation of vbe_get_mode_info. Returns information about the specified video card mode..." alt="" coords="400,2165,551,2192"/>
+<area shape="rect" id="node30" href="group__video.html#gaed60fb8312287ec82fa90fed7fef715a" title="Sets the operating mode of the video card. " alt="" coords="417,2115,534,2141"/>
+<area shape="rect" id="node37" href="group__rtc.html#gabf6f23e3a37b625fce812ca09b3f35df" title="Reads data from the specified RTC register. " alt="" coords="1057,773,1176,800"/>
+<area shape="rect" id="node38" href="group__rtc.html#ga9356a574f1893f56d0973dd06db6ed74" title="Writes data to the specified RTC register. " alt="" coords="414,832,537,859"/>
+<area shape="rect" id="node41" href="group__mouse.html#ga04801d603b3c217e849f2d37d7c70394" title="mouse_parse_packet" alt="" coords="617,1296,764,1323"/>
+<area shape="rect" id="node47" href="group__utils.html#gabd8bbcfabb3ddef2ccaafb9928a37b95" title="Returns the smallest of two integers. " alt="" coords="1095,1168,1138,1195"/>
+<area shape="rect" id="node48" href="group__utils.html#gaf082905f7eac6d03e92015146bbc1925" title="Returns the largest of two integers. " alt="" coords="667,1347,714,1373"/>
+<area shape="rect" id="node42" href="group__mouse.html#gad1ab1b763a6bdb1de1779e0a02809df6" title="mouse_put_bytes_on\l_packet" alt="" coords="841,1259,988,1301"/>
+<area shape="rect" id="node43" href="group__mouse.html#gaa968bd798197a2abab567fc46bdf8ed1" title="mouse_get_buttons_pressed" alt="" coords="820,1325,1009,1352"/>
+<area shape="rect" id="node44" href="group__mouse.html#gaa85649a27dd5cec7384188b5a816c9fc" title="mouse_get_x_displacement" alt="" coords="823,1376,1007,1403"/>
+<area shape="rect" id="node45" href="group__mouse.html#gaff82f0871b2116ed7acad3c983915cad" title="mouse_get_y_displacement" alt="" coords="823,1427,1007,1453"/>
+<area shape="rect" id="node46" href="group__mouse.html#ga5d00d2b38a2c228ba1a089c501afc210" title="mouse_get_overflow" alt="" coords="843,1477,986,1504"/>
+<area shape="rect" id="node57" href="group__serial__port.html#gad9ebdab85b01da1edde0fc0176243608" title="Receive the Receiver Holding Register to a vector. " alt="" coords="1074,875,1159,901"/>
+<area shape="rect" id="node58" href="group__serial__port.html#ga49f2bb5bcfcad0d807d263b9586fa817" title="Add a byte to the transmission. " alt="" coords="609,1027,772,1069"/>
+<area shape="rect" id="node60" href="group__serial__port.html#gadd475e212f2c31efa339bef3be1ceaf1" title="Transmit the vector to the Transmitter Holding Register. " alt="" coords="869,1077,960,1104"/>
+<area shape="rect" id="node61" href="group__utils.html#ga0bb8bf253e25c4e51ff35215cf92d581" title="Erases a given number of bytes from the start of a queue, shifting the next bytes to the start..." alt="" coords="1077,1077,1156,1104"/>
+<area shape="rect" id="node64" href="group__serial__port.html#gab71fa17d64d2c95053410f12b0276074" title="Transform player, powerup and bullet information into bytes to be transmitted. " alt="" coords="403,1086,548,1127"/>
+<area shape="rect" id="node65" href="group__utils.html#ga211515e715b741116f67afaf6f214d70" title="Gets the four bytes that make up a given 32 bit number, from most to least significant. " alt="" coords="641,1093,741,1120"/>
+<area shape="rect" id="node68" href="group__serial__port.html#gaba6c97f8c0cdadd4d326e0917ba5f8a4" title="Transform received vector in information for player, rtc and bullet. " alt="" coords="392,2411,559,2437"/>
+<area shape="rect" id="node69" href="group__utils.html#ga4566ac7fb7474e0fbaa3e6d0f60b789d" title="Appends two bytes to make a 16 bit number. " alt="" coords="431,2461,519,2488"/>
+<area shape="rect" id="node70" href="group__utils.html#gaf1856e9fcb6df64ffa8cd2cbc45b45e0" title="Appends four bytes to make a 32 bit number, from most to least significant. " alt="" coords="424,2512,527,2539"/>
+<area shape="rect" id="node77" href="group__game__logic.html#gaf60d50aa55bd6501e471aac89efec799" title="Calculates the sum of two vectors. " alt="" coords="643,1811,738,1837"/>
+<area shape="rect" id="node78" href="group__game__logic.html#ga2306491105159c8c5dbf40b970c73536" title="Returns a normalized (length = 1) version of a vector. " alt="" coords="622,2013,759,2040"/>
+<area shape="rect" id="node79" href="group__game__logic.html#gaa50f5776598439bec252c8de0faa2e14" title="Calculates the norm (length) of the given vector. " alt="" coords="863,1988,966,2015"/>
+<area shape="rect" id="node81" href="group__game__logic.html#ga130c3e63388cd3634247a99d45b41fe2" title="Returns the angle between the two vectors in radians. " alt="" coords="414,1608,537,1635"/>
+<area shape="rect" id="node82" href="group__game__logic.html#gabc9becb6747f8908a0ff6d1a4737fce2" title="Updates the position of the mouse cursor. " alt="" coords="397,1507,553,1533"/>
+<area shape="rect" id="node83" href="group__utils.html#ga7bd2a3e76557131d9099c06fb3b52af4" title="Returns the value of x limited by a lower and upper bound. " alt="" coords="662,1503,719,1529"/>
+<area shape="rect" id="node85" href="game__logic_8c.html#a16797ec72c9dae60717b8f8546a4f630" title="update_entity_position" alt="" coords="399,1456,551,1483"/>
+<area shape="rect" id="node86" href="group__utils.html#ga751b8cc4510bc24ec95605a9161de540" title="Deletes the first occurrence of a given element from the linked list. " alt="" coords="415,1760,535,1787"/>
+<area shape="rect" id="node88" href="group__game__logic.html#gaa38e1f395a44d0690e8ea0452ff494e2" title="Detects a collision between two circles. " alt="" coords="403,1963,548,1989"/>
+<area shape="rect" id="node89" href="group__game__logic.html#ga2144cfd35ea040a59e24ed701b5c27f8" title="Returns the distance between the two vectors. " alt="" coords="620,1963,761,1989"/>
+<area shape="rect" id="node91" href="group__video.html#gab25167202fb0e55ce46a3832bd53d464" title="Draws a pixel of the given color in a specified position to a given buffer. " alt="" coords="862,2651,967,2677"/>
+<area shape="rect" id="node93" href="video_8c.html#ac27d5fe327e07a511da32f3985a22e9f" title="vg_render_entity" alt="" coords="416,2672,535,2699"/>
 </map>
 </div>
 
@@ -523,6 +526,50 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a id="ga8a81d1eb67c67f5b544085138c61e0d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8a81d1eb67c67f5b544085138c61e0d1">&#9670;&nbsp;</a></span>game_over_player_1_xpm</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const xpm_map_t game_over_player_1_xpm = (xpm_map_t) GameOverPlayer1_xpm</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ga4b566efe550110975fa912161a44fee5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4b566efe550110975fa912161a44fee5">&#9670;&nbsp;</a></span>game_over_player_2_xpm</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const xpm_map_t game_over_player_2_xpm = (xpm_map_t) GameOverPlayer2_xpm</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ga23175dbab3f49b4eec42dba0f912eef4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga23175dbab3f49b4eec42dba0f912eef4">&#9670;&nbsp;</a></span>kbd_int_subscribed</h2>
 
@@ -577,20 +624,6 @@ Here is the call graph for this function:</div>
       <table class="memname">
         <tr>
           <td class="memname">uint8_t packet_byte</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga7e37f52e77ca8f2897e1f6fdf856dbee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7e37f52e77ca8f2897e1f6fdf856dbee">&#9670;&nbsp;</a></span>ready_to_transmit</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ready_to_transmit = false</td>
         </tr>
       </table>
 </div><div class="memdoc">

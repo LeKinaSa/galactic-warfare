@@ -1,5 +1,5 @@
 <map id="sp_transmit" name="sp_transmit">
-<area shape="rect" id="node2" href="$group__serial__port.html#ga329223b2a30242d83bace18bb5a5d67f" title="Serial port interrupt handler. When an interrupt occurs, identify the type of interrupt and process i..." alt="" coords="156,5,263,32"/>
-<area shape="rect" id="node4" href="$group__serial__port.html#ga5a2923b573ad7fb0e77c83914b87cc76" title="Transmit the vector to the Transmitter Holding Register by polling. " alt="" coords="144,56,275,83"/>
-<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="323,31,432,57"/>
+<area shape="rect" id="node2" href="$group__serial__port.html#ga5a2923b573ad7fb0e77c83914b87cc76" title="Transmit the vector to the Transmitter Holding Register by polling. " alt="" coords="144,5,275,32"/>
+<area shape="rect" id="node3" href="$group__proj.html#ga2a16f651eccbd248e1ad3b3b924b143b" title="The project&#39;s main function. " alt="" coords="477,5,587,32"/>
+<area shape="rect" id="node4" href="$group__serial__port.html#ga329223b2a30242d83bace18bb5a5d67f" title="Serial port interrupt handler. When an interrupt occurs, identify the type of interrupt and process i..." alt="" coords="323,31,429,57"/>
 </map>
