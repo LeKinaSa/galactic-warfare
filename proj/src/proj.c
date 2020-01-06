@@ -36,6 +36,8 @@
 #include "../res/DamagePowerup.xpm"
 #include "../res/Bullet.xpm"
 #include "../res/BulletEnemy.xpm"
+#include "../res/GameOverPlayer1.xpm"
+#include "../res/GameOverPlayer2.xpm"
 
 /** @defgroup proj proj
  * @{
@@ -83,6 +85,9 @@ static const xpm_map_t damage_powerup_xpm = (xpm_map_t) DamagePowerup_xpm;
 
 static const xpm_map_t bullet_xpm = (xpm_map_t) Bullet_xpm;
 static const xpm_map_t bullet_enemy_xpm = (xpm_map_t) BulletEnemy_xpm;
+
+static const xpm_map_t game_over_player_1_xpm = (xpm_map_t) GameOverPlayer1_xpm;
+static const xpm_map_t game_over_player_2_xpm = (xpm_map_t) GameOverPlayer2_xpm;
 
 static void exit_program(program_status_t* status);
 
@@ -215,6 +220,7 @@ int (proj_main_loop)(int argc, char *argv[]) {
   xpm_image_t ship_ne_img, ship_nw_img, ship_se_img, ship_sw_img;
   xpm_image_t speed_powerup_img, damage_powerup_img;
   xpm_image_t bullet_img, bullet_enemy_img;
+  xpm_image_t game_over_player_1_img, game_over_player_2_img;
 
   if (
   xpm_load(bg_xpm     , XPM_5_6_5, &bg_img     ) == NULL ||
@@ -230,7 +236,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
   xpm_load(speed_powerup_xpm, XPM_5_6_5, &speed_powerup_img) == NULL ||
   xpm_load(damage_powerup_xpm, XPM_5_6_5, &damage_powerup_img) == NULL ||
   xpm_load(bullet_xpm, XPM_5_6_5, &bullet_img) == NULL ||
-  xpm_load(bullet_enemy_xpm, XPM_5_6_5, &bullet_enemy_img) == NULL
+  xpm_load(bullet_enemy_xpm, XPM_5_6_5, &bullet_enemy_img) == NULL ||
+  xpm_load(game_over_player_1_xpm, XPM_5_6_5, &game_over_player_1_img) == NULL ||
+  xpm_load(game_over_player_2_xpm, XPM_5_6_5, &game_over_player_2_img) == NULL
   ) {
     exit_program(program_status);
     printf("Error when loading xpm.\n");
@@ -326,7 +334,9 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
 
-  while (scancode != KBD_ESC_BREAKCODE) {
+  bool exit = false; /* One Player has died */
+  bool winner = false; /* Used to Determine which Game Over Screen the Player Sees at the End */
+  while ((scancode != KBD_ESC_BREAKCODE) && (!exit)) {
     if (driver_receive(ANY, &msg, &ipc_status)) {
       printf("Error when calling driver_receive.\n");
       continue;
@@ -490,10 +500,16 @@ int (proj_main_loop)(int argc, char *argv[]) {
         break;
       }
     }
+
+    if ((player.current_health == 0) || (enemy.current_health ==0)) {
+      if (enemy.current_health == 0) {
+        winner = true;
+      }
+      exit = true;
+    }
   }
   
   // Free dynamically allocated memory
-  free(aux_buffer);
   LinkedList_delete(bullets);
   Powerup_delete(current_powerup);
   free(ship_collision_shape);
@@ -538,13 +554,6 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
 
-  if (kbd_unsubscribe_int()) {
-    exit_program(program_status);
-    printf("Error when calling kbd_unsubscribe_int.\n");
-    return 1;
-  }
-  program_status->kbd_int_subscribed = false;
-
   if (host) {
     if (rtc_unsubscribe_int()) {
       exit_program(program_status);
@@ -560,6 +569,57 @@ int (proj_main_loop)(int argc, char *argv[]) {
     return 1;
   }
   program_status->timer_int_subscribed = false;
+
+  // Game Over Screen
+  if ((host && winner) || ((!host) && (!winner))) {
+    vg_draw_xpm(game_over_player_1_img, 0, 0, &aux_buffer);
+  }
+  else {
+    vg_draw_xpm(game_over_player_2_img, 0, 0, &aux_buffer);
+  }
+  memcpy(frame_buffer, aux_buffer, vg_get_frame_buffer_size());
+  // Free dynamically allocated memory
+  free(aux_buffer);
+  
+  while (scancode != KBD_ESC_BREAKCODE) {
+    if (driver_receive(ANY, &msg, &ipc_status)) {
+      printf("Error when calling driver_receive.\n");
+      continue;
+    }
+
+    if (is_ipc_notify(ipc_status)) {
+      switch (_ENDPOINT_P(msg.m_source)) {
+      case HARDWARE:
+        if (msg.m_notify.interrupts & BIT(kbd_bit_no)) {
+          kbc_ih();
+
+          if (scancode == KBD_TWO_BYTE_CODE) {
+            bytes[0] = scancode;
+            two_byte_scancode = true;
+          }
+          else {
+            if (two_byte_scancode) {
+              bytes[1] = scancode;
+            }
+            else {
+              bytes[0] = scancode;
+            }
+            two_byte_scancode = false;
+          }
+        }
+        break;
+      default:
+        break;
+      }
+    }
+  }
+
+  if (kbd_unsubscribe_int()) {
+    exit_program(program_status);
+    printf("Error when calling kbd_unsubscribe_int.\n");
+    return 1;
+  }
+  program_status->kbd_int_subscribed = false;
 
   if (vg_exit()) {
     printf("Error when calling vg_exit.\n");
