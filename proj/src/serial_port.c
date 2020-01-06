@@ -82,17 +82,14 @@ void sp_int_handler() {
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
   switch ( iir & SP_IIR_INT ) {
       case SP_IIR_RDR:
-        //printf("Read\n"); // RETIRAR
         /* Read next char */
         sp_receive();
         break;
       case SP_IIR_CTO:
-        //printf("Timeout\n"); // RETIRAR
         /* Character Timeout */
         sp_receive();
         break;
       case SP_IIR_RLS:
-        //printf("Error\n"); // RETIRAR
         /* Receiver Line Status - Signals Error in LSR */
         util_sys_inb(SP1_BASE_ADDR + SP_LSR, &error);
         sp_add_to_transmission_queue(SP_SEND_SEQUENCE);
@@ -101,7 +98,6 @@ void sp_int_handler() {
         }
         break;
       default:
-        //printf("Modem\n"); // RETIRAR
         break;
   }
   util_sys_inb(SP1_BASE_ADDR + SP_IIR, &iir);
@@ -377,18 +373,15 @@ void sp_transmit() {
 }
 
 void sp_transmit_polled() {
-  uint8_t byte = 0, lsr = 0;
-  int minimum;
+  uint8_t lsr = 0;
 
-  while (to_transmit_size != 0) {
+  while (true) {
     util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
     if (lsr & SP_LSR_THR_EMPTY) {
-      minimum = min(SP_FIFO_SIZE, to_transmit_size);
-      for (int index = 0; index < minimum; ++ index) {
-        byte = to_transmit[index];
-        sys_outb(SP1_BASE_ADDR + SP_THR, byte);
-      }
-      util_erase(to_transmit, &to_transmit_size, minimum);
+      sp_transmit();
+    }
+    if (to_transmit_size == 0) {
+      break;
     }
     micro_delay(500);
   }
@@ -397,8 +390,6 @@ void sp_transmit_polled() {
 void sp_receive() {
   uint8_t byte = 0;
   uint8_t lsr = 0;
-
-  int packets = 0; // RETIRAR
 
   util_sys_inb(SP1_BASE_ADDR + SP_LSR, &lsr);
   while ((lsr & SP_LSR_RD) != 0) {
@@ -409,7 +400,5 @@ void sp_receive() {
     if (received_size >= (SP_FIFO_SIZE * SP_INT_PER_TIMER_INT) / 2) {
       received_size = 0;
     }
-    ++ packets; // RETIRAR
   }
-  //printf("Received : %d out of %d packets\n", received_size, packets); // RETIRAR
 }
